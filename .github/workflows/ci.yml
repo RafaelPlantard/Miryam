@@ -83,6 +83,10 @@ jobs:
             echo "No test results found — skipping coverage report"
           fi
 
+      - name: Install gpg (needed by Codecov)
+        if: always()
+        run: which gpg || brew install gnupg
+
       - name: Upload coverage to Codecov
         if: always()
         uses: codecov/codecov-action@75cd11691c0faa626561e295848008c8a7dddffe # v5.5.4
