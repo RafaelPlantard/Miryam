@@ -126,7 +126,7 @@ public struct PlayerView: View {
                         .font(.miryam.bodySmall)
                         .foregroundStyle(Color._miryamAccent)
                         .lineLimit(1)
-                        .frame(minHeight: 44)
+                        .frame(minWidth: Layout.Player.minTapTarget, minHeight: Layout.Player.minTapTarget)
                 }
                 .accessibilityLabel("View album \(song.albumName)")
             }
@@ -166,7 +166,8 @@ public struct PlayerView: View {
                     )
                 }
             }
-            .frame(height: 16)
+            .frame(height: Layout.Player.minTapTarget)
+            .contentShape(Rectangle())
             .accessibilityElement()
             .accessibilityLabel(AccessibilityID.songProgress.rawValue)
             .accessibilityValue("\(Int(viewModel.playbackState.progress * 100))%")
