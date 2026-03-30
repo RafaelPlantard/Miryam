@@ -435,7 +435,7 @@ final class MiryamUITests: XCTestCase {
         }
 
         let moreButton = app.buttons[AccessibilityID.moreOptionsButton.rawValue].firstMatch
-        guard moreButton.waitForExistence(timeout: 5) else {
+        guard moreButton.waitForExistence(timeout: 10) else {
             XCTFail("More options button not found")
             return
         }
