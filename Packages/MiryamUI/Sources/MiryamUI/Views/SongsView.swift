@@ -55,7 +55,7 @@ public struct SongsView: View {
                 )
                 .onAppear {
                     if song.id == viewModel.songs.last?.id {
-                        Task { await viewModel.loadMore() }
+                        viewModel.loadMore()
                     }
                 }
             }

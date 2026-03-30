@@ -10,7 +10,7 @@ public actor SongRepository: SongRepositoryProtocol {
     }
 
     public func searchSongs(query: String, limit: Int, offset: Int) async throws -> SearchResult {
-        let url = ITunesEndpoint.search(query: query, limit: limit, offset: offset).url
+        let url = try ITunesEndpoint.search(query: query, limit: limit, offset: offset).makeURL()
         let response: ITunesSearchResponse = try await httpClient.fetch(url)
 
         let songs = response.results.compactMap { $0.toDomain() }
@@ -18,7 +18,7 @@ public actor SongRepository: SongRepositoryProtocol {
     }
 
     public func fetchAlbumSongs(albumId: Int) async throws -> [Song] {
-        let url = ITunesEndpoint.lookup(albumId: albumId).url
+        let url = try ITunesEndpoint.lookup(albumId: albumId).makeURL()
         let response: ITunesSearchResponse = try await httpClient.fetch(url)
 
         return response.results.compactMap { $0.toDomain() }
