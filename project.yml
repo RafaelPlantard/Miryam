@@ -36,6 +36,8 @@ targets:
           - "**/*.md"
     resources:
       - Miryam/Assets.xcassets
+      - path: Miryam/TestFixtures
+        buildPhase: resources
     entitlements:
       path: Miryam/Miryam.entitlements
       properties:

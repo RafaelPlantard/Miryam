@@ -1,6 +1,8 @@
 import MiryamCore
 import MiryamFeatures
+import MiryamNetworking
 import MiryamPersistence
+import MiryamPlayer
 import MiryamUI
 import SwiftData
 import SwiftUI
@@ -43,7 +45,16 @@ struct MiryamApp: App {
             .task {
                 FontRegistration.registerFonts()
                 do {
-                    let di = try DependencyContainer()
+                    let di: DependencyContainer
+                    #if DEBUG
+                        if ProcessInfo.processInfo.arguments.contains("-UITestMode") {
+                            di = try Self.makeTestContainer()
+                        } else {
+                            di = try DependencyContainer()
+                        }
+                    #else
+                        di = try DependencyContainer()
+                    #endif
                     container = di
                     songsViewModel = di.makeSongsViewModel()
                     playerViewModel = di.makePlayerViewModel()
@@ -103,4 +114,33 @@ struct MiryamApp: App {
         }
         .modelContainer(container.modelContainer)
     }
+
+    // MARK: - UI Test Support
+
+    #if DEBUG
+        private static func makeTestContainer() throws -> DependencyContainer {
+            StubURLProtocol.stubbedResponses = [
+                (pattern: "term=xyznonexistent", fixture: "search_empty"),
+                (pattern: "/search", fixture: "search_adele"),
+                (pattern: "/lookup", fixture: "lookup_album"),
+            ]
+
+            let config = URLSessionConfiguration.ephemeral
+            config.protocolClasses = [StubURLProtocol.self]
+            let session = URLSession(configuration: config)
+
+            let httpClient = HTTPClient(session: session, maxRetries: 0)
+            let songRepository = SongRepository(httpClient: httpClient)
+            let modelContainer = try PersistenceContainer.makeTestContainer()
+            let cacheRepository = CacheActor(modelContainer: modelContainer)
+            let player = AudioPlayer()
+
+            return DependencyContainer(
+                songRepository: songRepository,
+                cacheRepository: cacheRepository,
+                player: player,
+                modelContainer: modelContainer
+            )
+        }
+    #endif
 }
