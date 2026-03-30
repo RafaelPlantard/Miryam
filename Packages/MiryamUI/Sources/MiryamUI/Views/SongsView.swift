@@ -111,8 +111,8 @@ public struct SongsView: View {
     private func errorView(_ error: AppError) -> some View {
         VStack(spacing: 16) {
             Spacer()
-            Image(systemName: "exclamationmark.triangle")
-                .font(.system(size: 48))
+            Image(symbol: .warningTriangle)
+                .font(.miryam.iconMedium)
                 .foregroundStyle(Color._miryamLabelSecondary)
             Text(error.userMessage)
                 .font(.miryam.bodyLarge)
@@ -134,8 +134,8 @@ public struct SongsView: View {
                 recentlyPlayedList
             } else {
                 Spacer()
-                Image(systemName: "music.note.list")
-                    .font(.system(size: 48))
+                Image(symbol: .musicNoteList)
+                    .font(.miryam.iconMedium)
                     .foregroundStyle(Color._miryamLabelSecondary)
                 Text("Search for songs")
                     .font(.miryam.bodyLarge)
@@ -157,8 +157,8 @@ public struct SongsView: View {
     private var noResultsView: some View {
         VStack(spacing: 16) {
             Spacer()
-            Image(systemName: "magnifyingglass")
-                .font(.system(size: 48))
+            Image(symbol: .magnifyingGlass)
+                .font(.miryam.iconMedium)
                 .foregroundStyle(Color._miryamLabelSecondary)
             Text("No results found")
                 .font(.miryam.bodyLarge)

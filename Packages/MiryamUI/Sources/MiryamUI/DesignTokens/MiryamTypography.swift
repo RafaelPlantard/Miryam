@@ -21,5 +21,20 @@ public extension Font {
 
         /// Caption 12 — Medium 500, size 12, line height 1.4
         public static let caption = Font.custom("DMSans-Medium", size: 12)
+
+        /// Icon Large — size 60 (Player artwork placeholder)
+        public static let iconLarge = Font.system(size: 60)
+
+        /// Icon Medium — size 48 (Empty state icons)
+        public static let iconMedium = Font.system(size: 48)
+
+        /// Icon Small — size 40 (Album artwork placeholder)
+        public static let iconSmall = Font.system(size: 40)
+
+        /// Control Large — size 28 (Play/pause button)
+        public static let controlLarge = Font.system(size: 28)
+
+        /// Control Regular — size 20 (Skip buttons)
+        public static let controlRegular = Font.system(size: 20)
     }
 }

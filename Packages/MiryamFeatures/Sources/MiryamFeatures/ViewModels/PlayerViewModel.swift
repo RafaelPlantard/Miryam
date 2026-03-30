@@ -63,12 +63,12 @@ public final class PlayerViewModel {
 
     /// Skip forward 15 seconds.
     public func skipForward() async {
-        await player.skipForward(seconds: 15)
+        await player.skipForward(seconds: Constants.Player.skipInterval)
     }
 
     /// Skip backward 15 seconds.
     public func skipBackward() async {
-        await player.skipBackward(seconds: 15)
+        await player.skipBackward(seconds: Constants.Player.skipInterval)
     }
 
     /// Stop playback.

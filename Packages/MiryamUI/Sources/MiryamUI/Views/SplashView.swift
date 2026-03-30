@@ -17,7 +17,7 @@ public struct SplashView: View {
 
             Image("musical-note", bundle: .module)
                 .resizable()
-                .frame(width: 100, height: 100)
+                .frame(width: Layout.Splash.logoSize, height: Layout.Splash.logoSize)
                 .opacity(isActive ? 1 : 0)
                 .scaleEffect(isActive ? 1 : 0.8)
                 .accessibilityLabel("Miryam")
@@ -27,7 +27,7 @@ public struct SplashView: View {
             if reduceMotion {
                 isActive = true
             } else {
-                withAnimation(.easeOut(duration: 0.6)) {
+                withAnimation(.easeOut(duration: Layout.Splash.animationDuration)) {
                     isActive = true
                 }
             }
@@ -37,7 +37,7 @@ public struct SplashView: View {
 
     private func scheduleTransition() {
         Task {
-            try? await Task.sleep(for: .seconds(1.5))
+            try? await Task.sleep(for: .seconds(Layout.Splash.transitionDelay))
             await MainActor.run {
                 onComplete()
             }

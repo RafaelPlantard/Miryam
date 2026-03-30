@@ -35,8 +35,8 @@ public struct SongRow: View {
                         albumPlaceholder
                     }
                 }
-                .frame(width: 52, height: 52)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .frame(width: Layout.SongRow.thumbnailSize, height: Layout.SongRow.thumbnailSize)
+                .clipShape(RoundedRectangle(cornerRadius: Layout.SongRow.thumbnailCornerRadius))
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(song.name)
@@ -60,10 +60,10 @@ public struct SongRow: View {
 
             if let onMoreTapped {
                 Button(action: onMoreTapped) {
-                    Image(systemName: "ellipsis")
+                    Image(symbol: .ellipsis)
                         .font(.body)
                         .foregroundStyle(Color._miryamIconSecondary)
-                        .frame(width: 44, height: 44)
+                        .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -76,10 +76,10 @@ public struct SongRow: View {
     }
 
     private var albumPlaceholder: some View {
-        RoundedRectangle(cornerRadius: 8)
+        RoundedRectangle(cornerRadius: Layout.SongRow.thumbnailCornerRadius)
             .fill(Color._miryamSurfaceSecondary)
             .overlay(
-                Image(systemName: "music.note")
+                Image(symbol: .musicNote)
                     .foregroundStyle(Color._miryamSubtitle)
             )
     }

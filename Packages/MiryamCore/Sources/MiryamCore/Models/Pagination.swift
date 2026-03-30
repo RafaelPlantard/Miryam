@@ -6,7 +6,7 @@ public struct Pagination: Sendable {
     public private(set) var offset: Int
     public private(set) var hasMorePages: Bool
 
-    public init(limit: Int = 25) {
+    public init(limit: Int = Constants.Search.pageLimit) {
         self.limit = limit
         self.offset = 0
         self.hasMorePages = true
