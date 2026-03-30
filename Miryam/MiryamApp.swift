@@ -10,6 +10,7 @@ struct MiryamApp: App {
     @State private var showSplash = true
     @State private var container: DependencyContainer?
     @State private var router = Router()
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     var body: some Scene {
         WindowGroup {
