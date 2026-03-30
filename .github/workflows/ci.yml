@@ -171,6 +171,14 @@ jobs:
           flags: snapshot-tests
           fail_ci_if_error: false
 
+      - name: Upload snapshot diffs
+        if: failure()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
+        with:
+          name: snapshot-diffs
+          path: Packages/MiryamUI/Tests/MiryamUITests/Snapshots/__Snapshots__/
+          if-no-files-found: ignore
+
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         if: always()
         with:
