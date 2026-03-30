@@ -9,6 +9,7 @@ import SwiftUI
 struct MiryamApp: App {
     @State private var showSplash = true
     @State private var container: DependencyContainer?
+    @State private var containerError: Error?
     @State private var router = Router()
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
@@ -23,6 +24,12 @@ struct MiryamApp: App {
                     }
                 } else if let container {
                     mainContent(container: container)
+                } else if let containerError {
+                    ContentUnavailableView(
+                        "Unable to Load",
+                        systemImage: "exclamation.triangle",
+                        description: Text(containerError.localizedDescription)
+                    )
                 } else {
                     ProgressView("Loading...")
                 }
@@ -32,7 +39,7 @@ struct MiryamApp: App {
                 do {
                     container = try DependencyContainer()
                 } catch {
-                    fatalError("Failed to create DependencyContainer: \(error)")
+                    containerError = error
                 }
             }
         }
