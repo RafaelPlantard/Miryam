@@ -40,11 +40,11 @@ targets:
       path: Miryam/Miryam.entitlements
       properties:
         aps-environment: development
-        com.apple.developer.aps-environment: development
         com.apple.developer.icloud-container-identifiers: []
-        com.apple.developer.carplay-audio: true
+        com.apple.developer.icloud-container-environment: Production
         com.apple.developer.icloud-services:
           - CloudKit
+        com.apple.developer.carplay-audio: true
     info:
       path: Miryam/Info.plist
       properties:
@@ -54,6 +54,17 @@ targets:
         CFBundleDisplayName: Miryam
         CFBundleShortVersionString: "1.0"
         CFBundleVersion: "1"
+        CFBundleIconName: AppIcon
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
     dependencies:
       - package: MiryamUI
       - package: MiryamFeatures
@@ -65,11 +76,14 @@ targets:
         SWIFT_STRICT_CONCURRENCY: complete
         PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam
         DEVELOPMENT_TEAM: __REDACTED_TEAM_ID__
-        CODE_SIGN_STYLE: Automatic
       configs:
         Debug:
+          CODE_SIGN_STYLE: Automatic
           DEBUG_INFORMATION_FORMAT: dwarf
         Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: "Apple Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "match AppStore io.swift-yah.miryam"
           DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
 
   MiryamTests:
