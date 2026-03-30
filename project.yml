@@ -180,7 +180,6 @@ schemes:
     build:
       targets:
         Miryam: all
-        MiryamWatch: all
     run:
       config: Debug
     test:
