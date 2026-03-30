@@ -8,6 +8,7 @@ final class MiryamUITests: XCTestCase {
     override func setUp() async throws {
         continueAfterFailure = false
         app = XCUIApplication()
+        app.launchArguments = ["-UITestMode"]
     }
 
     override func tearDown() async throws {
@@ -41,18 +42,18 @@ final class MiryamUITests: XCTestCase {
 
     func testSearchForSongsShowsResults() throws {
         app.launch()
-        searchFor("Beatles")
+        searchFor("Adele")
 
         let firstCell = app.cells.firstMatch
-        XCTAssertTrue(firstCell.waitForExistence(timeout: 10))
+        XCTAssertTrue(firstCell.waitForExistence(timeout: 5))
     }
 
     func testSearchPagination() throws {
         app.launch()
-        searchFor("Love")
+        searchFor("Adele")
 
         let firstCell = app.cells.firstMatch
-        guard firstCell.waitForExistence(timeout: 10) else {
+        guard firstCell.waitForExistence(timeout: 5) else {
             XCTFail("No search results appeared")
             return
         }
@@ -72,7 +73,7 @@ final class MiryamUITests: XCTestCase {
         searchFor("Adele")
 
         let firstCell = app.cells.firstMatch
-        guard firstCell.waitForExistence(timeout: 10) else {
+        guard firstCell.waitForExistence(timeout: 5) else {
             XCTFail("No search results appeared")
             return
         }
@@ -87,34 +88,24 @@ final class MiryamUITests: XCTestCase {
 
         // Navigate back
         let backButton = app.navigationBars.buttons.firstMatch
-        XCTAssertTrue(backButton.waitForExistence(timeout: 5))
+        XCTAssertTrue(backButton.waitForExistence(timeout: 3))
         backButton.tap()
 
         // Verify search query is preserved
         let searchField = app.searchFields.firstMatch
-        XCTAssertTrue(searchField.waitForExistence(timeout: 5))
+        XCTAssertTrue(searchField.waitForExistence(timeout: 3))
 
         // Verify results are still visible
         let resultCell = app.cells.firstMatch
-        XCTAssertTrue(resultCell.waitForExistence(timeout: 5), "Search results should persist after back navigation")
+        XCTAssertTrue(resultCell.waitForExistence(timeout: 3), "Search results should persist after back navigation")
     }
 
     func testNoResultsState() throws {
         app.launch()
-        searchFor("zzzxqqnosongsexist999")
+        searchFor("xyznonexistent")
 
-        // Wait for search to complete (loading to disappear)
-        // Accept any terminal state: no results, error, or even results
-        // (API behavior varies across environments)
         let noResultsView = app.descendants(matching: .any)[AccessibilityID.noResultsView.rawValue]
-        let errorButton = app.buttons["Try Again"]
-        let resultCell = app.cells.firstMatch
-
-        let noResults = noResultsView.waitForExistence(timeout: 15)
-        XCTAssertTrue(
-            noResults || errorButton.exists || resultCell.exists,
-            "Search should complete with a result state"
-        )
+        XCTAssertTrue(noResultsView.waitForExistence(timeout: 5), "No results view should appear for empty search")
     }
 
     func testEmptySearchShowsPrompt() throws {
@@ -169,7 +160,6 @@ final class MiryamUITests: XCTestCase {
         let skipForward = app.buttons[AccessibilityID.skipForward.rawValue]
         XCTAssertTrue(skipForward.waitForExistence(timeout: 5))
         skipForward.tap()
-        // Button should still exist after tapping
         XCTAssertTrue(skipForward.exists)
     }
 
@@ -180,7 +170,6 @@ final class MiryamUITests: XCTestCase {
         let skipBackward = app.buttons[AccessibilityID.skipBackward.rawValue]
         XCTAssertTrue(skipBackward.waitForExistence(timeout: 5))
         skipBackward.tap()
-        // Button should still exist after tapping
         XCTAssertTrue(skipBackward.exists)
     }
 
@@ -188,7 +177,6 @@ final class MiryamUITests: XCTestCase {
         app.launch()
         navigateToPlayer()
 
-        // The timeline progress element should exist
         let songProgress = app.otherElements[AccessibilityID.songProgress.rawValue]
         XCTAssertTrue(songProgress.waitForExistence(timeout: 5), "Song progress timeline should be visible")
     }
@@ -200,7 +188,6 @@ final class MiryamUITests: XCTestCase {
         let playPauseButton = app.buttons[AccessibilityID.playPause.rawValue]
         XCTAssertTrue(playPauseButton.waitForExistence(timeout: 5), "Player controls should be visible")
 
-        // Verify song info is displayed (at least some static texts exist)
         let staticTexts = app.staticTexts
         XCTAssertGreaterThan(staticTexts.count, 0, "Player should display song information")
     }
@@ -220,7 +207,7 @@ final class MiryamUITests: XCTestCase {
         openMoreOptions()
 
         let viewAlbumButton = app.buttons[AccessibilityID.viewAlbumButton.rawValue]
-        XCTAssertTrue(viewAlbumButton.waitForExistence(timeout: 10), "View album button should be in more options sheet")
+        XCTAssertTrue(viewAlbumButton.waitForExistence(timeout: 5), "View album button should be in more options sheet")
     }
 
     func testMoreOptionsViewAlbumNavigatesToAlbum() throws {
@@ -234,7 +221,6 @@ final class MiryamUITests: XCTestCase {
         }
         viewAlbumButton.tap()
 
-        // Album view should appear
         let albumView = app.descendants(matching: .any)[AccessibilityID.albumView.rawValue]
         XCTAssertTrue(albumView.waitForExistence(timeout: 5), "Album view should appear after tapping View album")
     }
@@ -245,16 +231,13 @@ final class MiryamUITests: XCTestCase {
         app.launch()
         navigateToAlbumFromSheet()
 
-        // Album view should have track rows
         let albumView = app.descendants(matching: .any)[AccessibilityID.albumView.rawValue]
         guard albumView.waitForExistence(timeout: 5) else {
             XCTFail("Album view did not appear")
             return
         }
 
-        // Wait for tracks to load
         let staticTexts = app.staticTexts
-        // Album should display at least the album name and some track info
         XCTAssertGreaterThan(staticTexts.count, 0, "Album view should display track information")
     }
 
@@ -262,10 +245,10 @@ final class MiryamUITests: XCTestCase {
 
     func testSwipeToRefresh() throws {
         app.launch()
-        searchFor("Beatles")
+        searchFor("Adele")
 
         let firstCell = app.cells.firstMatch
-        guard firstCell.waitForExistence(timeout: 10) else {
+        guard firstCell.waitForExistence(timeout: 5) else {
             XCTFail("No search results appeared")
             return
         }
@@ -275,9 +258,8 @@ final class MiryamUITests: XCTestCase {
         let belowCellCoordinate = firstCell.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 5.0))
         firstCellCoordinate.press(forDuration: 0.1, thenDragTo: belowCellCoordinate)
 
-        // Results should still be visible after refresh
         let resultCell = app.cells.firstMatch
-        XCTAssertTrue(resultCell.waitForExistence(timeout: 10), "Results should reappear after pull-to-refresh")
+        XCTAssertTrue(resultCell.waitForExistence(timeout: 5), "Results should reappear after pull-to-refresh")
     }
 
     // MARK: - Navigation
@@ -290,12 +272,11 @@ final class MiryamUITests: XCTestCase {
         XCTAssertTrue(playPauseButton.waitForExistence(timeout: 5))
 
         let backButton = app.navigationBars.buttons.firstMatch
-        XCTAssertTrue(backButton.waitForExistence(timeout: 5))
+        XCTAssertTrue(backButton.waitForExistence(timeout: 3))
         backButton.tap()
 
-        // After navigating back, verify we're on the Songs screen.
         let searchField = app.searchFields.firstMatch
-        XCTAssertTrue(searchField.waitForExistence(timeout: 5))
+        XCTAssertTrue(searchField.waitForExistence(timeout: 3))
     }
 
     // MARK: - Recently Played (SwiftData Cache)
@@ -304,28 +285,22 @@ final class MiryamUITests: XCTestCase {
         app.launch()
         navigateToPlayer()
 
-        // Wait a moment for the song to register as played
         let playPauseButton = app.buttons[AccessibilityID.playPause.rawValue]
         XCTAssertTrue(playPauseButton.waitForExistence(timeout: 5))
 
-        // Navigate back
         let backButton = app.navigationBars.buttons.firstMatch
-        XCTAssertTrue(backButton.waitForExistence(timeout: 5))
+        XCTAssertTrue(backButton.waitForExistence(timeout: 3))
         backButton.tap()
 
-        // Dismiss search to see home screen — use longer timeout for CI
         let songsNavBar = app.navigationBars["Songs"]
-        _ = songsNavBar.waitForExistence(timeout: 10)
+        _ = songsNavBar.waitForExistence(timeout: 5)
 
-        // Cancel search if active
         if app.buttons["Cancel"].waitForExistence(timeout: 3) {
             app.buttons["Cancel"].tap()
         }
 
-        // Check for recently played section
+        // Check for recently played section — may or may not appear depending on cache timing
         let recentlyPlayed = app.descendants(matching: .any)[AccessibilityID.recentlyPlayedSection.rawValue]
-        // This may or may not appear depending on whether the song was cached
-        // We just verify the flow doesn't crash
         _ = recentlyPlayed.waitForExistence(timeout: 5)
     }
 
@@ -336,7 +311,7 @@ final class MiryamUITests: XCTestCase {
         waitForSongsView()
 
         let songsView = app.descendants(matching: .any)[AccessibilityID.songsView.rawValue]
-        XCTAssertTrue(songsView.waitForExistence(timeout: 5), "SongsView should have accessibility identifier")
+        XCTAssertTrue(songsView.waitForExistence(timeout: 3), "SongsView should have accessibility identifier")
     }
 
     func testPlayerViewAccessibilityIdentifier() throws {
@@ -415,10 +390,10 @@ final class MiryamUITests: XCTestCase {
     }
 
     private func navigateToPlayer() {
-        searchFor("Taylor Swift")
+        searchFor("Adele")
 
         let firstCell = app.cells.firstMatch
-        guard firstCell.waitForExistence(timeout: 10) else {
+        guard firstCell.waitForExistence(timeout: 5) else {
             XCTFail("No search results appeared")
             return
         }
@@ -429,35 +404,24 @@ final class MiryamUITests: XCTestCase {
         searchFor("Adele")
 
         let firstCell = app.cells.firstMatch
-        guard firstCell.waitForExistence(timeout: 10) else {
+        guard firstCell.waitForExistence(timeout: 5) else {
             XCTFail("No search results appeared")
             return
         }
 
-        // The more button may appear as a button or as a generic element
-        // depending on how SwiftUI List renders the accessibility tree.
-        let identifier = AccessibilityID.moreOptionsButton.rawValue
-        let moreButton = app.buttons[identifier].firstMatch
-        if moreButton.waitForExistence(timeout: 10) {
-            moreButton.tap()
-            return
-        }
-
-        // Fallback: search as any descendant element (SwiftUI List cells
-        // sometimes flatten button accessibility into the cell)
-        let anyElement = app.descendants(matching: .any)[identifier].firstMatch
-        guard anyElement.waitForExistence(timeout: 5) else {
+        let moreButton = app.buttons[AccessibilityID.moreOptionsButton.rawValue].firstMatch
+        guard moreButton.waitForExistence(timeout: 5) else {
             XCTFail("More options button not found")
             return
         }
-        anyElement.tap()
+        moreButton.tap()
     }
 
     private func navigateToAlbumFromSheet() {
         openMoreOptions()
 
         let viewAlbumButton = app.buttons[AccessibilityID.viewAlbumButton.rawValue]
-        guard viewAlbumButton.waitForExistence(timeout: 10) else {
+        guard viewAlbumButton.waitForExistence(timeout: 5) else {
             XCTFail("View album button not found in sheet")
             return
         }
