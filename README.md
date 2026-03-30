@@ -7,28 +7,23 @@ A multi-platform Apple music search app built as a code challenge for Moises.ai.
 
 ## Getting Started
 
-**Prerequisites:** Homebrew, rbenv
+**Prerequisites:** [Homebrew](https://brew.sh)
 
 ```bash
-just bootstrap   # installs deps, generates project, opens Xcode
+brew install just       # one-time: install the task runner
+just bootstrap          # installs everything else, generates project, opens Xcode
 ```
 
-Or manually:
-```bash
-bundle install
-mint bootstrap
-mint run xcodegen generate
-open Miryam.xcodeproj
-```
+`bootstrap` auto-detects and installs missing tools (rbenv, Mint, Ruby, SwiftLint, SwiftFormat, XcodeGen) — just confirm with Enter.
 
 ## Platforms
 
-iPhone · iPad · Apple Watch · CarPlay · visionOS
+iPhone · iPad · Apple Watch · Apple TV · CarPlay · visionOS
 
 ## Architecture
 
 ```
-App Targets (iOS · iPadOS · watchOS · CarPlay · visionOS)
+App Targets (iOS · iPadOS · watchOS · tvOS · CarPlay · visionOS)
          |
     MiryamUI          — Design system, SwiftUI views, Router
          |
@@ -53,6 +48,7 @@ MiryamNetworking  MiryamPersistence  MiryamPlayer
 - **Dark & Light Mode** — Semantic color tokens adapt automatically
 - **iPad Responsive** — Adaptive artwork sizing and spacing for larger displays
 - **Apple Watch** — Now playing controls on watchOS
+- **Apple TV** — Full-screen experience with focus-based navigation
 - **CarPlay** — Now playing template for in-car audio control
 - **Accessibility** — WCAG AA contrast, VoiceOver labels, 44pt tap targets, Dynamic Type
 
@@ -85,6 +81,7 @@ Unit tests, snapshot tests, and UI tests across all packages:
 | Snapshot — iPhone | 28 | All screens x dark/light x states |
 | Snapshot — iPad | 14 | All screens x dark/light + landscape |
 | Snapshot — Watch | 4 | Now playing x dark/light x states |
+| Snapshot — TV | 13 | All screens x dark/light x states |
 
 ```bash
 just test    # run all tests
@@ -97,6 +94,7 @@ just lint    # SwiftLint + SwiftFormat check
 Miryam/
   Miryam/                    # iOS app target (MiryamApp.swift, CarPlay, Assets)
   MiryamWatch/               # watchOS app target
+  MiryamTV/                  # tvOS app target
   MiryamVision/              # visionOS app target
   MiryamTests/               # Integration tests
   MiryamUITests/             # XCUITests
