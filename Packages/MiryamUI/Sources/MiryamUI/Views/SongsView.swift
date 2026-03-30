@@ -24,6 +24,7 @@ public struct SongsView: View {
                 songsList
             }
         }
+        .accessibilityIdentifier(AccessibilityID.songsView.rawValue)
         .background(Color._miryamBackground)
         .navigationTitle("Songs")
         .searchable(text: $viewModel.searchQuery, prompt: "Search")
@@ -97,6 +98,7 @@ public struct SongsView: View {
                 .font(.miryam.display)
                 .foregroundStyle(Color._miryamLabel)
         }
+        .accessibilityIdentifier(AccessibilityID.recentlyPlayedSection.rawValue)
     }
 
     private var loadingView: some View {
@@ -142,6 +144,7 @@ public struct SongsView: View {
                 Text("Search for songs")
                     .font(.miryam.bodyLarge)
                     .foregroundStyle(Color._miryamLabelSecondary)
+                    .accessibilityIdentifier(AccessibilityID.emptyStateText.rawValue)
                 Spacer()
             }
         }
@@ -167,5 +170,6 @@ public struct SongsView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity)
+        .accessibilityIdentifier(AccessibilityID.noResultsView.rawValue)
     }
 }
