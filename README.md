@@ -54,34 +54,38 @@ MiryamNetworking  MiryamPersistence  MiryamPlayer
 
 ## Tech Stack
 
-| Category | Technology |
-|---|---|
-| Language | Swift 6 (strict concurrency) |
-| UI | SwiftUI |
-| Architecture | MVVM (enforced by SPM package graph) |
-| State | `@Observable`, `@MainActor` ViewModels, actors |
-| Persistence | SwiftData |
-| Networking | URLSession, iTunes Search API |
-| Audio | AVFoundation |
-| Navigation | NavigationStack + typed `AppRoute` enum |
-| Font | DM Sans (Google Fonts) |
-| Snapshot Testing | swift-snapshot-testing (Point-Free) |
-| Testing | Swift Testing, XCUITest |
-| Tooling | XcodeGen, Mint, Fastlane, Just |
-| CI/CD | GitHub Actions |
+
+| Category         | Technology                                     |
+| ---------------- | ---------------------------------------------- |
+| Language         | Swift 6 (strict concurrency)                   |
+| UI               | SwiftUI                                        |
+| Architecture     | MVVM (enforced by SPM package graph)           |
+| State            | `@Observable`, `@MainActor` ViewModels, actors |
+| Persistence      | SwiftData                                      |
+| Networking       | URLSession, iTunes Search API                  |
+| Audio            | AVFoundation                                   |
+| Navigation       | NavigationStack + typed `AppRoute` enum        |
+| Font             | DM Sans (Google Fonts)                         |
+| Snapshot Testing | swift-snapshot-testing (Point-Free)            |
+| Testing          | Swift Testing, XCUITest                        |
+| Tooling          | XcodeGen, Mint, Fastlane, Just                 |
+| CI/CD            | GitHub Actions                                 |
+
 
 ## Testing
 
 Unit tests, snapshot tests, and UI tests across all packages:
 
-| Suite | Tests | Description |
-|---|---|---|
-| MiryamTests | 5 | Domain model integration tests |
-| MiryamUITests | 8 | XCUITest search, playback, navigation flows |
-| Snapshot — iPhone | 28 | All screens x dark/light x states |
-| Snapshot — iPad | 14 | All screens x dark/light + landscape |
-| Snapshot — Watch | 4 | Now playing x dark/light x states |
-| Snapshot — TV | 13 | All screens x dark/light x states |
+
+| Suite             | Tests | Description                                 |
+| ----------------- | ----- | ------------------------------------------- |
+| MiryamTests       | 5     | Domain model integration tests              |
+| MiryamUITests     | 8     | XCUITest search, playback, navigation flows |
+| Snapshot — iPhone | 28    | All screens x dark/light x states           |
+| Snapshot — iPad   | 14    | All screens x dark/light + landscape        |
+| Snapshot — Watch  | 4     | Now playing x dark/light x states           |
+| Snapshot — TV     | 13    | All screens x dark/light x states           |
+
 
 ```bash
 just test    # run all tests
