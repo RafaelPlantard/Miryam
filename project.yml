@@ -80,7 +80,7 @@ targets:
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
         PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam
-        DEVELOPMENT_TEAM: __REDACTED_TEAM_ID__
+        DEVELOPMENT_TEAM: ${DEVELOPMENT_TEAM}
       configs:
         Debug:
           CODE_SIGN_STYLE: Automatic
@@ -147,7 +147,7 @@ targets:
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
         PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.watchkitapp
-        DEVELOPMENT_TEAM: __REDACTED_TEAM_ID__
+        DEVELOPMENT_TEAM: ${DEVELOPMENT_TEAM}
         GENERATE_INFOPLIST_FILE: YES
       configs:
         Debug:
@@ -179,7 +179,7 @@ targets:
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
         PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.vision
-        DEVELOPMENT_TEAM: __REDACTED_TEAM_ID__
+        DEVELOPMENT_TEAM: ${DEVELOPMENT_TEAM}
         CODE_SIGN_STYLE: Automatic
         GENERATE_INFOPLIST_FILE: YES
 
@@ -207,7 +207,7 @@ targets:
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
         PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.tv
-        DEVELOPMENT_TEAM: __REDACTED_TEAM_ID__
+        DEVELOPMENT_TEAM: ${DEVELOPMENT_TEAM}
         CODE_SIGN_STYLE: Automatic
         GENERATE_INFOPLIST_FILE: YES
 

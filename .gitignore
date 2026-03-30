@@ -54,6 +54,9 @@ fastlane/.env
 *.cer
 *.mobileprovision
 
+# Device registrations (contains UDIDs)
+fastlane/devices.txt
+
 # Superpowers brainstorm artifacts
 .superpowers/
 docs/superpowers/

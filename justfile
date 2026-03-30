@@ -17,6 +17,8 @@ bootstrap: _ensure-deps
 	mint bootstrap
 	@echo "→ Generating Xcode project..."
 	mint run xcodegen generate
+	@echo "→ Installing git hooks..."
+	just install-hooks
 	@echo "→ Opening Xcode..."
 	open Miryam.xcodeproj
 	@echo ""
@@ -59,6 +61,20 @@ snapshot-update:
 		-testArguments "-recordSnapshots YES" \
 		| mint run xcbeautify
 
+# ── Security ───────────────────────────────────────────────────────────────────
+
+# Scan repo for secrets
+scan-secrets:
+	gitleaks detect --source . --verbose
+
+# Install git hooks (pre-commit secret scan)
+install-hooks:
+	@echo "→ Installing pre-commit hook..."
+	@echo '#!/usr/bin/env bash' > .git/hooks/pre-commit
+	@echo 'gitleaks git --pre-commit --staged --verbose' >> .git/hooks/pre-commit
+	@chmod +x .git/hooks/pre-commit
+	@echo "✅ Pre-commit hook installed."
+
 # ── CI/CD ──────────────────────────────────────────────────────────────────────
 
 # Upload to TestFlight
@@ -84,8 +100,9 @@ _ensure-deps:
 	fi
 
 	# ── Detect missing tools ──
-	command -v rbenv  &> /dev/null || _need_install+=(rbenv)
-	command -v mint   &> /dev/null || _need_install+=(mint)
+	command -v rbenv   &> /dev/null || _need_install+=(rbenv)
+	command -v mint    &> /dev/null || _need_install+=(mint)
+	command -v gitleaks &> /dev/null || _need_install+=(gitleaks)
 
 	if [ ${#_need_install[@]} -gt 0 ]; then
 		echo "📦 Missing tools: ${_need_install[*]}"
