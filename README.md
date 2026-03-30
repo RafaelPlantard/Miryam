@@ -21,10 +21,14 @@ mint run xcodegen generate
 open Miryam.xcodeproj
 ```
 
+## Platforms
+
+iPhone · iPad · Apple Watch · CarPlay · visionOS
+
 ## Architecture
 
 ```
-App Target (iOS · iPadOS)
+App Targets (iOS · iPadOS · watchOS · CarPlay · visionOS)
          |
     MiryamUI          — Design system, SwiftUI views, Router
          |
@@ -48,6 +52,8 @@ MiryamNetworking  MiryamPersistence  MiryamPlayer
 - **Offline-First** — Search results cached; falls back to cache on network errors
 - **Dark & Light Mode** — Semantic color tokens adapt automatically
 - **iPad Responsive** — Adaptive artwork sizing and spacing for larger displays
+- **Apple Watch** — Now playing controls on watchOS
+- **CarPlay** — Now playing template for in-car audio control
 - **Accessibility** — WCAG AA contrast, VoiceOver labels, 44pt tap targets, Dynamic Type
 
 ## Tech Stack
@@ -63,22 +69,22 @@ MiryamNetworking  MiryamPersistence  MiryamPlayer
 | Audio | AVFoundation |
 | Navigation | NavigationStack + typed `AppRoute` enum |
 | Font | DM Sans (Google Fonts) |
+| Snapshot Testing | swift-snapshot-testing (Point-Free) |
 | Testing | Swift Testing, XCUITest |
 | Tooling | XcodeGen, Mint, Fastlane, Just |
 | CI/CD | GitHub Actions |
 
 ## Testing
 
-143 unit tests + 8 UI tests across all packages:
+Unit tests, snapshot tests, and UI tests across all packages:
 
-| Package | Tests |
-|---|---|
-| MiryamCore | 61 |
-| MiryamNetworking | 18 |
-| MiryamPersistence | 24 |
-| MiryamFeatures | 40 |
-| MiryamTests (integration) | 5 |
-| MiryamUITests (XCUITest) | 8 |
+| Suite | Tests | Description |
+|---|---|---|
+| MiryamTests | 5 | Domain model integration tests |
+| MiryamUITests | 8 | XCUITest search, playback, navigation flows |
+| Snapshot — iPhone | 28 | All screens x dark/light x states |
+| Snapshot — iPad | 14 | All screens x dark/light + landscape |
+| Snapshot — Watch | 4 | Now playing x dark/light x states |
 
 ```bash
 just test    # run all tests
@@ -89,7 +95,9 @@ just lint    # SwiftLint + SwiftFormat check
 
 ```
 Miryam/
-  Miryam/                    # App target (MiryamApp.swift, Assets, Entitlements)
+  Miryam/                    # iOS app target (MiryamApp.swift, CarPlay, Assets)
+  MiryamWatch/               # watchOS app target
+  MiryamVision/              # visionOS app target
   MiryamTests/               # Integration tests
   MiryamUITests/             # XCUITests
   Packages/
@@ -98,7 +106,7 @@ Miryam/
     MiryamPersistence/       # SwiftData cache, offline-first
     MiryamPlayer/            # AVFoundation audio player
     MiryamFeatures/          # ViewModels, Router, DI container
-    MiryamUI/                # Design system, views, components
+    MiryamUI/                # Design system, views, components, snapshot tests
   project.yml                # XcodeGen project definition
   justfile                   # Task runner
   fastlane/                  # Automation lanes
