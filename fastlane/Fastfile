@@ -240,6 +240,11 @@ platform :ios do
     end
   end
 
+  # TODO(ci): Automate internal tester setup once fastlane bug #29556 is fixed.
+  # Creating internal beta groups via API fails because fastlane sends
+  # publicLinkLimitEnabled for internal groups, which Apple's API rejects.
+  # Manual setup: App Store Connect → TestFlight → Internal Testing → + → Add testers
+
   desc "Register devices from devices.txt"
   lane :sync_devices do
     register_devices(
