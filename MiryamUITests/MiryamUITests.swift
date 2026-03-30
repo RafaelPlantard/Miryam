@@ -1,20 +1,20 @@
 import XCTest
 
+@MainActor
 final class MiryamUITests: XCTestCase {
     private var app: XCUIApplication!
 
-    override func setUpWithError() throws {
+    override func setUp() async throws {
         continueAfterFailure = false
         app = XCUIApplication()
     }
 
-    override func tearDownWithError() throws {
+    override func tearDown() async throws {
         app = nil
     }
 
     // MARK: - Splash Screen
 
-    @MainActor
     func testSplashScreenAppearsOnLaunch() throws {
         app.launch()
         // Verify the Songs view doesn't appear immediately — splash is blocking.
@@ -22,7 +22,6 @@ final class MiryamUITests: XCTestCase {
         XCTAssertFalse(songsNavBar.exists, "Songs should not appear while splash is showing")
     }
 
-    @MainActor
     func testSplashScreenTransitionsToSongsView() throws {
         app.launch()
         let songsNavTitle = app.navigationBars["Songs"]
@@ -31,7 +30,6 @@ final class MiryamUITests: XCTestCase {
 
     // MARK: - Search Flow
 
-    @MainActor
     func testSearchFieldExists() throws {
         app.launch()
         let songsNavBar = app.navigationBars["Songs"]
@@ -41,7 +39,6 @@ final class MiryamUITests: XCTestCase {
         XCTAssertTrue(searchField.waitForExistence(timeout: 3))
     }
 
-    @MainActor
     func testSearchForSongsShowsResults() throws {
         app.launch()
         let songsNavBar = app.navigationBars["Songs"]
@@ -56,7 +53,6 @@ final class MiryamUITests: XCTestCase {
         XCTAssertTrue(firstCell.waitForExistence(timeout: 10))
     }
 
-    @MainActor
     func testTapSongNavigatesToPlayer() throws {
         app.launch()
         navigateToPlayer()
@@ -67,7 +63,6 @@ final class MiryamUITests: XCTestCase {
 
     // MARK: - Player Controls
 
-    @MainActor
     func testPlayerShowsTimelineControls() throws {
         app.launch()
         navigateToPlayer()
@@ -81,7 +76,6 @@ final class MiryamUITests: XCTestCase {
         XCTAssertTrue(skipBackward.waitForExistence(timeout: 3))
     }
 
-    @MainActor
     func testPlayerTogglePlayPause() throws {
         app.launch()
         navigateToPlayer()
@@ -94,7 +88,6 @@ final class MiryamUITests: XCTestCase {
 
     // MARK: - Navigation
 
-    @MainActor
     func testBackNavigationFromPlayer() throws {
         app.launch()
         navigateToPlayer()
@@ -114,7 +107,6 @@ final class MiryamUITests: XCTestCase {
 
     // MARK: - Launch Performance
 
-    @MainActor
     func testLaunchPerformance() throws {
         measure(metrics: [XCTApplicationLaunchMetric()]) {
             XCUIApplication().launch()
@@ -123,7 +115,6 @@ final class MiryamUITests: XCTestCase {
 
     // MARK: - Helpers
 
-    @MainActor
     private func navigateToPlayer() {
         let songsNavBar = app.navigationBars["Songs"]
         guard songsNavBar.waitForExistence(timeout: 5) else {
