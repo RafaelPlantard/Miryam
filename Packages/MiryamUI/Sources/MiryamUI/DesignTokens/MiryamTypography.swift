@@ -12,5 +12,8 @@ public extension Font {
 
         /// Body Small 14 — Medium 500, size 14, line height 1.2
         public static let bodySmall = Font.custom("DMSans-Medium", size: 14)
+
+        /// Caption 12 — Medium 500, size 12, line height 1.4
+        public static let caption = Font.custom("DMSans-Medium", size: 12)
     }
 }

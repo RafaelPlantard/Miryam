@@ -14,92 +14,47 @@ public struct MoreOptionsView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
+            // Grabber
+            RoundedRectangle(cornerRadius: 2.5)
+                .fill(Color._miryamLabelTertiary)
+                .frame(width: 56, height: 5)
+                .padding(.top, 5)
+
             // Song info header
             songHeader
 
-            Divider()
-                .background(Color._miryamSurfaceSecondary)
-
             // Actions
-            VStack(spacing: 0) {
-                actionButton(
-                    icon: "music.note.list",
-                    title: "View Album"
-                ) {
-                    router.dismissSheet()
-                    onViewAlbum()
-                }
-
-                Divider()
-                    .background(Color._miryamSurfaceSecondary)
-                    .padding(.leading, 56)
-
-                actionButton(
-                    icon: "square.and.arrow.up",
-                    title: "Share"
-                ) {
-                    router.dismissSheet()
-                }
+            actionButton(
+                icon: "music.note.list",
+                title: "View album"
+            ) {
+                router.dismissSheet()
+                onViewAlbum()
             }
 
             Spacer()
-
-            Button {
-                router.dismissSheet()
-            } label: {
-                Text("Cancel")
-                    .font(.miryam.bodyLarge)
-                    .foregroundStyle(Color._miryamAccent)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-            }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 8)
         }
-        .background(.ultraThinMaterial)
+        .background(Color._miryamSurface)
         .presentationDetents([.medium])
-        .presentationDragIndicator(.visible)
+        .presentationCornerRadius(16)
     }
 
     // MARK: - Song Header
 
     private var songHeader: some View {
-        HStack(spacing: 12) {
-            AsyncImage(url: song.artworkURL(size: 112)) { phase in
-                switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                case .failure, .empty:
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color._miryamSurfaceSecondary)
-                        .overlay(
-                            Image(systemName: "music.note")
-                                .foregroundStyle(Color._miryamLabelSecondary)
-                        )
-                @unknown default:
-                    Color._miryamSurfaceSecondary
-                }
-            }
-            .frame(width: 56, height: 56)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+        VStack(spacing: 4) {
+            Text(song.name)
+                .font(.miryam.display)
+                .foregroundStyle(Color._miryamLabel)
+                .lineLimit(1)
 
-            VStack(alignment: .leading, spacing: 2) {
-                Text(song.name)
-                    .font(.miryam.bodyLarge)
-                    .foregroundStyle(Color._miryamLabel)
-                    .lineLimit(1)
-
-                Text(song.artistName)
-                    .font(.miryam.bodySmall)
-                    .foregroundStyle(Color._miryamLabelSecondary)
-                    .lineLimit(1)
-            }
-
-            Spacer()
+            Text(song.artistName)
+                .font(.miryam.bodySmall)
+                .foregroundStyle(Color._miryamLabel)
+                .lineLimit(1)
         }
-        .padding(20)
+        .frame(height: 67)
+        .frame(maxWidth: .infinity)
     }
 
     // MARK: - Action Button
@@ -112,7 +67,7 @@ public struct MoreOptionsView: View {
         Button(action: action) {
             HStack(spacing: 16) {
                 Image(systemName: icon)
-                    .font(.title3)
+                    .font(.body)
                     .foregroundStyle(Color._miryamIconPrimary)
                     .frame(width: 24)
 
@@ -121,15 +76,11 @@ public struct MoreOptionsView: View {
                     .foregroundStyle(Color._miryamLabel)
 
                 Spacer()
-
-                Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundStyle(Color._miryamLabelTertiary)
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 14)
+            .padding(.horizontal, 24)
+            .padding(.vertical, 16)
             .contentShape(Rectangle())
         }
-        .frame(minHeight: 44)
+        .frame(minHeight: 56)
     }
 }
