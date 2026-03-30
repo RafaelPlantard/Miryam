@@ -73,14 +73,10 @@ targets:
     dependencies:
       - target: Miryam
       - package: MiryamCore
-      - package: MiryamNetworking
-      - package: MiryamPersistence
-      - package: MiryamPlayer
-      - package: MiryamFeatures
-      - package: MiryamUI
     settings:
       base:
         SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.tests
 
   MiryamUITests:
@@ -94,6 +90,7 @@ targets:
     settings:
       base:
         SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.uitests
 
 schemes:
