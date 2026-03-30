@@ -48,13 +48,15 @@ jobs:
 
       - name: Run tests
         run: |
+          set -o pipefail
           xcodebuild test \
             -project Miryam.xcodeproj \
             -scheme Miryam \
             -destination 'platform=iOS Simulator,OS=latest,name=iPhone 16 Pro' \
+            -skip-testing:MiryamSnapshotTests \
             -resultBundlePath TestResults.xcresult \
             -enableCodeCoverage YES \
-            | xcpretty
+            2>&1 | mint run xcbeautify
 
       # TODO(ci): Raise threshold to 80% after Wave 3 adds unit tests
       # for MiryamNetworking, MiryamPersistence, and MiryamPlayer
