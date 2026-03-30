@@ -47,6 +47,7 @@ vendor/
 
 # Env / secrets — never commit
 .env
+fastlane/.env
 *.p8
 *.p12
 *.cer
