@@ -194,6 +194,7 @@ public struct PlayerView: View {
                     .foregroundStyle(Color._miryamIconPrimary)
             }
             .frame(minWidth: 44, minHeight: 44)
+            .accessibilityIdentifier("Skip Backward")
             .accessibilityLabel("Skip backward 15 seconds")
 
             Button {
@@ -204,6 +205,7 @@ public struct PlayerView: View {
                     .foregroundStyle(Color._miryamAccent)
             }
             .frame(minWidth: 44, minHeight: 44)
+            .accessibilityIdentifier("Play/Pause")
             .accessibilityLabel(viewModel.isPlaying ? "Pause" : "Play")
             .accessibilityValue(viewModel.isPlaying ? "Playing" : "Paused")
 
@@ -215,6 +217,7 @@ public struct PlayerView: View {
                     .foregroundStyle(Color._miryamIconPrimary)
             }
             .frame(minWidth: 44, minHeight: 44)
+            .accessibilityIdentifier("Skip Forward")
             .accessibilityLabel("Skip forward 15 seconds")
         }
     }
