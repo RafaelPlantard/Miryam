@@ -2,7 +2,7 @@ import Foundation
 import MiryamCore
 import os
 
-private let logger = Logger(subsystem: "io.swift-yah.miryam", category: "Search")
+private let logger = Log.search
 
 /// ViewModel for the Songs (Home) screen.
 @Observable

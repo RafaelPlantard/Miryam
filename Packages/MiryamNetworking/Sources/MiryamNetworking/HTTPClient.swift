@@ -2,7 +2,7 @@ import Foundation
 import MiryamCore
 import os
 
-private let logger = Logger(subsystem: "io.swift-yah.miryam", category: "Network")
+private let logger = Log.network
 
 /// Actor-based HTTP client with retry, timeout, and rate-limit handling.
 public actor HTTPClient {
