@@ -88,12 +88,12 @@ public struct PlayerView: View {
     private var songInfoView: some View {
         VStack(spacing: 4) {
             Text(viewModel.currentSong?.name ?? "Not Playing")
-                .font(.miryam.display)
+                .font(.miryam.bodyLarge)
                 .foregroundStyle(Color._miryamLabel)
                 .lineLimit(1)
 
             Text(viewModel.currentSong?.artistName ?? "")
-                .font(.miryam.bodyLarge)
+                .font(.miryam.bodySmall)
                 .foregroundStyle(Color._miryamLabelSecondary)
                 .lineLimit(1)
 
