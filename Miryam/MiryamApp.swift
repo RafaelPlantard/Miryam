@@ -27,7 +27,7 @@ struct MiryamApp: App {
                 } else if let containerError {
                     ContentUnavailableView(
                         "Unable to Load",
-                        systemImage: "exclamation.triangle",
+                        systemImage: "exclamationmark.triangle",
                         description: Text(containerError.localizedDescription)
                     )
                 } else {

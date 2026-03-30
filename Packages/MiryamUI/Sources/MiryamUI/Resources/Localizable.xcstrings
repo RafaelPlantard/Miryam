@@ -1,6 +1,77 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "·" : {
+
+    },
+    "%@ by %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ by %2$@"
+          }
+        }
+      }
+    },
+    "%lld" : {
+
+    },
+    "%lld tracks" : {
+      "comment" : "Track count in album header",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld tracks"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld faixas"
+          }
+        }
+      }
+    },
+    "%lld%%" : {
+
+    },
+    "Double tap to play" : {
+      "comment" : "Accessibility hint for song rows",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Double tap to play"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toque duas vezes para reproduzir"
+          }
+        }
+      }
+    },
+    "Loading..." : {
+      "comment" : "Loading state message",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading..."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carregando..."
+          }
+        }
+      }
+    },
     "Miryam" : {
       "comment" : "App name — accessibility label on splash screen",
       "localizations" : {
@@ -31,91 +102,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mais opções para %@"
-          }
-        }
-      }
-    },
-    "Songs" : {
-      "comment" : "Navigation title for the songs list screen",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Songs"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Músicas"
-          }
-        }
-      }
-    },
-    "Search" : {
-      "comment" : "Search field placeholder",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Buscar"
-          }
-        }
-      }
-    },
-    "Recently Played" : {
-      "comment" : "Section header for recently played songs",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recently Played"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tocadas Recentemente"
-          }
-        }
-      }
-    },
-    "Try Again" : {
-      "comment" : "Retry button label for error states",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Try Again"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tentar Novamente"
-          }
-        }
-      }
-    },
-    "Search for songs" : {
-      "comment" : "Empty state message when no search has been performed",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search for songs"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Busque por músicas"
           }
         }
       }
@@ -154,57 +140,6 @@
         }
       }
     },
-    "Song progress" : {
-      "comment" : "Accessibility label for the song timeline slider",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Song progress"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Progresso da música"
-          }
-        }
-      }
-    },
-    "Skip backward 15 seconds" : {
-      "comment" : "Accessibility label for skip backward button",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skip backward 15 seconds"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Retroceder 15 segundos"
-          }
-        }
-      }
-    },
-    "Skip forward 15 seconds" : {
-      "comment" : "Accessibility label for skip forward button",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Skip forward 15 seconds"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Avançar 15 segundos"
-          }
-        }
-      }
-    },
     "Pause" : {
       "comment" : "Accessibility label for pause button",
       "localizations" : {
@@ -218,6 +153,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pausar"
+          }
+        }
+      }
+    },
+    "Paused" : {
+      "comment" : "Accessibility value when music is paused",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paused"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausado"
           }
         }
       }
@@ -256,19 +208,138 @@
         }
       }
     },
-    "Paused" : {
-      "comment" : "Accessibility value when music is paused",
+    "Recently Played" : {
+      "comment" : "Section header for recently played songs",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Paused"
+            "value" : "Recently Played"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pausado"
+            "value" : "Tocadas Recentemente"
+          }
+        }
+      }
+    },
+    "Search" : {
+      "comment" : "Search field placeholder",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar"
+          }
+        }
+      }
+    },
+    "Search for songs" : {
+      "comment" : "Empty state message when no search has been performed",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search for songs"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Busque por músicas"
+          }
+        }
+      }
+    },
+    "Skip backward 15 seconds" : {
+      "comment" : "Accessibility label for skip backward button",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip backward 15 seconds"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retroceder 15 segundos"
+          }
+        }
+      }
+    },
+    "Skip forward 15 seconds" : {
+      "comment" : "Accessibility label for skip forward button",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip forward 15 seconds"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avançar 15 segundos"
+          }
+        }
+      }
+    },
+    "Song progress" : {
+      "comment" : "Accessibility label for the song timeline slider",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Song progress"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progresso da música"
+          }
+        }
+      }
+    },
+    "Songs" : {
+      "comment" : "Navigation title for the songs list screen",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Songs"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Músicas"
+          }
+        }
+      }
+    },
+    "Try Again" : {
+      "comment" : "Retry button label for error states",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try Again"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tentar Novamente"
           }
         }
       }
@@ -290,40 +361,6 @@
         }
       }
     },
-    "Double tap to play" : {
-      "comment" : "Accessibility hint for song rows",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Double tap to play"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Toque duas vezes para reproduzir"
-          }
-        }
-      }
-    },
-    "%lld tracks" : {
-      "comment" : "Track count in album header",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld tracks"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld faixas"
-          }
-        }
-      }
-    },
     "View album %@" : {
       "comment" : "Accessibility label for album navigation button in player",
       "localizations" : {
@@ -337,23 +374,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ver álbum %@"
-          }
-        }
-      }
-    },
-    "Loading..." : {
-      "comment" : "Loading state message",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Loading..."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Carregando..."
           }
         }
       }
