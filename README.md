@@ -35,18 +35,21 @@ iPhone · iPad · Apple Watch · Apple TV · CarPlay · visionOS
 
 ## Architecture
 
-```
-App Targets (iOS · iPadOS · watchOS · tvOS · CarPlay · visionOS)
-         |
-    MiryamUI          — Design system, SwiftUI views, Router
-         |
-  MiryamFeatures      — @Observable ViewModels, DI container
-         |
-MiryamNetworking  MiryamPersistence  MiryamPlayer
-(iTunes API)      (SwiftData cache)  (AVFoundation)
-         |               |                |
-              MiryamCore
-   (Domain models, protocols, AppError)
+```mermaid
+graph TD
+    iOS[iOS] --> UI[MiryamUI]
+    iPadOS[iPadOS] --> UI
+    watchOS[watchOS] --> UI
+    tvOS[tvOS] --> UI
+    CarPlay[CarPlay] --> UI
+    visionOS[visionOS] --> UI
+    UI --> Features[MiryamFeatures]
+    Features --> Networking[MiryamNetworking]
+    Features --> Persistence[MiryamPersistence]
+    Features --> Player[MiryamPlayer]
+    Networking --> Core[MiryamCore]
+    Persistence --> Core
+    Player --> Core
 ```
 
 **Dependency rule:** ViewModels depend only on protocols in MiryamCore. Concrete implementations are injected via `DependencyContainer`. No ViewModel imports Networking or Persistence directly.
