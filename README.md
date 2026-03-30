@@ -1,5 +1,8 @@
 # Miryam
 
+[![CI](https://github.com/RafaelPlantard/Miryam/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/RafaelPlantard/Miryam/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/RafaelPlantard/Miryam/branch/main/graph/badge.svg)](https://codecov.io/gh/RafaelPlantard/Miryam)
+
 > Named after Miriam (Miryam) — Moses' sister, prophet, and musician who played the timbrel and led song after the crossing of the Red Sea (Exodus 15:20-21).
 > The challenge is for [Moises.ai](https://moises.ai); Miryam is who stands next to Moses and makes music.
 
@@ -19,6 +22,16 @@ just bootstrap          # installs everything else, generates project, opens Xco
 ## Platforms
 
 iPhone · iPad · Apple Watch · Apple TV · CarPlay · visionOS
+
+## Compatibility
+
+| Platform | Minimum Version |
+| -------- | --------------- |
+| iOS      | 17.0            |
+| watchOS  | 10.0            |
+| tvOS     | 17.0            |
+| visionOS | 1.0             |
+| macOS    | 14.0            |
 
 ## Architecture
 
@@ -58,6 +71,8 @@ MiryamNetworking  MiryamPersistence  MiryamPlayer
 | Category         | Technology                                     |
 | ---------------- | ---------------------------------------------- |
 | Language         | Swift 6 (strict concurrency)                   |
+| IDE              | Xcode 26.4                                     |
+| Apple SDKs       | 26.4 (iOS, watchOS, tvOS, visionOS, macOS)     |
 | UI               | SwiftUI                                        |
 | Architecture     | MVVM (enforced by SPM package graph)           |
 | State            | `@Observable`, `@MainActor` ViewModels, actors |
