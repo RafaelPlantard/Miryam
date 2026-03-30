@@ -13,9 +13,9 @@ public enum SFSymbol: String, Sendable {
     case magnifyingGlass = "magnifyingglass"
 }
 
-extension Image {
+public extension Image {
     /// Create an Image from a type-safe SFSymbol.
-    public init(symbol: SFSymbol) {
+    init(symbol: SFSymbol) {
         self.init(systemName: symbol.rawValue)
     }
 }
