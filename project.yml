@@ -1,6 +1,6 @@
 name: Miryam
 options:
-  bundleIdPrefix: com.rafaelplantard
+  bundleIdPrefix: io.swift-yah
   deploymentTarget:
     iOS: "17.0"
   xcodeVersion: "16.3"
@@ -55,7 +55,7 @@ targets:
       base:
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
-        PRODUCT_BUNDLE_IDENTIFIER: com.rafaelplantard.miryam
+        PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam
         DEVELOPMENT_TEAM: __REDACTED_TEAM_ID__
         CODE_SIGN_STYLE: Automatic
       configs:
@@ -81,7 +81,7 @@ targets:
     settings:
       base:
         SWIFT_VERSION: "6.0"
-        PRODUCT_BUNDLE_IDENTIFIER: com.rafaelplantard.miryam.tests
+        PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.tests
 
   MiryamUITests:
     type: bundle.ui-testing
@@ -94,7 +94,7 @@ targets:
     settings:
       base:
         SWIFT_VERSION: "6.0"
-        PRODUCT_BUNDLE_IDENTIFIER: com.rafaelplantard.miryam.uitests
+        PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.uitests
 
 schemes:
   Miryam:
