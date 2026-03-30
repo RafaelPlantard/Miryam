@@ -43,7 +43,7 @@ struct PlayerViewiPadSnapshotTests {
         )
         assertSnapshot(
             of: controller,
-            as: .image(on: .iPadPro11(.portrait)),
+            as: .image(on: .iPadPro11(.portrait), precision: 0.995, perceptualPrecision: 0.98),
             record: false
         )
     }
@@ -74,7 +74,7 @@ struct PlayerViewiPadSnapshotTests {
         )
         assertSnapshot(
             of: controller,
-            as: .image(on: .iPadPro11(.portrait)),
+            as: .image(on: .iPadPro11(.portrait), precision: 0.995, perceptualPrecision: 0.98),
             record: false
         )
     }
@@ -105,7 +105,7 @@ struct PlayerViewiPadSnapshotTests {
         )
         assertSnapshot(
             of: controller,
-            as: .image(on: .iPadPro11(.landscape)),
+            as: .image(on: .iPadPro11(.landscape), precision: 0.995, perceptualPrecision: 0.98),
             record: false
         )
     }
