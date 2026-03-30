@@ -5,6 +5,7 @@ let package = Package(
     name: "MiryamCore",
     platforms: [
         .iOS(.v17),
+        .tvOS(.v17),
         .watchOS(.v10),
         .macOS(.v14),
         .visionOS(.v1)
