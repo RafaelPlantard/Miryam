@@ -335,6 +335,26 @@ final class MiryamUITests: XCTestCase {
         XCTAssertTrue(playerView.waitForExistence(timeout: 5), "PlayerView should have accessibility identifier")
     }
 
+    // MARK: - Accessibility Audits
+
+    func testSongsViewAccessibilityAudit() throws {
+        app.launch()
+        waitForSongsView()
+        try app.performAccessibilityAudit()
+    }
+
+    func testPlayerViewAccessibilityAudit() throws {
+        app.launch()
+        navigateToPlayer()
+        try app.performAccessibilityAudit()
+    }
+
+    func testMoreOptionsAccessibilityAudit() throws {
+        app.launch()
+        openMoreOptions()
+        try app.performAccessibilityAudit()
+    }
+
     // MARK: - Launch Performance
 
     func testLaunchPerformance() throws {
