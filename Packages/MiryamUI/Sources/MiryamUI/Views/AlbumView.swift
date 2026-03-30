@@ -5,6 +5,7 @@ import MiryamFeatures
 public struct AlbumView: View {
     @Bindable private var viewModel: AlbumViewModel
     @Environment(Router.self) private var router
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     private let onPlaySong: @MainActor (Song) -> Void
 
     public init(viewModel: AlbumViewModel, onPlaySong: @escaping @MainActor (Song) -> Void) {
@@ -52,6 +53,10 @@ public struct AlbumView: View {
         }
     }
 
+    private var albumArtworkSize: CGFloat {
+        horizontalSizeClass == .compact ? 200 : 280
+    }
+
     private var albumHeader: some View {
         VStack(spacing: 12) {
             AsyncImage(url: viewModel.album.artworkURL(size: 400)) { phase in
@@ -72,7 +77,7 @@ public struct AlbumView: View {
                     Color._miryamSurface
                 }
             }
-            .frame(width: 200, height: 200)
+            .frame(width: albumArtworkSize, height: albumArtworkSize)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .shadow(color: .black.opacity(0.2), radius: 10, y: 5)
 

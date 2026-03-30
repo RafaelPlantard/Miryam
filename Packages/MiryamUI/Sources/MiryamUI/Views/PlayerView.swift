@@ -5,14 +5,23 @@ import MiryamFeatures
 public struct PlayerView: View {
     @Bindable private var viewModel: PlayerViewModel
     @Environment(Router.self) private var router
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @GestureState private var isDragging = false
 
     public init(viewModel: PlayerViewModel) {
         self.viewModel = viewModel
     }
 
+    private var isCompact: Bool {
+        horizontalSizeClass == .compact
+    }
+
+    private var artworkSize: CGFloat {
+        isCompact ? 300 : 400
+    }
+
     public var body: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: isCompact ? 24 : 32) {
             // Artwork
             artworkView
 
@@ -27,9 +36,10 @@ public struct PlayerView: View {
 
             Spacer()
         }
-        .padding(.horizontal, 24)
-        .padding(.top, 32)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, isCompact ? 24 : 48)
+        .padding(.top, isCompact ? 32 : 48)
+        .frame(maxWidth: isCompact ? .infinity : 600, maxHeight: .infinity)
+        .frame(maxWidth: .infinity)
         .background(Color._miryamBackground)
         #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -57,7 +67,7 @@ public struct PlayerView: View {
                 artworkPlaceholder
             }
         }
-        .frame(width: 300, height: 300)
+        .frame(width: artworkSize, height: artworkSize)
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.3), radius: 20, y: 10)
         .accessibilityHidden(true)
