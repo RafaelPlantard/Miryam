@@ -1,0 +1,176 @@
+name: Dependency Submission
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/Package.resolved'
+      - '**/Package.swift'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dependency-submission
+  cancel-in-progress: true
+
+jobs:
+  submit-dependencies:
+    name: Submit SPM Dependencies
+    runs-on: self-hosted
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Build dependency snapshot
+        run: |
+          python3 << 'PYEOF'
+          import json, os, re, sys
+          import glob as globmod
+          from datetime import datetime, timezone
+
+          def find_resolved_files():
+              all_resolved = globmod.glob('**/Package.resolved', recursive=True)
+              return [f for f in all_resolved
+                      if '/.build/' not in f and '/checkouts/' not in f]
+
+          def parse_direct_deps(package_swift_path):
+              try:
+                  with open(package_swift_path) as f:
+                      content = f.read()
+                  urls = re.findall(r'\.package\s*\(\s*url\s*:\s*"([^"]+)"', content)
+                  normalized = set()
+                  for u in urls:
+                      u = u.rstrip('/')
+                      if u.endswith('.git'):
+                          u = u[:-4]
+                      normalized.add(u.lower())
+                  return normalized
+              except FileNotFoundError:
+                  return set()
+
+          def to_purl(location, version):
+              url = location.rstrip('/')
+              if url.endswith('.git'):
+                  url = url[:-4]
+              for prefix in ('https://', 'http://'):
+                  if url.startswith(prefix):
+                      url = url[len(prefix):]
+                      break
+              return f"pkg:swift/{url}@{version}"
+
+          def build_manifest(resolved_path):
+              with open(resolved_path) as f:
+                  data = json.load(f)
+              resolved_dir = os.path.dirname(resolved_path)
+              direct_urls = parse_direct_deps(os.path.join(resolved_dir, 'Package.swift'))
+              manifest_name = os.path.basename(resolved_dir) or 'root'
+              resolved_deps = {}
+              for pin in data.get('pins', []):
+                  if pin.get('kind') == 'localSourceControl':
+                      continue
+                  location = pin.get('location', '')
+                  state = pin.get('state', {})
+                  version = state.get('version', state.get('revision', 'unknown'))
+                  purl = to_purl(location, version)
+                  norm = location.rstrip('/')
+                  if norm.endswith('.git'):
+                      norm = norm[:-4]
+                  norm = norm.lower()
+                  resolved_deps[purl] = {
+                      "package_url": purl,
+                      "relationship": "direct" if norm in direct_urls else "indirect",
+                      "scope": "runtime",
+                      "dependencies": []
+                  }
+              return {"name": manifest_name,
+                      "file": {"source_location": resolved_path},
+                      "resolved": resolved_deps}
+
+          resolved_files = find_resolved_files()
+          if not resolved_files:
+              print("No Package.resolved files found.")
+              sys.exit(0)
+
+          manifests = {}
+          for rf in resolved_files:
+              m = build_manifest(rf)
+              manifests[m["name"]] = m
+
+          if not any(m["resolved"] for m in manifests.values()):
+              print("No external dependencies found.")
+              sys.exit(0)
+
+          sha = os.environ['GITHUB_SHA']
+          ref = os.environ['GITHUB_REF']
+          run_id = os.environ['GITHUB_RUN_ID']
+          repo = os.environ['GITHUB_REPOSITORY']
+          server = os.environ.get('GITHUB_SERVER_URL', 'https://github.com')
+
+          snapshot = {
+              "version": 0,
+              "sha": sha,
+              "ref": ref,
+              "job": {
+                  "correlator": f"spm-dependency-submission-{ref}",
+                  "id": run_id
+              },
+              "detector": {
+                  "name": "spm-dependency-submission",
+                  "version": "1.0.0",
+                  "url": f"{server}/{repo}"
+              },
+              "scanned": datetime.now(timezone.utc).isoformat(),
+              "manifests": manifests
+          }
+
+          with open('dependency-snapshot.json', 'w') as f:
+              json.dump(snapshot, f, indent=2)
+
+          for name, m in manifests.items():
+              direct = sum(1 for d in m['resolved'].values() if d['relationship'] == 'direct')
+              indirect = len(m['resolved']) - direct
+              print(f"  {name}: {direct} direct, {indirect} indirect dependencies")
+          PYEOF
+
+      - name: Submit snapshot to GitHub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [ ! -f dependency-snapshot.json ]; then
+            echo "No snapshot file generated. Skipping submission."
+            exit 0
+          fi
+
+          python3 -c "import json; json.load(open('dependency-snapshot.json'))" || {
+            echo "::error::Generated snapshot is not valid JSON"
+            exit 1
+          }
+
+          echo "Submitting dependency snapshot..."
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -H "Content-Type: application/json" \
+            -d @dependency-snapshot.json \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/dependency-graph/snapshots")
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "API response (HTTP ${HTTP_CODE}):"
+          echo "$BODY"
+
+          if [ "${HTTP_CODE}" -ge 200 ] && [ "${HTTP_CODE}" -lt 300 ]; then
+            SNAPSHOT_ID=$(echo "$BODY" | python3 -c "import sys,json; print(json.load(sys.stdin).get('id','unknown'))" 2>/dev/null || echo "unknown")
+            echo "Dependency snapshot submitted successfully (ID: ${SNAPSHOT_ID})."
+          else
+            echo "::error::Failed to submit dependency snapshot (HTTP ${HTTP_CODE})"
+            exit 1
+          fi
+
+          rm -f dependency-snapshot.json
