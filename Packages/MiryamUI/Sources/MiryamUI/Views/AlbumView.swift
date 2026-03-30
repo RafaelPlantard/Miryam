@@ -90,10 +90,20 @@ public struct AlbumView: View {
                 .font(.miryam.bodyLarge)
                 .foregroundStyle(Color._miryamLabelSecondary)
 
-            if viewModel.album.trackCount > 0 {
-                Text("\(viewModel.album.trackCount) tracks")
-                    .font(.miryam.bodySmall)
-                    .foregroundStyle(Color._miryamLabelTertiary)
+            if viewModel.album.trackCount > 0 || !viewModel.album.genre.isEmpty {
+                HStack(spacing: 8) {
+                    if viewModel.album.trackCount > 0 {
+                        Text("\(viewModel.album.trackCount) tracks")
+                    }
+                    if viewModel.album.trackCount > 0 && !viewModel.album.genre.isEmpty {
+                        Text("·")
+                    }
+                    if !viewModel.album.genre.isEmpty {
+                        Text(viewModel.album.genre)
+                    }
+                }
+                .font(.miryam.bodySmall)
+                .foregroundStyle(Color._miryamLabelTertiary)
             }
         }
         .padding(.top, 16)

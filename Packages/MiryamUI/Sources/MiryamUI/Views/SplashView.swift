@@ -35,7 +35,7 @@ public struct SplashView: View {
 
     private func scheduleTransition() {
         Task {
-            try? await Task.sleep(for: .seconds(2))
+            try? await Task.sleep(for: .seconds(1.5))
             await MainActor.run {
                 onComplete()
             }
