@@ -10,6 +10,7 @@ public final class PlayerViewModel {
     public var playbackState = PlaybackState()
     public var currentSong: Song?
     public var isPlaying = false
+    public var isBuffering = false
     public var error: AppError?
 
     // MARK: - Private
@@ -31,6 +32,7 @@ public final class PlayerViewModel {
     /// Play a song.
     public func play(_ song: Song) async {
         currentSong = song
+        isBuffering = true
         error = nil
 
         do {
@@ -88,14 +90,20 @@ public final class PlayerViewModel {
                 switch state.status {
                 case .playing:
                     isPlaying = true
+                    isBuffering = false
                     error = nil
                 case .paused:
                     isPlaying = false
+                    isBuffering = false
                 case let .failed(appError):
                     isPlaying = false
+                    isBuffering = false
                     error = appError
-                case .idle, .loading:
-                    break
+                case .loading:
+                    isBuffering = true
+                case .idle:
+                    isPlaying = false
+                    isBuffering = false
                 }
             }
         }
