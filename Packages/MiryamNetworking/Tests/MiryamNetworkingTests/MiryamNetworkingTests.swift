@@ -306,16 +306,16 @@ struct ITunesTrackToDomainTests {
 struct ITunesEndpointTests {
 
     @Test("Search URL has correct base URL")
-    func searchURLHasCorrectBaseURL() {
-        let url = ITunesEndpoint.search(query: "test", limit: 25, offset: 0).url
+    func searchURLHasCorrectBaseURL() throws {
+        let url = try ITunesEndpoint.search(query: "test", limit: 25, offset: 0).makeURL()
         #expect(url.scheme == "https")
         #expect(url.host == "itunes.apple.com")
         #expect(url.path == "/search" || url.path() == "/search")
     }
 
     @Test("Search URL contains all required query parameters")
-    func searchURLContainsAllQueryParameters() {
-        let url = ITunesEndpoint.search(query: "taylor swift", limit: 20, offset: 10).url
+    func searchURLContainsAllQueryParameters() throws {
+        let url = try ITunesEndpoint.search(query: "taylor swift", limit: 20, offset: 10).makeURL()
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         let queryItems = components?.queryItems ?? []
 
@@ -336,8 +336,8 @@ struct ITunesEndpointTests {
     }
 
     @Test("Search URL encodes special characters in query")
-    func searchURLEncodesSpecialCharacters() {
-        let url = ITunesEndpoint.search(query: "rock & roll", limit: 10, offset: 0).url
+    func searchURLEncodesSpecialCharacters() throws {
+        let url = try ITunesEndpoint.search(query: "rock & roll", limit: 10, offset: 0).makeURL()
         let urlString = url.absoluteString
 
         // The ampersand in the query value must be percent-encoded so it is
@@ -347,8 +347,8 @@ struct ITunesEndpointTests {
     }
 
     @Test("Search URL encodes unicode characters in query")
-    func searchURLEncodesUnicodeCharacters() {
-        let url = ITunesEndpoint.search(query: "cafe\u{0301}", limit: 5, offset: 0).url
+    func searchURLEncodesUnicodeCharacters() throws {
+        let url = try ITunesEndpoint.search(query: "cafe\u{0301}", limit: 5, offset: 0).makeURL()
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         let term = components?.queryItems?.first(where: { $0.name == "term" })
 
@@ -356,16 +356,16 @@ struct ITunesEndpointTests {
     }
 
     @Test("Lookup URL has correct base URL and path")
-    func lookupURLHasCorrectBaseAndPath() {
-        let url = ITunesEndpoint.lookup(albumId: 999).url
+    func lookupURLHasCorrectBaseAndPath() throws {
+        let url = try ITunesEndpoint.lookup(albumId: 999).makeURL()
         #expect(url.scheme == "https")
         #expect(url.host == "itunes.apple.com")
         #expect(url.path == "/lookup" || url.path() == "/lookup")
     }
 
     @Test("Lookup URL contains correct id and entity parameters")
-    func lookupURLContainsCorrectParameters() {
-        let url = ITunesEndpoint.lookup(albumId: 456).url
+    func lookupURLContainsCorrectParameters() throws {
+        let url = try ITunesEndpoint.lookup(albumId: 456).makeURL()
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         let queryItems = components?.queryItems ?? []
 
@@ -377,10 +377,19 @@ struct ITunesEndpointTests {
     }
 
     @Test("Search and lookup produce distinct paths")
-    func searchAndLookupProduceDistinctPaths() {
-        let searchURL = ITunesEndpoint.search(query: "test", limit: 10, offset: 0).url
-        let lookupURL = ITunesEndpoint.lookup(albumId: 1).url
+    func searchAndLookupProduceDistinctPaths() throws {
+        let searchURL = try ITunesEndpoint.search(query: "test", limit: 10, offset: 0).makeURL()
+        let lookupURL = try ITunesEndpoint.lookup(albumId: 1).makeURL()
 
         #expect(searchURL.path != lookupURL.path)
+    }
+
+    @Test("Search URL handles emoji in query")
+    func searchURLHandlesEmojiInQuery() throws {
+        let url = try ITunesEndpoint.search(query: "🎵 music", limit: 10, offset: 0).makeURL()
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        let term = components?.queryItems?.first(where: { $0.name == "term" })
+
+        #expect(term?.value == "🎵 music")
     }
 }

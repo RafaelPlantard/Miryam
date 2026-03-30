@@ -333,7 +333,8 @@ struct SongsViewModelTests {
         let secondPage = (26...30).map { makeSong(id: $0, name: "Song \($0)") }
         await songRepo.setSearchResult(SearchResult(songs: secondPage, totalCount: 50))
 
-        await viewModel.loadMore()
+        viewModel.loadMore()
+        try? await Task.sleep(for: .milliseconds(500))
 
         #expect(viewModel.songs.count == 30)
         #expect(viewModel.hasMorePages == false) // 5 < 25 limit
@@ -359,7 +360,8 @@ struct SongsViewModelTests {
 
         let countBefore = await songRepo.getSearchCallCount()
 
-        await viewModel.loadMore()
+        viewModel.loadMore()
+        try? await Task.sleep(for: .milliseconds(500))
 
         let countAfter = await songRepo.getSearchCallCount()
         #expect(countAfter == countBefore) // No additional call
@@ -372,7 +374,8 @@ struct SongsViewModelTests {
         let cacheRepo = MockCacheRepository()
         let viewModel = SongsViewModel(songRepository: songRepo, cacheRepository: cacheRepo)
 
-        await viewModel.loadMore()
+        viewModel.loadMore()
+        try? await Task.sleep(for: .milliseconds(500))
 
         let callCount = await songRepo.getSearchCallCount()
         #expect(callCount == 0)
