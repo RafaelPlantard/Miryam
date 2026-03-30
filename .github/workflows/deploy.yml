@@ -44,7 +44,7 @@ jobs:
 
       - name: Generate Xcode project
         env:
-          DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: mint run xcodegen generate
 
       - name: Validate inputs
@@ -75,7 +75,7 @@ jobs:
       - name: Run fastlane
         run: bundle exec fastlane ${{ steps.lane.outputs.lane }}
         env:
-          DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           ITC_TEAM_ID: ${{ secrets.ITC_TEAM_ID }}
