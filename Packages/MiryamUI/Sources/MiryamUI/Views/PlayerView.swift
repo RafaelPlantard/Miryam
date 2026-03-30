@@ -60,6 +60,25 @@ public struct PlayerView: View {
         #if !os(macOS) && !os(tvOS)
             .navigationBarTitleDisplayMode(.inline)
         #endif
+        #if !os(tvOS)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    if let song = viewModel.currentSong {
+                        Button {
+                            router.presentSheet(.moreOptions(song))
+                        } label: {
+                            Image(systemName: "ellipsis")
+                                .font(.body)
+                                .foregroundStyle(Color._miryamIconSecondary)
+                                .frame(width: 36, height: 36)
+                                .contentShape(Rectangle())
+                        }
+                        .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
+                        .accessibilityLabel("More options")
+                    }
+                }
+            }
+        #endif
     }
 
     // MARK: - Artwork
@@ -110,7 +129,7 @@ public struct PlayerView: View {
 
             Text(viewModel.currentSong?.artistName ?? "")
                 .font(.miryam.bodyLarge)
-                .foregroundStyle(.white.opacity(0.7))
+                .foregroundStyle(Color._miryamLabelSecondary)
                 .lineLimit(1)
 
             if let song = viewModel.currentSong {
@@ -145,12 +164,12 @@ public struct PlayerView: View {
                 ZStack(alignment: .leading) {
                     // Track background
                     Capsule()
-                        .fill(.white.opacity(0.25))
+                        .fill(Color._miryamLabelTertiary)
                         .frame(height: 4)
 
                     // Progress fill
                     Capsule()
-                        .fill(.white.opacity(0.6))
+                        .fill(Color._miryamAccent)
                         .frame(
                             width: max(0, geometry.size.width * viewModel.playbackState.progress),
                             height: 4
@@ -159,12 +178,12 @@ public struct PlayerView: View {
                     // Drag handle
                     #if os(tvOS)
                         Circle()
-                            .fill(.white.opacity(0.6))
+                            .fill(Color._miryamAccent)
                             .frame(width: 8, height: 8)
                             .offset(x: max(0, geometry.size.width * viewModel.playbackState.progress - 4))
                     #else
                         Circle()
-                            .fill(.white.opacity(0.6))
+                            .fill(Color._miryamAccent)
                             .frame(width: isDragging ? 16 : 8, height: isDragging ? 16 : 8)
                             .offset(x: max(0, geometry.size.width * viewModel.playbackState.progress - 4))
                             .gesture(
@@ -226,9 +245,9 @@ public struct PlayerView: View {
             } label: {
                 Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
                     .font(.system(size: 28))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color._miryamIconPrimary)
                     .frame(width: 72, height: 72)
-                    .background(.white.opacity(0.2), in: Circle())
+                    .background(Color._miryamSurfaceSecondary, in: Circle())
             }
             .accessibilityIdentifier(AccessibilityID.playPause.rawValue)
             .accessibilityLabel(viewModel.isPlaying ? "Pause" : "Play")
