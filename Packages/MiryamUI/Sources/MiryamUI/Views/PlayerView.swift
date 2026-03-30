@@ -6,9 +6,6 @@ public struct PlayerView: View {
     @Bindable private var viewModel: PlayerViewModel
     @Environment(Router.self) private var router
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    #if !os(tvOS)
-        @GestureState private var isDragging = false
-    #endif
 
     public init(viewModel: PlayerViewModel) {
         self.viewModel = viewModel
@@ -57,28 +54,8 @@ public struct PlayerView: View {
         }
         .accessibilityIdentifier(AccessibilityID.playerView.rawValue)
         .background(Color._miryamBackground)
-        #if !os(macOS) && !os(tvOS)
-            .navigationBarTitleDisplayMode(.inline)
-        #endif
-        #if !os(tvOS)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    if let song = viewModel.currentSong {
-                        Button {
-                            router.presentSheet(.moreOptions(song))
-                        } label: {
-                            Image(systemName: "ellipsis")
-                                .font(.body)
-                                .foregroundStyle(Color._miryamIconSecondary)
-                                .frame(width: 36, height: 36)
-                                .contentShape(Rectangle())
-                        }
-                        .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
-                        .accessibilityLabel("More options")
-                    }
-                }
-            }
-        #endif
+        .inlineNavigationTitle()
+        .playerToolbar(song: viewModel.currentSong, router: router)
     }
 
     // MARK: - Artwork
@@ -176,30 +153,16 @@ public struct PlayerView: View {
                         )
 
                     // Drag handle
-                    #if os(tvOS)
-                        Circle()
-                            .fill(Color._miryamAccent)
-                            .frame(width: 8, height: 8)
-                            .offset(x: max(0, geometry.size.width * viewModel.playbackState.progress - 4))
-                    #else
-                        Circle()
-                            .fill(Color._miryamAccent)
-                            .frame(width: isDragging ? 16 : 8, height: isDragging ? 16 : 8)
-                            .offset(x: max(0, geometry.size.width * viewModel.playbackState.progress - 4))
-                            .gesture(
-                                DragGesture(minimumDistance: 0)
-                                    .updating($isDragging) { _, state, _ in
-                                        state = true
-                                    }
-                                    .onChanged { value in
-                                        let progress = max(0, min(1, value.location.x / geometry.size.width))
-                                        let viewModel = viewModel
-                                        Task { @MainActor in
-                                            await viewModel.seek(to: progress)
-                                        }
-                                    }
-                            )
-                    #endif
+                    TimelineHandle(
+                        progress: viewModel.playbackState.progress,
+                        trackWidth: geometry.size.width,
+                        onSeek: { progress in
+                            let viewModel = viewModel
+                            Task { @MainActor in
+                                await viewModel.seek(to: progress)
+                            }
+                        }
+                    )
                 }
             }
             .frame(height: 16)

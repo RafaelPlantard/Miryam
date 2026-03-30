@@ -67,9 +67,7 @@ public struct SongsView: View {
                         .padding()
                     Spacer()
                 }
-                #if !os(watchOS) && !os(tvOS)
-                .listRowSeparator(.hidden)
-                #endif
+                .hideRowSeparator()
             }
         }
         .listStyle(.plain)
@@ -90,9 +88,7 @@ public struct SongsView: View {
                 .padding(.vertical, 16)
             }
             .listRowInsets(EdgeInsets())
-            #if !os(watchOS) && !os(tvOS)
-                .listRowSeparator(.hidden)
-            #endif
+            .hideRowSeparator()
         } header: {
             Text("Recently Played")
                 .font(.miryam.display)

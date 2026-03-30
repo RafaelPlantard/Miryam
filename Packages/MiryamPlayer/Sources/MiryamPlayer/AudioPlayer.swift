@@ -44,7 +44,7 @@ public actor AudioPlayer: PlayerProtocol {
         currentSong = song
         emitState(.init(status: .loading, currentSong: song))
 
-        #if os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
+        #if canImport(AVFAudio)
             do {
                 try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
                 try AVAudioSession.sharedInstance().setActive(true)
