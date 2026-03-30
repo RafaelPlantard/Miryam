@@ -64,7 +64,7 @@ public struct SongRow: View {
                     Image(systemName: "ellipsis")
                         .font(.body)
                         .foregroundStyle(Color._miryamIconSecondary)
-                        .frame(width: 36, height: 36)
+                        .frame(width: 44, height: 44)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -74,7 +74,7 @@ public struct SongRow: View {
         }
         .padding(.vertical, 8)
         .accessibilityIdentifier(AccessibilityID.songRow(id: song.id))
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .contain)
         .accessibilityLabel("\(song.name) by \(song.artistName)")
         .accessibilityHint("Double tap to play")
     }
