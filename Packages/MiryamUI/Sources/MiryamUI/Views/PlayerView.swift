@@ -17,7 +17,7 @@ public struct PlayerView: View {
     }
 
     private var artworkSize: CGFloat {
-        isCompact ? 300 : 400
+        isCompact ? 264 : 360
     }
 
     public var body: some View {
@@ -82,13 +82,13 @@ public struct PlayerView: View {
             }
         }
         .frame(width: artworkSize, height: artworkSize)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(RoundedRectangle(cornerRadius: 32))
         .shadow(color: .black.opacity(0.3), radius: 20, y: 10)
         .accessibilityHidden(true)
     }
 
     private var artworkPlaceholder: some View {
-        RoundedRectangle(cornerRadius: 16)
+        RoundedRectangle(cornerRadius: 32)
             .fill(Color._miryamSurface)
             .overlay(
                 Image(systemName: "music.note")
@@ -102,13 +102,13 @@ public struct PlayerView: View {
     private var songInfoView: some View {
         VStack(spacing: 4) {
             Text(viewModel.currentSong?.name ?? "Not Playing")
-                .font(.miryam.bodyLarge)
+                .font(.miryam.display32)
                 .foregroundStyle(Color._miryamLabel)
                 .lineLimit(1)
 
             Text(viewModel.currentSong?.artistName ?? "")
-                .font(.miryam.bodySmall)
-                .foregroundStyle(Color._miryamLabelSecondary)
+                .font(.miryam.bodyLarge)
+                .foregroundStyle(.white.opacity(0.7))
                 .lineLimit(1)
 
             if let song = viewModel.currentSong {
@@ -143,12 +143,12 @@ public struct PlayerView: View {
                 ZStack(alignment: .leading) {
                     // Track background
                     Capsule()
-                        .fill(Color._miryamSurfaceSecondary)
+                        .fill(.white.opacity(0.25))
                         .frame(height: 4)
 
                     // Progress fill
                     Capsule()
-                        .fill(Color._miryamAccent)
+                        .fill(.white.opacity(0.6))
                         .frame(
                             width: max(0, geometry.size.width * viewModel.playbackState.progress),
                             height: 4
@@ -156,7 +156,7 @@ public struct PlayerView: View {
 
                     // Drag handle
                     Circle()
-                        .fill(Color._miryamAccent)
+                        .fill(.white.opacity(0.6))
                         .frame(width: isDragging ? 16 : 8, height: isDragging ? 16 : 8)
                         .offset(x: max(0, geometry.size.width * viewModel.playbackState.progress - 4))
                         .gesture(
@@ -204,8 +204,9 @@ public struct PlayerView: View {
                 Task { await viewModel.skipBackward() }
             } label: {
                 Image(systemName: "gobackward.15")
-                    .font(.title)
+                    .font(.system(size: 20))
                     .foregroundStyle(Color._miryamIconPrimary)
+                    .frame(width: 36, height: 36)
             }
             .frame(minWidth: 44, minHeight: 44)
             .accessibilityIdentifier(AccessibilityID.skipBackward.rawValue)
@@ -214,11 +215,12 @@ public struct PlayerView: View {
             Button {
                 Task { await viewModel.togglePlayPause() }
             } label: {
-                Image(systemName: viewModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                    .font(.system(size: 64))
-                    .foregroundStyle(Color._miryamAccent)
+                Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                    .font(.system(size: 28))
+                    .foregroundStyle(.white)
+                    .frame(width: 72, height: 72)
+                    .background(.white.opacity(0.2), in: Circle())
             }
-            .frame(minWidth: 44, minHeight: 44)
             .accessibilityIdentifier(AccessibilityID.playPause.rawValue)
             .accessibilityLabel(viewModel.isPlaying ? "Pause" : "Play")
             .accessibilityValue(viewModel.isPlaying ? "Playing" : "Paused")
@@ -227,8 +229,9 @@ public struct PlayerView: View {
                 Task { await viewModel.skipForward() }
             } label: {
                 Image(systemName: "goforward.15")
-                    .font(.title)
+                    .font(.system(size: 20))
                     .foregroundStyle(Color._miryamIconPrimary)
+                    .frame(width: 36, height: 36)
             }
             .frame(minWidth: 44, minHeight: 44)
             .accessibilityIdentifier(AccessibilityID.skipForward.rawValue)

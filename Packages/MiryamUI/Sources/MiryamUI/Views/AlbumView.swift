@@ -55,7 +55,7 @@ public struct AlbumView: View {
     }
 
     private var albumArtworkSize: CGFloat {
-        horizontalSizeClass == .compact ? 200 : 280
+        horizontalSizeClass == .compact ? 120 : 160
     }
 
     private var albumHeader: some View {
@@ -67,7 +67,7 @@ public struct AlbumView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                 case .failure, .empty:
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: 20)
                         .fill(Color._miryamSurface)
                         .overlay(
                             Image(systemName: "music.note.list")
@@ -79,11 +79,11 @@ public struct AlbumView: View {
                 }
             }
             .frame(width: albumArtworkSize, height: albumArtworkSize)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: 20))
             .shadow(color: .black.opacity(0.2), radius: 10, y: 5)
 
             Text(viewModel.album.name)
-                .font(.miryam.display)
+                .font(.miryam.display20)
                 .foregroundStyle(Color._miryamLabel)
                 .multilineTextAlignment(.center)
 
@@ -117,7 +117,7 @@ public struct AlbumView: View {
 
                 if song.id != viewModel.songs.last?.id {
                     Divider()
-                        .padding(.leading, 52)
+                        .padding(.leading, 76)
                 }
             }
         }
@@ -125,10 +125,25 @@ public struct AlbumView: View {
 
     private func trackRow(_ song: Song) -> some View {
         HStack(spacing: 12) {
-            Text("\(song.trackNumber)")
-                .font(.miryam.bodySmall)
-                .foregroundStyle(Color._miryamLabelSecondary)
-                .frame(width: 24)
+            AsyncImage(url: song.artworkURL(size: 88)) { phase in
+                switch phase {
+                case let .success(image):
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                case .failure, .empty:
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color._miryamSurfaceSecondary)
+                        .overlay(
+                            Image(systemName: "music.note")
+                                .foregroundStyle(Color._miryamSubtitle)
+                        )
+                @unknown default:
+                    Color._miryamSurfaceSecondary
+                }
+            }
+            .frame(width: 44, height: 44)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(song.name)
@@ -149,8 +164,8 @@ public struct AlbumView: View {
                 .foregroundStyle(Color._miryamLabelSecondary)
                 .monospacedDigit()
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 8)
         .contentShape(Rectangle())
         .onTapGesture {
             onPlaySong(song)

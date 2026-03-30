@@ -12,6 +12,27 @@ public struct WatchNowPlayingView: View {
     public var body: some View {
         VStack(spacing: 8) {
             if let song = viewModel.currentSong {
+                AsyncImage(url: song.artworkURL(size: 200)) { phase in
+                    switch phase {
+                    case let .success(image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    case .failure, .empty:
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color._miryamSurfaceSecondary)
+                            .overlay(
+                                Image(systemName: "music.note")
+                                    .foregroundStyle(.secondary)
+                            )
+                    @unknown default:
+                        Color._miryamSurfaceSecondary
+                    }
+                }
+                .frame(width: 100, height: 100)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .accessibilityHidden(true)
+
                 Text(song.name)
                     .font(.headline)
                     .lineLimit(2)
