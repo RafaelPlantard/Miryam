@@ -80,6 +80,7 @@ public struct CachedAsyncImage<Content: View>: View {
 
 #if canImport(UIKit)
     import UIKit
+
     private typealias PlatformImage = UIImage
 
     private extension Image {
@@ -87,8 +88,10 @@ public struct CachedAsyncImage<Content: View>: View {
             self.init(uiImage: platformImage)
         }
     }
+
 #elseif canImport(AppKit)
     import AppKit
+
     private typealias PlatformImage = NSImage
 
     private extension Image {
