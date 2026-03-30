@@ -83,11 +83,15 @@ jobs:
             echo "No test results found — skipping coverage report"
           fi
 
+      - name: Install xcresultparser
+        if: always()
+        run: which xcresultparser || brew install xcresultparser
+
       - name: Export coverage report
         if: always()
         run: |
           if [ -d TestResults.xcresult ]; then
-            xcrun xccov view --report --json TestResults.xcresult > coverage.json
+            xcresultparser --output-format cobertura TestResults.xcresult > coverage.xml
           fi
 
       - name: Install gpg (needed by Codecov)
@@ -98,7 +102,7 @@ jobs:
         if: always()
         uses: codecov/codecov-action@75cd11691c0faa626561e295848008c8a7dddffe # v5.5.4
         with:
-          files: coverage.json
+          files: coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: RafaelPlantard/Miryam
           fail_ci_if_error: false
