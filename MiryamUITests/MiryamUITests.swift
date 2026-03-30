@@ -434,12 +434,23 @@ final class MiryamUITests: XCTestCase {
             return
         }
 
-        let moreButton = app.buttons[AccessibilityID.moreOptionsButton.rawValue].firstMatch
-        guard moreButton.waitForExistence(timeout: 10) else {
+        // The more button may appear as a button or as a generic element
+        // depending on how SwiftUI List renders the accessibility tree.
+        let identifier = AccessibilityID.moreOptionsButton.rawValue
+        let moreButton = app.buttons[identifier].firstMatch
+        if moreButton.waitForExistence(timeout: 10) {
+            moreButton.tap()
+            return
+        }
+
+        // Fallback: search as any descendant element (SwiftUI List cells
+        // sometimes flatten button accessibility into the cell)
+        let anyElement = app.descendants(matching: .any)[identifier].firstMatch
+        guard anyElement.waitForExistence(timeout: 5) else {
             XCTFail("More options button not found")
             return
         }
-        moreButton.tap()
+        anyElement.tap()
     }
 
     private func navigateToAlbumFromSheet() {
