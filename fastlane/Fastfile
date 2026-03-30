@@ -34,13 +34,14 @@ platform :ios do
 
   # ── Certificates ─────────────────────────────────────────────────────────────
 
-  desc "Sync development certificates (read-only)"
+  desc "Sync development certificates (read-only, regenerates if new devices found)"
   lane :match_dev do
     api_key = asc_api_key
     match(
       type: "development",
       app_identifier: APP_IDENTIFIER,
-      readonly: true,
+      readonly: false,
+      force_for_new_devices: true,
       api_key: api_key
     )
   end
@@ -247,9 +248,10 @@ platform :ios do
 
   desc "Register devices from devices.txt"
   lane :sync_devices do
+    api_key = asc_api_key
     register_devices(
       devices_file: "fastlane/devices.txt",
-      team_id: ENV["APPLE_TEAM_ID"]
+      api_key: api_key
     )
   end
 
