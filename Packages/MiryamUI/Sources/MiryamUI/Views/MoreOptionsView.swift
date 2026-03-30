@@ -35,6 +35,7 @@ public struct MoreOptionsView: View {
 
             Spacer()
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier(AccessibilityID.moreOptionsSheet.rawValue)
         .background(Color._miryamSurface)
         .presentationDetents([.medium])
@@ -84,6 +85,7 @@ public struct MoreOptionsView: View {
             .padding(.vertical, 16)
             .contentShape(Rectangle())
         }
+        .buttonStyle(.plain)
         .frame(minHeight: Layout.MoreOptions.actionButtonMinHeight)
         .accessibilityIdentifier(identifier ?? title)
     }
