@@ -16,6 +16,12 @@ public struct PlaybackState: Sendable {
     public var duration: TimeInterval
     public var progress: Double
 
+    /// Current time formatted as "m:ss" — computed once at init.
+    public let formattedCurrentTime: String
+
+    /// Remaining time formatted as "-m:ss" — computed once at init.
+    public let formattedRemainingTime: String
+
     public init(
         status: Status = .idle,
         currentSong: Song? = nil,
@@ -28,17 +34,8 @@ public struct PlaybackState: Sendable {
         self.currentTime = currentTime
         self.duration = duration
         self.progress = progress
-    }
-
-    /// Current time formatted as "m:ss"
-    public var formattedCurrentTime: String {
-        Self.format(time: currentTime)
-    }
-
-    /// Remaining time formatted as "-m:ss"
-    public var formattedRemainingTime: String {
-        let remaining = max(duration - currentTime, 0)
-        return "-" + Self.format(time: remaining)
+        self.formattedCurrentTime = Self.format(time: currentTime)
+        self.formattedRemainingTime = "-" + Self.format(time: max(duration - currentTime, 0))
     }
 
     private static func format(time: TimeInterval) -> String {
