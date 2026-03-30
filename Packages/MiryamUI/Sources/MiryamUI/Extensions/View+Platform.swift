@@ -3,18 +3,17 @@ import MiryamFeatures
 import SwiftUI
 
 // MARK: - Platform-Adaptive View Modifiers
-//
+
 // Centralises all `#if os()` checks for SwiftUI modifiers that are
 // unavailable on certain platforms. Views use these extensions instead
 // of scattering conditional compilation throughout the codebase.
 
-extension View {
-
+public extension View {
     /// Applies `.navigationBarTitleDisplayMode(.inline)` on platforms that support it.
     @ViewBuilder
-    public func inlineNavigationTitle() -> some View {
+    func inlineNavigationTitle() -> some View {
         #if !os(macOS) && !os(tvOS)
-            self.navigationBarTitleDisplayMode(.inline)
+            navigationBarTitleDisplayMode(.inline)
         #else
             self
         #endif
@@ -22,9 +21,9 @@ extension View {
 
     /// Applies `.listRowSeparator(.hidden)` on platforms that support it.
     @ViewBuilder
-    public func hideRowSeparator() -> some View {
+    func hideRowSeparator() -> some View {
         #if !os(watchOS) && !os(tvOS)
-            self.listRowSeparator(.hidden)
+            listRowSeparator(.hidden)
         #else
             self
         #endif
@@ -32,9 +31,9 @@ extension View {
 
     /// Adds a ••• toolbar button that opens the MoreOptions sheet on supported platforms.
     @ViewBuilder
-    public func playerToolbar(song: Song?, router: Router) -> some View {
+    func playerToolbar(song: Song?, router: Router) -> some View {
         #if !os(tvOS)
-            self.toolbar {
+            toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     if let song {
                         Button {
