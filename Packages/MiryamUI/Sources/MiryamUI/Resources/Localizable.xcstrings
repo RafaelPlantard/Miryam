@@ -54,6 +54,9 @@
         }
       }
     },
+    "Loading song" : {
+
+    },
     "Loading..." : {
       "comment" : "Loading state message",
       "extractionState" : "stale",
