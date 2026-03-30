@@ -14,7 +14,8 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../MiryamCore"),
-        .package(path: "../MiryamFeatures")
+        .package(path: "../MiryamFeatures"),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.17.0")
     ],
     targets: [
         .target(
@@ -25,7 +26,12 @@ let package = Package(
         ),
         .testTarget(
             name: "MiryamUITests",
-            dependencies: ["MiryamUI", "MiryamFeatures", "MiryamCore"]
+            dependencies: [
+                "MiryamUI",
+                "MiryamFeatures",
+                "MiryamCore",
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+            ]
         )
     ]
 )
