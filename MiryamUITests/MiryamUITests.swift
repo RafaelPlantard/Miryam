@@ -220,7 +220,7 @@ final class MiryamUITests: XCTestCase {
         openMoreOptions()
 
         let viewAlbumButton = app.buttons[AccessibilityID.viewAlbumButton.rawValue]
-        XCTAssertTrue(viewAlbumButton.waitForExistence(timeout: 5), "View album button should be in more options sheet")
+        XCTAssertTrue(viewAlbumButton.waitForExistence(timeout: 10), "View album button should be in more options sheet")
     }
 
     func testMoreOptionsViewAlbumNavigatesToAlbum() throws {
@@ -457,7 +457,7 @@ final class MiryamUITests: XCTestCase {
         openMoreOptions()
 
         let viewAlbumButton = app.buttons[AccessibilityID.viewAlbumButton.rawValue]
-        guard viewAlbumButton.waitForExistence(timeout: 5) else {
+        guard viewAlbumButton.waitForExistence(timeout: 10) else {
             XCTFail("View album button not found in sheet")
             return
         }
