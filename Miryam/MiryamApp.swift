@@ -11,6 +11,8 @@ struct MiryamApp: App {
     @State private var container: DependencyContainer?
     @State private var containerError: Error?
     @State private var router = Router()
+    @State private var songsViewModel: SongsViewModel?
+    @State private var playerViewModel: PlayerViewModel?
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     var body: some Scene {
@@ -22,8 +24,12 @@ struct MiryamApp: App {
                             showSplash = false
                         }
                     }
-                } else if let container {
-                    mainContent(container: container)
+                } else if let container, let songsViewModel, let playerViewModel {
+                    mainContent(
+                        container: container,
+                        songsViewModel: songsViewModel,
+                        playerViewModel: playerViewModel
+                    )
                 } else if let containerError {
                     ContentUnavailableView(
                         "Unable to Load",
@@ -37,7 +43,10 @@ struct MiryamApp: App {
             .task {
                 FontRegistration.registerFonts()
                 do {
-                    container = try DependencyContainer()
+                    let di = try DependencyContainer()
+                    container = di
+                    songsViewModel = di.makeSongsViewModel()
+                    playerViewModel = di.makePlayerViewModel()
                 } catch {
                     containerError = error
                 }
@@ -46,10 +55,12 @@ struct MiryamApp: App {
     }
 
     @ViewBuilder
-    private func mainContent(container: DependencyContainer) -> some View {
+    private func mainContent(
+        container: DependencyContainer,
+        songsViewModel: SongsViewModel,
+        playerViewModel: PlayerViewModel
+    ) -> some View {
         @Bindable var router = router
-        let songsViewModel = container.makeSongsViewModel()
-        let playerViewModel = container.makePlayerViewModel()
 
         NavigationStack(path: $router.path) {
             SongsView(viewModel: songsViewModel)
