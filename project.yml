@@ -223,6 +223,26 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.snapshottests
 
+  MiryamSnapshotTestsTV:
+    type: bundle.unit-test
+    platform: tvOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Packages/MiryamUI/Tests/MiryamUITests
+    dependencies:
+      - target: MiryamTV
+      - package: MiryamUI
+      - package: MiryamFeatures
+      - package: MiryamCore
+      - package: SnapshotTesting
+        product: SnapshotTesting
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.snapshottests.tv
+
 schemes:
   Miryam:
     build:
@@ -257,6 +277,12 @@ schemes:
         MiryamTV: all
     run:
       config: Debug
+    test:
+      config: Debug
+      targets:
+        - MiryamSnapshotTestsTV
+      coverageTargets:
+        - MiryamTV
 
   MiryamVision:
     build:

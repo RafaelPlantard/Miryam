@@ -1,4 +1,4 @@
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import SwiftUI
 import UIKit
 
@@ -15,4 +15,4 @@ enum SnapshotHelper {
     }
 }
 
-#endif // os(iOS)
+#endif // os(iOS) || os(tvOS)
