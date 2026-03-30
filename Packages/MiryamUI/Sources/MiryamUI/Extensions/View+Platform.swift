@@ -42,7 +42,7 @@ public extension View {
                             Image(systemName: "ellipsis")
                                 .font(.body)
                                 .foregroundStyle(Color._miryamIconSecondary)
-                                .frame(width: 36, height: 36)
+                                .frame(width: 44, height: 44)
                                 .contentShape(Rectangle())
                         }
                         .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
