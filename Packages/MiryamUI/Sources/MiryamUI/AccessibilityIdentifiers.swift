@@ -2,7 +2,6 @@ import Foundation
 
 /// Centralized accessibility identifiers for UI testing.
 public enum AccessibilityID: String {
-
     // MARK: - Screens
 
     case splashScreen = "SplashScreen"
