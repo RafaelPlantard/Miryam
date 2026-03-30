@@ -72,6 +72,9 @@ targets:
       - package: MiryamFeatures
       - package: MiryamCore
       - package: MiryamPersistence
+      - target: MiryamWatch
+        embed: true
+        codeSign: true
     settings:
       base:
         SWIFT_VERSION: "6.0"
@@ -132,6 +135,7 @@ targets:
         CFBundleShortVersionString: "1.0"
         CFBundleVersion: "1"
         WKApplication: true
+        WKCompanionAppBundleIdentifier: io.swift-yah.miryam
     dependencies:
       - package: MiryamCore
       - package: MiryamPlayer
@@ -141,7 +145,7 @@ targets:
       base:
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
-        PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.watch
+        PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.watchkitapp
         DEVELOPMENT_TEAM: __REDACTED_TEAM_ID__
         CODE_SIGN_STYLE: Automatic
         GENERATE_INFOPLIST_FILE: YES
@@ -196,6 +200,7 @@ schemes:
     build:
       targets:
         Miryam: all
+        MiryamWatch: all
     run:
       config: Debug
     test:
