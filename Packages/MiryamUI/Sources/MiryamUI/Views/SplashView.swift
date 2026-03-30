@@ -22,6 +22,7 @@ public struct SplashView: View {
                 .scaleEffect(isActive ? 1 : 0.8)
                 .accessibilityLabel("Miryam")
         }
+        .accessibilityIdentifier("SplashScreen")
         .onAppear {
             if reduceMotion {
                 isActive = true

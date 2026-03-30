@@ -46,7 +46,7 @@ struct PlayerViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -77,7 +77,7 @@ struct PlayerViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -110,7 +110,7 @@ struct PlayerViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -141,7 +141,7 @@ struct PlayerViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -164,7 +164,7 @@ struct PlayerViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -185,7 +185,7 @@ struct PlayerViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 }

@@ -40,7 +40,7 @@ struct AlbumViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -60,7 +60,7 @@ struct AlbumViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -84,7 +84,7 @@ struct AlbumViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -106,7 +106,7 @@ struct AlbumViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -131,7 +131,7 @@ struct AlbumViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -154,7 +154,7 @@ struct AlbumViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 }

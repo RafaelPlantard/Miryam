@@ -29,7 +29,7 @@ struct MoreOptionsViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -49,7 +49,7 @@ struct MoreOptionsViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -74,7 +74,7 @@ struct MoreOptionsViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -97,7 +97,7 @@ struct MoreOptionsViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 }

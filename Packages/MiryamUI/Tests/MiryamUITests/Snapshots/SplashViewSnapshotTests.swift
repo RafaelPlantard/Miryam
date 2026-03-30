@@ -19,7 +19,7 @@ struct SplashViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -33,7 +33,7 @@ struct SplashViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 }
