@@ -82,6 +82,35 @@ platform :ios do
 
   # ── Capabilities ─────────────────────────────────────────────────────────────
 
+  desc "Create CloudKit container and assign to App ID (requires Apple ID session)"
+  lane :setup_cloudkit do
+    container_id = "iCloud.#{APP_IDENTIFIER}"
+
+    # Portal API requires Apple ID session auth
+    Spaceship::Portal.login(ENV["FASTLANE_USER"], ENV["FASTLANE_PASSWORD"])
+    Spaceship::Portal.client.team_id = ENV["APPLE_TEAM_ID"]
+
+    # Create or find the CloudKit container
+    container = Spaceship::Portal::CloudContainer.find(container_id)
+    if container
+      UI.message("CloudKit container '#{container_id}' already exists")
+    else
+      container = Spaceship::Portal::CloudContainer.create!(
+        identifier: container_id,
+        name: "Miryam"
+      )
+      UI.success("Created CloudKit container '#{container_id}'")
+    end
+
+    # Assign container to the App ID
+    app = Spaceship::Portal::App.find(APP_IDENTIFIER)
+    UI.user_error!("App ID #{APP_IDENTIFIER} not found in Portal") unless app
+
+    # Associate the container with the app (passes full container objects)
+    Spaceship::Portal.client.associate_cloud_containers_with_app(app, [container])
+    UI.success("Assigned '#{container_id}' to App ID '#{APP_IDENTIFIER}'")
+  end
+
   desc "Enable required capabilities on the App ID and regenerate profiles"
   lane :enable_capabilities do
     api_key = asc_api_key
