@@ -209,13 +209,12 @@ platform :ios do
       scheme: SCHEME,
       export_method: "app-store",
       output_directory: "fastlane/builds",
-      clean: true,
       export_options: {
         iCloudContainerEnvironment: "Production"
       }
     )
     upload_to_testflight(
-      skip_waiting_for_build_processing: false,
+      skip_waiting_for_build_processing: true,
       api_key: api_key
     )
   end
