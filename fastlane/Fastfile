@@ -1,0 +1,168 @@
+# frozen_string_literal: true
+
+default_platform(:ios)
+
+APP_IDENTIFIER = "io.swift-yah.miryam"
+PROJECT = "Miryam.xcodeproj"
+SCHEME = "Miryam"
+
+platform :ios do
+
+  # ── Testing ──────────────────────────────────────────────────────────────────
+
+  desc "Run all tests"
+  lane :test do
+    run_tests(
+      project: PROJECT,
+      scheme: SCHEME,
+      devices: ["iPhone 16 Pro"],
+      clean: true,
+      code_coverage: true,
+      output_directory: "fastlane/test_output"
+    )
+  end
+
+  # ── Certificates ─────────────────────────────────────────────────────────────
+
+  desc "Sync development certificates (read-only)"
+  lane :match_dev do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY"])
+    )
+    match(
+      type: "development",
+      app_identifier: APP_IDENTIFIER,
+      readonly: true,
+      api_key: api_key
+    )
+  end
+
+  desc "Sync adhoc certificates (read-only)"
+  lane :match_adhoc do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY"])
+    )
+    match(
+      type: "adhoc",
+      app_identifier: APP_IDENTIFIER,
+      readonly: true,
+      api_key: api_key
+    )
+  end
+
+  desc "Sync App Store certificates (read-only)"
+  lane :match_appstore do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY"])
+    )
+    match(
+      type: "appstore",
+      app_identifier: APP_IDENTIFIER,
+      readonly: true,
+      api_key: api_key
+    )
+  end
+
+  desc "First-time setup: generate all cert types in MiryamCertificates repo"
+  lane :setup_match do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY"])
+    )
+    ["development", "adhoc", "appstore"].each do |cert_type|
+      match(
+        type: cert_type,
+        app_identifier: APP_IDENTIFIER,
+        readonly: false,
+        api_key: api_key
+      )
+    end
+  end
+
+  # ── Build & Deploy ────────────────────────────────────────────────────────────
+
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY"])
+    )
+    match_appstore
+    increment_build_number(
+      build_number: latest_testflight_build_number + 1,
+      xcodeproj: PROJECT
+    )
+    build_app(
+      project: PROJECT,
+      scheme: SCHEME,
+      export_method: "app-store",
+      output_directory: "fastlane/builds",
+      clean: true
+    )
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      api_key: api_key
+    )
+  end
+
+  desc "Build and release to App Store"
+  lane :release do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY"])
+    )
+    match_appstore
+    build_app(
+      project: PROJECT,
+      scheme: SCHEME,
+      export_method: "app-store",
+      clean: true
+    )
+    deliver(
+      submit_for_review: false,
+      automatic_release: false,
+      force: true,
+      api_key: api_key
+    )
+  end
+
+  desc "Create app in App Store Connect (run once)"
+  lane :create_app do
+    produce(
+      app_identifier: APP_IDENTIFIER,
+      app_name: "Miryam",
+      language: "English",
+      app_version: "1.0",
+      sku: "miryam-moises-challenge",
+      team_id: ENV["APPLE_TEAM_ID"]
+    )
+  end
+
+  desc "Register devices from devices.txt"
+  lane :register_devices do
+    register_devices(
+      devices_file: "fastlane/devices.txt",
+      team_id: ENV["APPLE_TEAM_ID"]
+    )
+  end
+
+  desc "Bump build number, commit, and push tag"
+  lane :bump_version do |options|
+    version = options[:version] || UI.input("Enter new version (e.g. 1.0.1): ")
+    increment_version_number(version_number: version, xcodeproj: PROJECT)
+    increment_build_number(build_number: Time.now.strftime("%Y%m%d%H%M"), xcodeproj: PROJECT)
+    git_commit(path: PROJECT, message: "chore: bump version to #{version}")
+    add_git_tag(tag: "v#{version}")
+    push_to_git_remote
+  end
+
+end
