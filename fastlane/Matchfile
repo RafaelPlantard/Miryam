@@ -4,3 +4,4 @@ type "development"
 app_identifier "io.swift-yah.miryam"
 username ENV["APPLE_ID"]
 clone_branch_directly true
+shallow_clone true

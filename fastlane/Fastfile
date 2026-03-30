@@ -274,6 +274,31 @@ platform :ios do
   # publicLinkLimitEnabled for internal groups, which Apple's API rejects.
   # Manual setup: App Store Connect → TestFlight → Internal Testing → + → Add testers
 
+  desc "Revoke all development certificates and re-create match from scratch"
+  lane :nuke_and_recreate do
+    api_key = asc_api_key
+    match_nuke(
+      type: "development",
+      api_key: api_key,
+      app_identifier: ALL_IDENTIFIERS,
+      skip_confirmation: true
+    )
+    match_nuke(
+      type: "appstore",
+      api_key: api_key,
+      app_identifier: ALL_IDENTIFIERS,
+      skip_confirmation: true
+    )
+    ["development", "adhoc", "appstore"].each do |cert_type|
+      match(
+        type: cert_type,
+        app_identifier: ALL_IDENTIFIERS,
+        readonly: false,
+        api_key: api_key
+      )
+    end
+  end
+
   desc "Register devices from devices.txt"
   lane :sync_devices do
     api_key = asc_api_key
