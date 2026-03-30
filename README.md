@@ -1,64 +1,110 @@
 # Miryam
 
-Welcome to this Code Challenge! We appreciate the time you dedicate to this process.
+> Named after Miriam (Miryam) — Moses' sister, prophet, and musician who played the timbrel and led song after the crossing of the Red Sea (Exodus 15:20-21).
+> The challenge is for [Moises.ai](https://moises.ai); Miryam is who stands next to Moses and makes music.
 
-## Description
+A multi-platform Apple music search app built as a code challenge for Moises.ai. Search the iTunes catalog, play song previews, browse albums, and keep track of recently played songs — all with offline-first caching.
 
-- You should build an app to search songs through Apple iTunes API based on a user text input.
-- The app has 4 screens and 1 bottom sheet
-  - Splash Screen
-  - Songs Screen (Home)
-  - Song Details (Player)
-  - More options bottom sheet
-  - Album Screen
+## Getting Started
 
-## Must-have requirements
+**Prerequisites:** Homebrew, rbenv
 
-- Usage of Swift 6
-- Usage of SwiftUI
-- MVVM architecture pattern
-- Tests implementation
-- API results pagination
-- Usage of Swift concurrency
-- Cache using SwiftData (think of an offline-first user experience)
-  - Display the most recently played songs on the home screen
-- Network abstraction layer (the API implementation should be replaceable without affecting other layers)
+```bash
+just bootstrap   # installs deps, generates project, opens Xcode
+```
 
-## What we will evaluate
+Or manually:
+```bash
+bundle install
+mint bootstrap
+mint run xcodegen generate
+open Miryam.xcodeproj
+```
 
-- Adherence to mandatory requirements outlined above
-- Usage of SOLID principles
-- App performance and responsiveness
-- Code organization
-- Fidelity to the specification
-- Readability, Maintainability & Scalability
+## Architecture
 
-## Extra points (optional)
+```
+App Target (iOS · iPadOS)
+         |
+    MiryamUI          — Design system, SwiftUI views, Router
+         |
+  MiryamFeatures      — @Observable ViewModels, DI container
+         |
+MiryamNetworking  MiryamPersistence  MiryamPlayer
+(iTunes API)      (SwiftData cache)  (AVFoundation)
+         |               |                |
+              MiryamCore
+   (Domain models, protocols, AppError)
+```
 
-- Error/States handling
-- Swipe to refresh
-- Repository organization
-- On the player screen
-  - Forward/Backward actions
-  - Slider action to seek a specific position
-    - Please ensure that the song timeline is displayed, as it's mandatory. However, implementing the drag-to-seek to a position functionality on the timeline is optional.
-- Accessibility
+**Dependency rule:** ViewModels depend only on protocols in MiryamCore. Concrete implementations are injected via `DependencyContainer`. No ViewModel imports Networking or Persistence directly.
 
-## Assets
+## Features
 
-- [Design](https://www.figma.com/design/uuhUN9OZYqNZkBxuDq9FWh/Code-Challenge?node-id=10985-10110&t=etEwvDfga5a2EMBw-4)
-  - The design file provided for this challenge contains screens and flows that may go beyond the scope of the specific role you applied for.
-  - You are only expected to implement the screens described in the challenge specification.
-  - However, if you notice other flows or interactions in the design that better showcase your strengths or interests, feel free to explore them. We are always interested in seeing how candidates approach problems and where they choose to focus their efforts.
-  - In some cases, this may also help us identify strong alignment with other teams within our mobile organization.
-- [API Documentation](https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html#//apple_ref/doc/uid/TP40017632-CH5-SW1)
+- **Song Search** — Real-time search with 300ms debounce, pagination, pull-to-refresh
+- **Audio Playback** — 30-second iTunes previews with play/pause, skip forward/backward, drag-to-seek timeline
+- **Album View** — Browse all tracks in an album, tap to play
+- **Recently Played** — Persisted via SwiftData, shown on home screen
+- **Offline-First** — Search results cached; falls back to cache on network errors
+- **Dark & Light Mode** — Semantic color tokens adapt automatically
+- **iPad Responsive** — Adaptive artwork sizing and spacing for larger displays
+- **Accessibility** — WCAG AA contrast, VoiceOver labels, 44pt tap targets, Dynamic Type
 
-We encourage your creativity to go beyond the specification. Feel free to show your potential and surprise us!
+## Tech Stack
 
-When you're ready to share your test, send us your repository link and instructions for running your application.
+| Category | Technology |
+|---|---|
+| Language | Swift 6 (strict concurrency) |
+| UI | SwiftUI |
+| Architecture | MVVM (enforced by SPM package graph) |
+| State | `@Observable`, `@MainActor` ViewModels, actors |
+| Persistence | SwiftData |
+| Networking | URLSession, iTunes Search API |
+| Audio | AVFoundation |
+| Navigation | NavigationStack + typed `AppRoute` enum |
+| Font | DM Sans (Google Fonts) |
+| Testing | Swift Testing, XCUITest |
+| Tooling | XcodeGen, Mint, Fastlane, Just |
+| CI/CD | GitHub Actions |
 
-You have **up to 7 days** to complete and submit the code challenge.
+## Testing
 
-Any additional work is completely optional and should remain within the same 7-day timeframe for the challenge.
+143 unit tests + 8 UI tests across all packages:
 
-Make sure you understand all the requirements. If you have any questions or concerns, we are available to clarify them. Good luck!
+| Package | Tests |
+|---|---|
+| MiryamCore | 61 |
+| MiryamNetworking | 18 |
+| MiryamPersistence | 24 |
+| MiryamFeatures | 40 |
+| MiryamTests (integration) | 5 |
+| MiryamUITests (XCUITest) | 8 |
+
+```bash
+just test    # run all tests
+just lint    # SwiftLint + SwiftFormat check
+```
+
+## Project Structure
+
+```
+Miryam/
+  Miryam/                    # App target (MiryamApp.swift, Assets, Entitlements)
+  MiryamTests/               # Integration tests
+  MiryamUITests/             # XCUITests
+  Packages/
+    MiryamCore/              # Domain models, protocols, errors
+    MiryamNetworking/        # iTunes API client, DTOs
+    MiryamPersistence/       # SwiftData cache, offline-first
+    MiryamPlayer/            # AVFoundation audio player
+    MiryamFeatures/          # ViewModels, Router, DI container
+    MiryamUI/                # Design system, views, components
+  project.yml                # XcodeGen project definition
+  justfile                   # Task runner
+  fastlane/                  # Automation lanes
+  .github/workflows/         # CI/CD pipelines
+```
+
+## Challenge Spec
+
+See [CHALLENGE.md](CHALLENGE.md) for the original code challenge specification.
