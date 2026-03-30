@@ -4,6 +4,19 @@ import SwiftUI
 ///
 /// Unlike `AsyncImage`, this component caches responses to disk, so scrolling
 /// back to a previously-loaded image is instant without a network round-trip.
+/// Shared URLSession with disk + memory caching for image loading.
+private enum ImageCache {
+    static let session: URLSession = {
+        let config = URLSessionConfiguration.default
+        config.urlCache = URLCache(
+            memoryCapacity: 50 * 1024 * 1024, // 50 MB
+            diskCapacity: 100 * 1024 * 1024 // 100 MB
+        )
+        config.requestCachePolicy = .returnCacheDataElseLoad
+        return URLSession(configuration: config)
+    }()
+}
+
 public struct CachedAsyncImage<Content: View>: View {
     private let url: URL?
     private let content: (AsyncImagePhase) -> Content
@@ -27,16 +40,6 @@ public struct CachedAsyncImage<Content: View>: View {
 
     // MARK: - Private
 
-    private static var cachingSession: URLSession = {
-        let config = URLSessionConfiguration.default
-        config.urlCache = URLCache(
-            memoryCapacity: 50 * 1024 * 1024, // 50 MB
-            diskCapacity: 100 * 1024 * 1024 // 100 MB
-        )
-        config.requestCachePolicy = .returnCacheDataElseLoad
-        return URLSession(configuration: config)
-    }()
-
     @MainActor
     private func load() async {
         guard let url else {
@@ -47,7 +50,7 @@ public struct CachedAsyncImage<Content: View>: View {
         let request = URLRequest(url: url)
 
         // Check cache first for instant display
-        if let cached = Self.cachingSession.configuration.urlCache?.cachedResponse(for: request),
+        if let cached = ImageCache.session.configuration.urlCache?.cachedResponse(for: request),
            let image = PlatformImage(data: cached.data)
         {
             phase = .success(Image(platformImage: image))
@@ -56,10 +59,10 @@ public struct CachedAsyncImage<Content: View>: View {
 
         // Download
         do {
-            let (data, response) = try await Self.cachingSession.data(for: request)
+            let (data, response) = try await ImageCache.session.data(for: request)
 
             // Manually store if not auto-cached (some servers omit cache headers)
-            let cache = Self.cachingSession.configuration.urlCache
+            let cache = ImageCache.session.configuration.urlCache
             if cache?.cachedResponse(for: request) == nil {
                 let cachedResponse = CachedURLResponse(response: response, data: data)
                 cache?.storeCachedResponse(cachedResponse, for: request)
