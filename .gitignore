@@ -1,0 +1,61 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Xcode
+build/
+DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.xcuserstate
+*.xcscmblueprint
+
+# XcodeGen — .xcodeproj is generated, not committed
+Miryam.xcodeproj/
+# Exception: keep .xcworkspace for SPM resolution
+!Miryam.xcodeproj/project.xcworkspace/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/.build/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+fastlane/README.md
+
+# Bundler
+.bundle/
+vendor/
+
+# Mint
+.mint/
+
+# Env / secrets — never commit
+.env
+*.p8
+*.p12
+*.cer
+*.mobileprovision
+
+# Superpowers brainstorm artifacts
+.superpowers/
+
+# Coverage reports
+coverage/
+*.xccovreport
+*.xccovarchive
