@@ -4,46 +4,60 @@ import SwiftUI
 /// Reusable song list row with artwork, title, artist, and more button.
 public struct SongRow: View {
     let song: Song
+    var onTapped: (() -> Void)?
     var onMoreTapped: (() -> Void)?
 
-    public init(song: Song, onMoreTapped: (() -> Void)? = nil) {
+    public init(
+        song: Song,
+        onTapped: (() -> Void)? = nil,
+        onMoreTapped: (() -> Void)? = nil
+    ) {
         self.song = song
+        self.onTapped = onTapped
         self.onMoreTapped = onMoreTapped
     }
 
     public var body: some View {
         HStack(spacing: 16) {
-            AsyncImage(url: song.artworkURL(size: 104)) { phase in
-                switch phase {
-                case let .success(image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                case .failure:
-                    albumPlaceholder
-                case .empty:
-                    albumPlaceholder
-                        .overlay(ProgressView().tint(Color._miryamSubtitle))
-                @unknown default:
-                    albumPlaceholder
+            Button {
+                onTapped?()
+            } label: {
+                HStack(spacing: 16) {
+                    AsyncImage(url: song.artworkURL(size: 104)) { phase in
+                        switch phase {
+                        case let .success(image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        case .failure:
+                            albumPlaceholder
+                        case .empty:
+                            albumPlaceholder
+                                .overlay(ProgressView().tint(Color._miryamSubtitle))
+                        @unknown default:
+                            albumPlaceholder
+                        }
+                    }
+                    .frame(width: 52, height: 52)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(song.name)
+                            .font(.miryam.bodyLarge)
+                            .foregroundStyle(Color._miryamLabel)
+                            .lineLimit(1)
+
+                        Text(song.artistName)
+                            .font(.miryam.caption)
+                            .foregroundStyle(Color._miryamSubtitle)
+                            .lineLimit(1)
+                    }
+
+                    Spacer()
                 }
+                .contentShape(Rectangle())
             }
-            .frame(width: 52, height: 52)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(song.name)
-                    .font(.miryam.bodyLarge)
-                    .foregroundStyle(Color._miryamLabel)
-                    .lineLimit(1)
-
-                Text(song.artistName)
-                    .font(.miryam.caption)
-                    .foregroundStyle(Color._miryamSubtitle)
-                    .lineLimit(1)
-            }
-
-            Spacer()
+            .buttonStyle(.plain)
 
             if let onMoreTapped {
                 Button(action: onMoreTapped) {
@@ -53,11 +67,11 @@ public struct SongRow: View {
                         .frame(width: 36, height: 36)
                         .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
                 .accessibilityLabel("More options for \(song.name)")
             }
         }
         .padding(.vertical, 8)
-        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(song.name) by \(song.artistName)")
         .accessibilityHint("Double tap to play")

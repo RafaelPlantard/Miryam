@@ -47,12 +47,11 @@ public struct SongsView: View {
             }
 
             ForEach(viewModel.songs) { song in
-                SongRow(song: song) {
-                    router.presentSheet(.moreOptions(song))
-                }
-                .onTapGesture {
-                    router.navigate(to: .player(song))
-                }
+                SongRow(
+                    song: song,
+                    onTapped: { router.navigate(to: .player(song)) },
+                    onMoreTapped: { router.presentSheet(.moreOptions(song)) }
+                )
                 .onAppear {
                     if song.id == viewModel.songs.last?.id {
                         Task { await viewModel.loadMore() }
