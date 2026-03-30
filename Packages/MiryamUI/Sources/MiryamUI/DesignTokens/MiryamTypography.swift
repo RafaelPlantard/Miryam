@@ -3,7 +3,7 @@ import SwiftUI
 /// Typography tokens using DM Sans font family.
 public extension Font {
     /// Miryam typography namespace.
-    enum miryam {
+    enum miryam { // swiftlint:disable:this type_name
         /// Display 18 — SemiBold 600, size 18, line height 1.08
         public static let display = Font.custom("DMSans-SemiBold", size: 18)
 

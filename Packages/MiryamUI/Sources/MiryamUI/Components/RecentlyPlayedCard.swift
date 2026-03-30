@@ -1,5 +1,5 @@
-import SwiftUI
 import MiryamCore
+import SwiftUI
 
 /// Compact card for the recently played horizontal scroll.
 public struct RecentlyPlayedCard: View {
@@ -13,7 +13,7 @@ public struct RecentlyPlayedCard: View {
         VStack(alignment: .leading, spacing: 6) {
             AsyncImage(url: song.artworkURL(size: 200)) { phase in
                 switch phase {
-                case .success(let image):
+                case let .success(image):
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)

@@ -1,9 +1,9 @@
 import Foundation
-import SwiftData
 import MiryamCore
 import MiryamNetworking
 import MiryamPersistence
 import MiryamPlayer
+import SwiftData
 
 /// Holds all concrete implementations and creates ViewModels.
 @MainActor

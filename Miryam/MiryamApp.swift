@@ -1,9 +1,9 @@
-import SwiftUI
-import SwiftData
 import MiryamCore
 import MiryamFeatures
-import MiryamUI
 import MiryamPersistence
+import MiryamUI
+import SwiftData
+import SwiftUI
 
 @main
 struct MiryamApp: App {
@@ -48,11 +48,11 @@ struct MiryamApp: App {
             SongsView(viewModel: songsViewModel)
                 .navigationDestination(for: AppRoute.self) { route in
                     switch route {
-                    case .player(let song):
+                    case let .player(song):
                         PlayerView(viewModel: playerViewModel)
                             .environment(router)
                             .task { await playerViewModel.play(song) }
-                    case .album(let album):
+                    case let .album(album):
                         AlbumView(
                             viewModel: container.makeAlbumViewModel(album: album),
                             onPlaySong: { song in
@@ -67,7 +67,7 @@ struct MiryamApp: App {
         .environment(playerViewModel)
         .sheet(item: $router.presentedSheet) { sheet in
             switch sheet {
-            case .moreOptions(let song):
+            case let .moreOptions(song):
                 MoreOptionsView(song: song) {
                     let album = Album(
                         id: song.albumId,

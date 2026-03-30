@@ -1,6 +1,6 @@
-import SwiftUI
 import MiryamCore
 import MiryamFeatures
+import SwiftUI
 
 public struct SongsView: View {
     @Bindable private var viewModel: SongsViewModel
@@ -16,7 +16,7 @@ public struct SongsView: View {
                 loadingView
             } else if let error = viewModel.error, viewModel.songs.isEmpty {
                 errorView(error)
-            } else if viewModel.songs.isEmpty && viewModel.searchQuery.isEmpty {
+            } else if viewModel.songs.isEmpty, viewModel.searchQuery.isEmpty {
                 emptyStateView
             } else if viewModel.songs.isEmpty {
                 noResultsView
@@ -42,7 +42,7 @@ public struct SongsView: View {
 
     private var songsList: some View {
         List {
-            if !viewModel.recentlyPlayed.isEmpty && viewModel.searchQuery.isEmpty {
+            if !viewModel.recentlyPlayed.isEmpty, viewModel.searchQuery.isEmpty {
                 recentlyPlayedSection
             }
 
@@ -90,7 +90,7 @@ public struct SongsView: View {
             }
             .listRowInsets(EdgeInsets())
             #if !os(watchOS)
-            .listRowSeparator(.hidden)
+                .listRowSeparator(.hidden)
             #endif
         } header: {
             Text("Recently Played")

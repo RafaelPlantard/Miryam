@@ -1,7 +1,7 @@
 import Foundation
 import MiryamCore
-import MiryamPlayer
 import MiryamFeatures
+import MiryamPlayer
 
 @MainActor
 final class WatchDependencyContainer {

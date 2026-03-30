@@ -1,7 +1,7 @@
-import SwiftUI
 import MiryamCore
 import MiryamFeatures
 import MiryamUI
+import SwiftUI
 
 @main
 struct MiryamWatchApp: App {

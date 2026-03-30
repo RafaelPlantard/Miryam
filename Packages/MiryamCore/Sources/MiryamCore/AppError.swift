@@ -19,7 +19,7 @@ public enum AppError: Error, Sendable, Equatable {
             return "Something went wrong while loading data."
         case .noInternetConnection:
             return "No internet connection. Showing cached results."
-        case .serverError(let code):
+        case let .serverError(code):
             return "Server error (\(code)). Please try again later."
         case .notFound:
             return "No results found."

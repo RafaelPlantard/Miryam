@@ -6,12 +6,14 @@ import MiryamCore
 @MainActor
 public final class AlbumViewModel {
     // MARK: - Published State
+
     public let album: Album
     public var songs: [Song] = []
     public var isLoading = false
     public var error: AppError?
 
     // MARK: - Private
+
     private let songRepository: any SongRepositoryProtocol
 
     public init(

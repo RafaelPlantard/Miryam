@@ -1,5 +1,5 @@
-import SwiftUI
 import MiryamCore
+import SwiftUI
 
 /// Centralized navigation state for the app.
 @Observable

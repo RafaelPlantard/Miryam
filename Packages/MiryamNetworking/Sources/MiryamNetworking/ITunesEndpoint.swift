@@ -9,7 +9,7 @@ enum ITunesEndpoint {
 
     var url: URL {
         switch self {
-        case .search(let query, let limit, let offset):
+        case let .search(query, limit, offset):
             var components = URLComponents(string: "\(Self.baseURL)/search")!
             components.queryItems = [
                 URLQueryItem(name: "term", value: query),
@@ -20,7 +20,7 @@ enum ITunesEndpoint {
             ]
             return components.url!
 
-        case .lookup(let albumId):
+        case let .lookup(albumId):
             var components = URLComponents(string: "\(Self.baseURL)/lookup")!
             components.queryItems = [
                 URLQueryItem(name: "id", value: String(albumId)),

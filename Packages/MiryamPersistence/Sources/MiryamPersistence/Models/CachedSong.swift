@@ -1,6 +1,6 @@
 import Foundation
-import SwiftData
 import MiryamCore
+import SwiftData
 
 /// SwiftData model for persisted songs.
 @Model

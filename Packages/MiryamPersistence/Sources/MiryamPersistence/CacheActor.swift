@@ -1,11 +1,10 @@
 import Foundation
-import SwiftData
 import MiryamCore
+import SwiftData
 
 /// Actor-based cache using SwiftData for offline-first song storage.
 @ModelActor
 public actor CacheActor: CacheRepositoryProtocol {
-
     public func cacheSongs(_ songs: [Song], for query: String) async throws {
         do {
             for song in songs {

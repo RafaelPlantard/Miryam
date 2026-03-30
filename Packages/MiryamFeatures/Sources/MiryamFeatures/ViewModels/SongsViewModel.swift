@@ -6,6 +6,7 @@ import MiryamCore
 @MainActor
 public final class SongsViewModel {
     // MARK: - Published State
+
     public var songs: [Song] = []
     public var recentlyPlayed: [Song] = []
     public var searchQuery: String = ""
@@ -15,6 +16,7 @@ public final class SongsViewModel {
     public var hasMorePages = true
 
     // MARK: - Private
+
     private let songRepository: any SongRepositoryProtocol
     private let cacheRepository: any CacheRepositoryProtocol
     private var pagination = Pagination(limit: 25)
