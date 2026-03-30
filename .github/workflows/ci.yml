@@ -21,6 +21,13 @@ jobs:
       - name: Install Mint
         run: brew install mint
 
+      - name: Cache Mint packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.mint
+          key: ${{ runner.os }}-mint-${{ hashFiles('Mintfile') }}
+          restore-keys: ${{ runner.os }}-mint-
+
       - name: Bootstrap Mint tools
         run: mint bootstrap
 
@@ -39,6 +46,13 @@ jobs:
 
       - name: Install Mint
         run: brew install mint
+
+      - name: Cache Mint packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.mint
+          key: ${{ runner.os }}-mint-${{ hashFiles('Mintfile') }}
+          restore-keys: ${{ runner.os }}-mint-
 
       - name: Bootstrap Mint tools
         run: mint bootstrap
