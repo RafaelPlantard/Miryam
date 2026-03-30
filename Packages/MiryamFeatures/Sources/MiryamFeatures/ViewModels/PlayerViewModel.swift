@@ -6,16 +6,18 @@ import MiryamCore
 @MainActor
 public final class PlayerViewModel {
     // MARK: - Published State
+
     public var playbackState = PlaybackState()
     public var currentSong: Song?
     public var isPlaying = false
     public var error: AppError?
 
     // MARK: - Private
+
     private let player: any PlayerProtocol
     private let cacheRepository: any CacheRepositoryProtocol
     @ObservationIgnored
-    nonisolated(unsafe) private var stateTask: Task<Void, Never>?
+    private nonisolated(unsafe) var stateTask: Task<Void, Never>?
 
     public init(
         player: any PlayerProtocol,
@@ -78,20 +80,20 @@ public final class PlayerViewModel {
     private func startObservingState() {
         stateTask = Task { [weak self] in
             guard let self else { return }
-            let stream = self.player.stateStream
+            let stream = player.stateStream
             for await state in stream {
                 guard !Task.isCancelled else { break }
-                self.playbackState = state
-                self.currentSong = state.currentSong
+                playbackState = state
+                currentSong = state.currentSong
                 switch state.status {
                 case .playing:
-                    self.isPlaying = true
-                    self.error = nil
+                    isPlaying = true
+                    error = nil
                 case .paused:
-                    self.isPlaying = false
-                case .failed(let appError):
-                    self.isPlaying = false
-                    self.error = appError
+                    isPlaying = false
+                case let .failed(appError):
+                    isPlaying = false
+                    error = appError
                 case .idle, .loading:
                     break
                 }

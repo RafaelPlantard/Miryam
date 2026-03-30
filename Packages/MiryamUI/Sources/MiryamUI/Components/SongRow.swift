@@ -1,5 +1,5 @@
-import SwiftUI
 import MiryamCore
+import SwiftUI
 
 /// Reusable song list row with artwork, title, artist, and more button.
 public struct SongRow: View {
@@ -15,7 +15,7 @@ public struct SongRow: View {
         HStack(spacing: 16) {
             AsyncImage(url: song.artworkURL(size: 104)) { phase in
                 switch phase {
-                case .success(let image):
+                case let .success(image):
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)

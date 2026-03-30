@@ -1,6 +1,6 @@
-import SwiftUI
 import MiryamCore
 import MiryamFeatures
+import SwiftUI
 
 public struct AlbumView: View {
     @Bindable private var viewModel: AlbumViewModel
@@ -46,11 +46,11 @@ public struct AlbumView: View {
         .background(Color._miryamBackground)
         .navigationTitle(viewModel.album.name)
         #if !os(macOS)
-        .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.inline)
         #endif
-        .task {
-            await viewModel.loadSongs()
-        }
+            .task {
+                await viewModel.loadSongs()
+            }
     }
 
     private var albumArtworkSize: CGFloat {
@@ -61,7 +61,7 @@ public struct AlbumView: View {
         VStack(spacing: 12) {
             AsyncImage(url: viewModel.album.artworkURL(size: 400)) { phase in
                 switch phase {
-                case .success(let image):
+                case let .success(image):
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -95,7 +95,7 @@ public struct AlbumView: View {
                     if viewModel.album.trackCount > 0 {
                         Text("\(viewModel.album.trackCount) tracks")
                     }
-                    if viewModel.album.trackCount > 0 && !viewModel.album.genre.isEmpty {
+                    if viewModel.album.trackCount > 0, !viewModel.album.genre.isEmpty {
                         Text("·")
                     }
                     if !viewModel.album.genre.isEmpty {

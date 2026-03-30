@@ -1,10 +1,9 @@
-import Testing
 import Foundation
 import MiryamCore
+import Testing
 
 @Suite("App Integration")
 struct MiryamTests {
-
     @Test("Song model round-trip through Codable")
     func songCodableRoundTrip() throws {
         let song = Song(

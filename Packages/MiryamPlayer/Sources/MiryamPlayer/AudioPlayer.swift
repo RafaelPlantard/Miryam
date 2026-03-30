@@ -7,7 +7,6 @@ import MiryamCore
 /// Plays 30-second iTunes preview clips via ``AVPlayer`` and publishes
 /// ``PlaybackState`` updates through an ``AsyncStream``.
 public actor AudioPlayer: PlayerProtocol {
-
     // MARK: - Properties
 
     private var player: AVPlayer?
@@ -20,7 +19,7 @@ public actor AudioPlayer: PlayerProtocol {
 
     // MARK: - PlayerProtocol
 
-    nonisolated public var stateStream: AsyncStream<PlaybackState> {
+    public nonisolated var stateStream: AsyncStream<PlaybackState> {
         _stateStream
     }
 
@@ -46,19 +45,19 @@ public actor AudioPlayer: PlayerProtocol {
         emitState(.init(status: .loading, currentSong: song))
 
         #if os(iOS) || os(watchOS) || os(visionOS)
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            throw AppError.playbackFailed(
-                "Audio session setup failed: \(error.localizedDescription)"
-            )
-        }
+            do {
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+                try AVAudioSession.sharedInstance().setActive(true)
+            } catch {
+                throw AppError.playbackFailed(
+                    "Audio session setup failed: \(error.localizedDescription)"
+                )
+            }
         #endif
 
         let playerItem = AVPlayerItem(url: previewURL)
         let avPlayer = AVPlayer(playerItem: playerItem)
-        self.player = avPlayer
+        player = avPlayer
 
         addTimeObserver(to: avPlayer)
         observePlaybackEnd(of: playerItem)
@@ -96,7 +95,7 @@ public actor AudioPlayer: PlayerProtocol {
         guard duration.isFinite, duration > 0 else { return }
 
         let targetTime = CMTime(
-            seconds: duration * progress.clamped(to: 0...1),
+            seconds: duration * progress.clamped(to: 0 ... 1),
             preferredTimescale: CMTimeScale(NSEC_PER_SEC)
         )
         await player.seek(to: targetTime)

@@ -1,8 +1,8 @@
-import SwiftUI
 import MiryamCore
 import MiryamFeatures
-import MiryamUI
 import MiryamPersistence
+import MiryamUI
+import SwiftUI
 
 @main
 struct MiryamVisionApp: App {
@@ -17,12 +17,12 @@ struct MiryamVisionApp: App {
                         SongsView(viewModel: container.makeSongsViewModel())
                             .navigationDestination(for: AppRoute.self) { route in
                                 switch route {
-                                case .player(let song):
+                                case let .player(song):
                                     let playerVM = container.makePlayerViewModel()
                                     PlayerView(viewModel: playerVM)
                                         .environment(router)
                                         .task { await playerVM.play(song) }
-                                case .album(let album):
+                                case let .album(album):
                                     AlbumView(
                                         viewModel: container.makeAlbumViewModel(album: album),
                                         onPlaySong: { song in

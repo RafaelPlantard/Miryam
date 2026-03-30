@@ -1,6 +1,6 @@
-import SwiftUI
 import MiryamCore
 import MiryamFeatures
+import SwiftUI
 
 public struct PlayerView: View {
     @Bindable private var viewModel: PlayerViewModel
@@ -43,7 +43,7 @@ public struct PlayerView: View {
         }
         .background(Color._miryamBackground)
         #if !os(macOS)
-        .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.inline)
         #endif
     }
 
@@ -54,7 +54,7 @@ public struct PlayerView: View {
             if let song = viewModel.currentSong {
                 AsyncImage(url: song.artworkURL(size: 600)) { phase in
                     switch phase {
-                    case .success(let image):
+                    case let .success(image):
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fill)

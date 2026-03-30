@@ -1,7 +1,6 @@
 import XCTest
 
 final class MiryamUITests: XCTestCase {
-
     private var app: XCUIApplication!
 
     override func setUpWithError() throws {

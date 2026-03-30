@@ -1,5 +1,5 @@
-import SwiftUI
 import MiryamCore
+import SwiftUI
 
 /// Navigation destinations.
 public enum AppRoute: Hashable {
@@ -13,7 +13,7 @@ public enum AppSheet: Identifiable {
 
     public var id: String {
         switch self {
-        case .moreOptions(let song): return "moreOptions-\(song.id)"
+        case let .moreOptions(song): return "moreOptions-\(song.id)"
         }
     }
 }

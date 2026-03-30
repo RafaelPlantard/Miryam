@@ -1,6 +1,6 @@
-import SwiftUI
 import MiryamCore
 import MiryamFeatures
+import SwiftUI
 
 public struct WatchNowPlayingView: View {
     @Bindable var viewModel: PlayerViewModel
