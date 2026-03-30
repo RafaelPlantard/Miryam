@@ -13,7 +13,7 @@
             self.interfaceController = interfaceController
 
             let nowPlayingTemplate = CPNowPlayingTemplate.shared
-            interfaceController.setRootTemplate(nowPlayingTemplate, animated: true)
+            interfaceController.setRootTemplate(nowPlayingTemplate, animated: true, completion: nil)
         }
 
         func templateApplicationScene(
