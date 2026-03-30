@@ -73,6 +73,8 @@ targets:
       - package: MiryamUI
       - package: MiryamFeatures
       - package: MiryamCore
+      - package: MiryamNetworking
+      - package: MiryamPlayer
       - package: MiryamPersistence
       - target: MiryamWatch
         embed: true
