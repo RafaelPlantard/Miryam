@@ -5,18 +5,18 @@ import SwiftData
 /// SwiftData model for persisted songs.
 @Model
 public final class CachedSong {
-    public var songId: Int
-    public var name: String
-    public var artistName: String
-    public var albumName: String
-    public var albumId: Int
+    public var songId: Int = 0
+    public var name: String = ""
+    public var artistName: String = ""
+    public var albumName: String = ""
+    public var albumId: Int = 0
     public var artworkURLString: String?
     public var previewURLString: String?
-    public var durationInMilliseconds: Int
-    public var genre: String
-    public var trackNumber: Int
+    public var durationInMilliseconds: Int = 0
+    public var genre: String = ""
+    public var trackNumber: Int = 0
     public var releaseDate: Date?
-    public var cachedAt: Date
+    public var cachedAt: Date = Date()
     public var lastPlayedAt: Date?
     public var searchQuery: String?
 
