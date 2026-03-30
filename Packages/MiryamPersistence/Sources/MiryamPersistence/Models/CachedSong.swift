@@ -5,7 +5,7 @@ import SwiftData
 /// SwiftData model for persisted songs.
 @Model
 public final class CachedSong {
-    @Attribute(.unique) public var songId: Int
+    public var songId: Int
     public var name: String
     public var artistName: String
     public var albumName: String
