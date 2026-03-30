@@ -3,7 +3,7 @@ import Foundation
 import MiryamCore
 import os
 
-private let logger = Logger(subsystem: "io.swift-yah.miryam", category: "Audio")
+private let logger = Log.audio
 
 /// AVFoundation-based audio player actor implementing ``PlayerProtocol``.
 ///

@@ -2,7 +2,7 @@ import Foundation
 import MiryamCore
 import os
 
-private let logger = Logger(subsystem: "io.swift-yah.miryam", category: "Player")
+private let logger = Log.player
 
 /// ViewModel for the Player screen.
 @Observable
