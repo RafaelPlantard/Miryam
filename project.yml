@@ -1,0 +1,116 @@
+name: Miryam
+options:
+  bundleIdPrefix: com.rafaelplantard
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "16.3"
+  groupSortPosition: none
+  generateEmptyDirectories: true
+  transitivelyLinkDependencies: true
+
+packages:
+  MiryamCore:
+    path: Packages/MiryamCore
+  MiryamNetworking:
+    path: Packages/MiryamNetworking
+  MiryamPersistence:
+    path: Packages/MiryamPersistence
+  MiryamPlayer:
+    path: Packages/MiryamPlayer
+  MiryamFeatures:
+    path: Packages/MiryamFeatures
+  MiryamUI:
+    path: Packages/MiryamUI
+
+targets:
+  Miryam:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Miryam
+        excludes:
+          - "**/*.md"
+    resources:
+      - Miryam/Assets.xcassets
+    entitlements:
+      path: Miryam/Miryam.entitlements
+      properties:
+        aps-environment: development
+        com.apple.developer.aps-environment: development
+        com.apple.developer.icloud-container-identifiers: []
+        com.apple.developer.icloud-services:
+          - CloudKit
+    info:
+      path: Miryam/Info.plist
+      properties:
+        UIBackgroundModes:
+          - remote-notification
+        CFBundleDisplayName: Miryam
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+    dependencies:
+      - package: MiryamUI
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+        PRODUCT_BUNDLE_IDENTIFIER: com.rafaelplantard.miryam
+        DEVELOPMENT_TEAM: __REDACTED_TEAM_ID__
+        CODE_SIGN_STYLE: Automatic
+      configs:
+        Debug:
+          DEBUG_INFORMATION_FORMAT: dwarf
+        Release:
+          DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+
+  MiryamTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - MiryamTests
+    dependencies:
+      - target: Miryam
+      - package: MiryamCore
+      - package: MiryamNetworking
+      - package: MiryamPersistence
+      - package: MiryamPlayer
+      - package: MiryamFeatures
+      - package: MiryamUI
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        PRODUCT_BUNDLE_IDENTIFIER: com.rafaelplantard.miryam.tests
+
+  MiryamUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - MiryamUITests
+    dependencies:
+      - target: Miryam
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        PRODUCT_BUNDLE_IDENTIFIER: com.rafaelplantard.miryam.uitests
+
+schemes:
+  Miryam:
+    build:
+      targets:
+        Miryam: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - MiryamTests
+        - MiryamUITests
+      coverageTargets:
+        - Miryam
+    profile:
+      config: Release
+    archive:
+      config: Release
