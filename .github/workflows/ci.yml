@@ -14,19 +14,12 @@ concurrency:
 jobs:
   lint:
     name: Lint
-    runs-on: macos-15
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
 
       - name: Install Mint
-        run: brew install mint
-
-      - name: Cache Mint packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.mint
-          key: ${{ runner.os }}-mint-${{ hashFiles('Mintfile') }}
-          restore-keys: ${{ runner.os }}-mint-
+        run: which mint || brew install mint
 
       - name: Bootstrap Mint tools
         run: mint bootstrap
@@ -39,20 +32,13 @@ jobs:
 
   test:
     name: Test
-    runs-on: macos-15
+    runs-on: self-hosted
     needs: lint
     steps:
       - uses: actions/checkout@v4
 
       - name: Install Mint
-        run: brew install mint
-
-      - name: Cache Mint packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.mint
-          key: ${{ runner.os }}-mint-${{ hashFiles('Mintfile') }}
-          restore-keys: ${{ runner.os }}-mint-
+        run: which mint || brew install mint
 
       - name: Bootstrap Mint tools
         run: mint bootstrap
