@@ -57,7 +57,7 @@ final class MiryamUITests: XCTestCase {
         }
 
         // Scroll down multiple times to trigger pagination
-        for _ in 0..<5 {
+        for _ in 0 ..< 5 {
             app.swipeUp()
         }
 
