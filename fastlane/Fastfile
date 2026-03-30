@@ -8,6 +8,16 @@ SCHEME = "Miryam"
 
 platform :ios do
 
+  # ── Helpers ──────────────────────────────────────────────────────────────────
+
+  private_lane :asc_api_key do
+    app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY"])
+    )
+  end
+
   # ── Testing ──────────────────────────────────────────────────────────────────
 
   desc "Run all tests"
@@ -26,11 +36,7 @@ platform :ios do
 
   desc "Sync development certificates (read-only)"
   lane :match_dev do
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
-      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY"])
-    )
+    api_key = asc_api_key
     match(
       type: "development",
       app_identifier: APP_IDENTIFIER,
@@ -41,11 +47,7 @@ platform :ios do
 
   desc "Sync adhoc certificates (read-only)"
   lane :match_adhoc do
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
-      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY"])
-    )
+    api_key = asc_api_key
     match(
       type: "adhoc",
       app_identifier: APP_IDENTIFIER,
@@ -56,11 +58,7 @@ platform :ios do
 
   desc "Sync App Store certificates (read-only)"
   lane :match_appstore do
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
-      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY"])
-    )
+    api_key = asc_api_key
     match(
       type: "appstore",
       app_identifier: APP_IDENTIFIER,
@@ -71,11 +69,7 @@ platform :ios do
 
   desc "First-time setup: generate all cert types in MiryamCertificates repo"
   lane :setup_match do
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
-      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY"])
-    )
+    api_key = asc_api_key
     ["development", "adhoc", "appstore"].each do |cert_type|
       match(
         type: cert_type,
@@ -86,18 +80,69 @@ platform :ios do
     end
   end
 
+  # ── Capabilities ─────────────────────────────────────────────────────────────
+
+  desc "Enable required capabilities on the App ID and regenerate profiles"
+  lane :enable_capabilities do
+    api_key = asc_api_key
+    Spaceship::ConnectAPI.token = Spaceship::ConnectAPI::Token.from(hash: api_key)
+
+    bundle_id = Spaceship::ConnectAPI::BundleId.find(APP_IDENTIFIER)
+    UI.user_error!("Bundle ID #{APP_IDENTIFIER} not found") unless bundle_id
+
+    capabilities = %w[PUSH_NOTIFICATIONS ICLOUD]
+
+    capabilities.each do |cap_type|
+      begin
+        settings = nil
+        if cap_type == "ICLOUD"
+          settings = [{ "key" => "ICLOUD_VERSION", "options" => [{ "key" => "XCODE_6" }] }]
+        end
+        bundle_id.create_capability(cap_type, settings: settings)
+        UI.success("Enabled #{cap_type}")
+      rescue => e
+        if e.message.include?("already exists")
+          UI.message("#{cap_type} already enabled, skipping")
+        else
+          UI.important("Could not enable #{cap_type}: #{e.message}")
+        end
+      end
+    end
+
+    # CarPlay audio is not available via the API — enable manually at
+    # https://developer.apple.com/account/resources/identifiers if needed.
+    UI.message("Note: CarPlay Audio must be enabled manually in the Developer Portal if not already set.")
+
+    # Force-regenerate profiles to include the new capabilities
+    ["development", "adhoc", "appstore"].each do |cert_type|
+      match(
+        type: cert_type,
+        app_identifier: APP_IDENTIFIER,
+        readonly: false,
+        force: true,
+        api_key: api_key
+      )
+    end
+  end
+
   # ── Build & Deploy ────────────────────────────────────────────────────────────
 
   desc "Build and upload to TestFlight"
   lane :beta do
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
-      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY"])
+    api_key = asc_api_key
+    match(
+      type: "appstore",
+      app_identifier: APP_IDENTIFIER,
+      readonly: true,
+      api_key: api_key
     )
-    match_appstore
+    current_build = latest_testflight_build_number(
+      api_key: api_key,
+      app_identifier: APP_IDENTIFIER,
+      initial_build_number: 0
+    )
     increment_build_number(
-      build_number: latest_testflight_build_number + 1,
+      build_number: current_build + 1,
       xcodeproj: PROJECT
     )
     build_app(
@@ -105,22 +150,26 @@ platform :ios do
       scheme: SCHEME,
       export_method: "app-store",
       output_directory: "fastlane/builds",
-      clean: true
+      clean: true,
+      export_options: {
+        iCloudContainerEnvironment: "Production"
+      }
     )
     upload_to_testflight(
-      skip_waiting_for_build_processing: true,
+      skip_waiting_for_build_processing: false,
       api_key: api_key
     )
   end
 
   desc "Build and release to App Store"
   lane :release do
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
-      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY"])
+    api_key = asc_api_key
+    match(
+      type: "appstore",
+      app_identifier: APP_IDENTIFIER,
+      readonly: true,
+      api_key: api_key
     )
-    match_appstore
     build_app(
       project: PROJECT,
       scheme: SCHEME,
@@ -135,7 +184,9 @@ platform :ios do
     )
   end
 
-  desc "Create app in App Store Connect (run once)"
+  # ── App Management ───────────────────────────────────────────────────────────
+
+  desc "Create app in App Store Connect (run once, requires 2FA)"
   lane :create_app do
     produce(
       app_identifier: APP_IDENTIFIER,
@@ -150,11 +201,7 @@ platform :ios do
 
   desc "Verify app exists in App Store Connect"
   lane :verify_app do
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
-      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY"])
-    )
+    api_key = asc_api_key
     Spaceship::ConnectAPI.token = Spaceship::ConnectAPI::Token.from(hash: api_key)
     app = Spaceship::ConnectAPI::App.find(APP_IDENTIFIER)
     if app
