@@ -67,7 +67,7 @@ public struct SongsView: View {
                         .padding()
                     Spacer()
                 }
-                #if !os(watchOS)
+                #if !os(watchOS) && !os(tvOS)
                 .listRowSeparator(.hidden)
                 #endif
             }
@@ -90,7 +90,7 @@ public struct SongsView: View {
                 .padding(.vertical, 16)
             }
             .listRowInsets(EdgeInsets())
-            #if !os(watchOS)
+            #if !os(watchOS) && !os(tvOS)
                 .listRowSeparator(.hidden)
             #endif
         } header: {

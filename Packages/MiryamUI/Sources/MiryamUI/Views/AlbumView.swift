@@ -46,7 +46,7 @@ public struct AlbumView: View {
         .accessibilityIdentifier(AccessibilityID.albumView.rawValue)
         .background(Color._miryamBackground)
         .navigationTitle(viewModel.album.name)
-        #if !os(macOS)
+        #if !os(macOS) && !os(tvOS)
             .navigationBarTitleDisplayMode(.inline)
         #endif
             .task {

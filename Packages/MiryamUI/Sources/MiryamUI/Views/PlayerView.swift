@@ -6,7 +6,9 @@ public struct PlayerView: View {
     @Bindable private var viewModel: PlayerViewModel
     @Environment(Router.self) private var router
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @GestureState private var isDragging = false
+    #if !os(tvOS)
+        @GestureState private var isDragging = false
+    #endif
 
     public init(viewModel: PlayerViewModel) {
         self.viewModel = viewModel
@@ -55,7 +57,7 @@ public struct PlayerView: View {
         }
         .accessibilityIdentifier(AccessibilityID.playerView.rawValue)
         .background(Color._miryamBackground)
-        #if !os(macOS)
+        #if !os(macOS) && !os(tvOS)
             .navigationBarTitleDisplayMode(.inline)
         #endif
     }
@@ -155,23 +157,30 @@ public struct PlayerView: View {
                         )
 
                     // Drag handle
-                    Circle()
-                        .fill(.white.opacity(0.6))
-                        .frame(width: isDragging ? 16 : 8, height: isDragging ? 16 : 8)
-                        .offset(x: max(0, geometry.size.width * viewModel.playbackState.progress - 4))
-                        .gesture(
-                            DragGesture(minimumDistance: 0)
-                                .updating($isDragging) { _, state, _ in
-                                    state = true
-                                }
-                                .onChanged { value in
-                                    let progress = max(0, min(1, value.location.x / geometry.size.width))
-                                    let viewModel = viewModel
-                                    Task { @MainActor in
-                                        await viewModel.seek(to: progress)
+                    #if os(tvOS)
+                        Circle()
+                            .fill(.white.opacity(0.6))
+                            .frame(width: 8, height: 8)
+                            .offset(x: max(0, geometry.size.width * viewModel.playbackState.progress - 4))
+                    #else
+                        Circle()
+                            .fill(.white.opacity(0.6))
+                            .frame(width: isDragging ? 16 : 8, height: isDragging ? 16 : 8)
+                            .offset(x: max(0, geometry.size.width * viewModel.playbackState.progress - 4))
+                            .gesture(
+                                DragGesture(minimumDistance: 0)
+                                    .updating($isDragging) { _, state, _ in
+                                        state = true
                                     }
-                                }
-                        )
+                                    .onChanged { value in
+                                        let progress = max(0, min(1, value.location.x / geometry.size.width))
+                                        let viewModel = viewModel
+                                        Task { @MainActor in
+                                            await viewModel.seek(to: progress)
+                                        }
+                                    }
+                            )
+                    #endif
                 }
             }
             .frame(height: 16)
