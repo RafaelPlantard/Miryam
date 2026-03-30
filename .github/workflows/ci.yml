@@ -104,6 +104,7 @@ jobs:
           files: coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: RafaelPlantard/Miryam
+          flags: unit-tests
           fail_ci_if_error: false
 
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
