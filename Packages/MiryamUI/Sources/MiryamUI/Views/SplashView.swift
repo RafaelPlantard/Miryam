@@ -15,11 +15,12 @@ public struct SplashView: View {
             LinearGradient.spotlight
                 .ignoresSafeArea()
 
-            Text("Miryam")
-                .font(.miryam.display)
-                .foregroundStyle(.white)
+            Image("musical-note", bundle: .module)
+                .resizable()
+                .frame(width: 100, height: 100)
                 .opacity(isActive ? 1 : 0)
                 .scaleEffect(isActive ? 1 : 0.8)
+                .accessibilityLabel("Miryam")
         }
         .onAppear {
             if reduceMotion {

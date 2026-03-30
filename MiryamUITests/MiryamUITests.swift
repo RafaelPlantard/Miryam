@@ -18,8 +18,8 @@ final class MiryamUITests: XCTestCase {
     @MainActor
     func testSplashScreenAppearsOnLaunch() throws {
         app.launch()
-        let miryamText = app.staticTexts["Miryam"]
-        XCTAssertTrue(miryamText.waitForExistence(timeout: 2))
+        let miryamImage = app.images["Miryam"]
+        XCTAssertTrue(miryamImage.waitForExistence(timeout: 2))
     }
 
     @MainActor
@@ -37,7 +37,7 @@ final class MiryamUITests: XCTestCase {
         let songsNavBar = app.navigationBars["Songs"]
         XCTAssertTrue(songsNavBar.waitForExistence(timeout: 5))
 
-        let searchField = app.searchFields["Search songs..."]
+        let searchField = app.searchFields["Search"]
         XCTAssertTrue(searchField.waitForExistence(timeout: 3))
     }
 
@@ -47,7 +47,7 @@ final class MiryamUITests: XCTestCase {
         let songsNavBar = app.navigationBars["Songs"]
         XCTAssertTrue(songsNavBar.waitForExistence(timeout: 5))
 
-        let searchField = app.searchFields["Search songs..."]
+        let searchField = app.searchFields["Search"]
         XCTAssertTrue(searchField.waitForExistence(timeout: 3))
         searchField.tap()
         searchField.typeText("Beatles")
@@ -129,7 +129,7 @@ final class MiryamUITests: XCTestCase {
             return
         }
 
-        let searchField = app.searchFields["Search songs..."]
+        let searchField = app.searchFields["Search"]
         guard searchField.waitForExistence(timeout: 3) else {
             XCTFail("Search field did not appear")
             return

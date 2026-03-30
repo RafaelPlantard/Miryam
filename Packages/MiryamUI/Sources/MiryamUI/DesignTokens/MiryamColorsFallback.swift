@@ -12,6 +12,7 @@ public extension Color {
     static let _miryamLabelTertiary = Color(light: .black.opacity(0.25), dark: .white.opacity(0.25))
     static let _miryamIconPrimary = Color(light: Color(hex: "1C1C1E"), dark: .white)
     static let _miryamAccent = Color(light: Color(hex: "006B80"), dark: Color(hex: "0086A0"))
+    static let _miryamSubtitle = Color(light: Color(hex: "545454"), dark: Color(hex: "737373"))
     // swiftlint:enable identifier_name
 }
 

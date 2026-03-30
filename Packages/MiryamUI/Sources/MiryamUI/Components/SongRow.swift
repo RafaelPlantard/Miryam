@@ -1,17 +1,19 @@
 import SwiftUI
 import MiryamCore
 
-/// Reusable song list row with artwork, title, and artist.
+/// Reusable song list row with artwork, title, artist, and more button.
 public struct SongRow: View {
     let song: Song
+    var onMoreTapped: (() -> Void)?
 
-    public init(song: Song) {
+    public init(song: Song, onMoreTapped: (() -> Void)? = nil) {
         self.song = song
+        self.onMoreTapped = onMoreTapped
     }
 
     public var body: some View {
-        HStack(spacing: 12) {
-            AsyncImage(url: song.artworkURL(size: 112)) { phase in
+        HStack(spacing: 16) {
+            AsyncImage(url: song.artworkURL(size: 104)) { phase in
                 switch phase {
                 case .success(let image):
                     image
@@ -21,33 +23,40 @@ public struct SongRow: View {
                     albumPlaceholder
                 case .empty:
                     albumPlaceholder
-                        .overlay(ProgressView().tint(Color._miryamLabelSecondary))
+                        .overlay(ProgressView().tint(Color._miryamSubtitle))
                 @unknown default:
                     albumPlaceholder
                 }
             }
-            .frame(width: 56, height: 56)
+            .frame(width: 52, height: 52)
             .clipShape(RoundedRectangle(cornerRadius: 8))
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(song.name)
                     .font(.miryam.bodyLarge)
                     .foregroundStyle(Color._miryamLabel)
                     .lineLimit(1)
 
                 Text(song.artistName)
-                    .font(.miryam.bodySmall)
-                    .foregroundStyle(Color._miryamLabelSecondary)
+                    .font(.miryam.caption)
+                    .foregroundStyle(Color._miryamSubtitle)
                     .lineLimit(1)
             }
 
             Spacer()
 
-            Text(song.formattedDuration)
-                .font(.miryam.bodySmall)
-                .foregroundStyle(Color._miryamLabelSecondary)
+            if let onMoreTapped {
+                Button(action: onMoreTapped) {
+                    Image(systemName: "ellipsis")
+                        .font(.body)
+                        .foregroundStyle(Color._miryamSubtitle)
+                        .frame(width: 36, height: 36)
+                        .contentShape(Rectangle())
+                }
+                .accessibilityLabel("More options for \(song.name)")
+            }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 8)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(song.name) by \(song.artistName)")
@@ -59,7 +68,7 @@ public struct SongRow: View {
             .fill(Color._miryamSurfaceSecondary)
             .overlay(
                 Image(systemName: "music.note")
-                    .foregroundStyle(Color._miryamLabelSecondary)
+                    .foregroundStyle(Color._miryamSubtitle)
             )
     }
 }

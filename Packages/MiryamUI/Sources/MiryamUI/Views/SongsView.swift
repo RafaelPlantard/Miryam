@@ -26,7 +26,7 @@ public struct SongsView: View {
         }
         .background(Color._miryamBackground)
         .navigationTitle("Songs")
-        .searchable(text: $viewModel.searchQuery, prompt: "Search songs...")
+        .searchable(text: $viewModel.searchQuery, prompt: "Search")
         .onChange(of: viewModel.searchQuery) {
             viewModel.search()
         }
@@ -47,23 +47,17 @@ public struct SongsView: View {
             }
 
             ForEach(viewModel.songs) { song in
-                SongRow(song: song)
-                    .onTapGesture {
-                        router.navigate(to: .player(song))
+                SongRow(song: song) {
+                    router.presentSheet(.moreOptions(song))
+                }
+                .onTapGesture {
+                    router.navigate(to: .player(song))
+                }
+                .onAppear {
+                    if song.id == viewModel.songs.last?.id {
+                        Task { await viewModel.loadMore() }
                     }
-                    .swipeActions(edge: .trailing) {
-                        Button {
-                            router.presentSheet(.moreOptions(song))
-                        } label: {
-                            Label("More", systemImage: "ellipsis.circle")
-                        }
-                        .tint(Color._miryamAccent)
-                    }
-                    .onAppear {
-                        if song.id == viewModel.songs.last?.id {
-                            Task { await viewModel.loadMore() }
-                        }
-                    }
+                }
             }
 
             if viewModel.isLoadingMore {

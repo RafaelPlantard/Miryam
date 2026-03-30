@@ -2,7 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Miryam" : {
-      "comment" : "App name displayed on splash screen",
+      "comment" : "App name — accessibility label on splash screen",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -14,6 +14,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Miryam"
+          }
+        }
+      }
+    },
+    "More options for %@" : {
+      "comment" : "Accessibility label for the more button on a song row",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More options for %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mais opções para %@"
           }
         }
       }
@@ -35,36 +52,19 @@
         }
       }
     },
-    "Search songs..." : {
+    "Search" : {
       "comment" : "Search field placeholder",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search songs..."
+            "value" : "Search"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Buscar músicas..."
-          }
-        }
-      }
-    },
-    "More" : {
-      "comment" : "Swipe action label for more options",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "More"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mais"
+            "value" : "Buscar"
           }
         }
       }
@@ -273,53 +273,19 @@
         }
       }
     },
-    "View Album" : {
+    "View album" : {
       "comment" : "Action to view the album of a song",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "View Album"
+            "value" : "View album"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ver Álbum"
-          }
-        }
-      }
-    },
-    "Share" : {
-      "comment" : "Action to share a song",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Share"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Compartilhar"
-          }
-        }
-      }
-    },
-    "Cancel" : {
-      "comment" : "Cancel button label",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancelar"
+            "value" : "Ver álbum"
           }
         }
       }
