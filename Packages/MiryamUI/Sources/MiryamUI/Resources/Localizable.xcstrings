@@ -14,9 +14,6 @@
         }
       }
     },
-    "%lld" : {
-
-    },
     "%lld tracks" : {
       "comment" : "Track count in album header",
       "localizations" : {
