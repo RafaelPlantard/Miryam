@@ -1,0 +1,66 @@
+#if os(tvOS)
+import Testing
+import SnapshotTesting
+import SwiftUI
+import UIKit
+@testable import MiryamUI
+@testable import MiryamFeatures
+import MiryamCore
+
+@Suite("AlbumView TV Snapshots")
+@MainActor
+struct AlbumViewTVSnapshotTests {
+
+    private func makeViewModel(
+        album: Album = TestData.makeAlbum(),
+        songs: [Song] = TestData.sampleSongs
+    ) -> AlbumViewModel {
+        let songRepo = MockSongRepository()
+        let viewModel = AlbumViewModel(album: album, songRepository: songRepo)
+        viewModel.songs = songs
+        viewModel.isLoading = false
+        return viewModel
+    }
+
+    @Test("AlbumView — TV — Loaded — Light Mode")
+    func albumLoadedTVLight() {
+        let router = Router()
+        let viewModel = makeViewModel()
+        let view = NavigationStack {
+            AlbumView(viewModel: viewModel, onPlaySong: { _ in })
+        }
+        .environment(router)
+
+        let controller = SnapshotHelper.hostingController(
+            for: view,
+            interfaceStyle: .light
+        )
+        assertSnapshot(
+            of: controller,
+            as: .image(on: .tv),
+            record: false
+        )
+    }
+
+    @Test("AlbumView — TV — Loaded — Dark Mode")
+    func albumLoadedTVDark() {
+        let router = Router()
+        let viewModel = makeViewModel()
+        let view = NavigationStack {
+            AlbumView(viewModel: viewModel, onPlaySong: { _ in })
+        }
+        .environment(router)
+
+        let controller = SnapshotHelper.hostingController(
+            for: view,
+            interfaceStyle: .dark
+        )
+        assertSnapshot(
+            of: controller,
+            as: .image(on: .tv),
+            record: false
+        )
+    }
+}
+
+#endif // os(tvOS)
