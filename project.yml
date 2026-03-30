@@ -83,6 +83,7 @@ targets:
       base:
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
+        GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam
         DEVELOPMENT_TEAM: ${APPLE_TEAM_ID}
       configs:

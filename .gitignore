@@ -26,6 +26,12 @@ Miryam.xcodeproj/
 # Exception: keep .xcworkspace for SPM resolution
 !Miryam.xcodeproj/project.xcworkspace/
 
+# XcodeGen — Info.plist files are generated from project.yml
+Miryam/Info.plist
+MiryamWatch/Info.plist
+MiryamVision/Info.plist
+MiryamTV/Info.plist
+
 # Swift Package Manager
 .build/
 .swiftpm/
