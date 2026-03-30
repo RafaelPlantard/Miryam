@@ -58,6 +58,8 @@ public struct SongRow: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("\(song.name) by \(song.artistName)")
+            .accessibilityHint("Double tap to play")
 
             if let onMoreTapped {
                 Button(action: onMoreTapped) {
@@ -74,9 +76,6 @@ public struct SongRow: View {
         }
         .padding(.vertical, 8)
         .accessibilityIdentifier(AccessibilityID.songRow(id: song.id))
-        .accessibilityElement(children: .contain)
-        .accessibilityLabel("\(song.name) by \(song.artistName)")
-        .accessibilityHint("Double tap to play")
     }
 
     private var albumPlaceholder: some View {

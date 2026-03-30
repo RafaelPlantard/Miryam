@@ -197,9 +197,9 @@ public struct PlayerView: View {
                 Image(systemName: "gobackward.15")
                     .font(.system(size: 20))
                     .foregroundStyle(Color._miryamIconPrimary)
-                    .frame(width: 36, height: 36)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
             }
-            .frame(minWidth: 44, minHeight: 44)
             .accessibilityIdentifier(AccessibilityID.skipBackward.rawValue)
             .accessibilityLabel("Skip backward 15 seconds")
 
@@ -222,9 +222,9 @@ public struct PlayerView: View {
                 Image(systemName: "goforward.15")
                     .font(.system(size: 20))
                     .foregroundStyle(Color._miryamIconPrimary)
-                    .frame(width: 36, height: 36)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
             }
-            .frame(minWidth: 44, minHeight: 44)
             .accessibilityIdentifier(AccessibilityID.skipForward.rawValue)
             .accessibilityLabel("Skip forward 15 seconds")
         }
