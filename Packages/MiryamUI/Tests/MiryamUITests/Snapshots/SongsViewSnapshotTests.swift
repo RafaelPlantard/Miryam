@@ -35,7 +35,7 @@ struct SongsViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -55,7 +55,7 @@ struct SongsViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -78,7 +78,7 @@ struct SongsViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -99,7 +99,7 @@ struct SongsViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -123,7 +123,7 @@ struct SongsViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -145,7 +145,7 @@ struct SongsViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -169,7 +169,7 @@ struct SongsViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -191,7 +191,7 @@ struct SongsViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -215,7 +215,7 @@ struct SongsViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 
@@ -237,7 +237,7 @@ struct SongsViewSnapshotTests {
         assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro),
-            record: true
+            record: false
         )
     }
 }

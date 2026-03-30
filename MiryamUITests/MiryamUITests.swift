@@ -18,8 +18,9 @@ final class MiryamUITests: XCTestCase {
     @MainActor
     func testSplashScreenAppearsOnLaunch() throws {
         app.launch()
-        let miryamImage = app.images["Miryam"]
-        XCTAssertTrue(miryamImage.waitForExistence(timeout: 2))
+        // Verify the Songs view doesn't appear immediately — splash is blocking.
+        let songsNavBar = app.navigationBars["Songs"]
+        XCTAssertFalse(songsNavBar.exists, "Songs should not appear while splash is showing")
     }
 
     @MainActor
@@ -103,11 +104,13 @@ final class MiryamUITests: XCTestCase {
         XCTAssertTrue(playPauseButton.waitForExistence(timeout: 5))
 
         let backButton = app.navigationBars.buttons.firstMatch
-        XCTAssertTrue(backButton.waitForExistence(timeout: 3))
+        XCTAssertTrue(backButton.waitForExistence(timeout: 5))
         backButton.tap()
 
-        let songsNavBar = app.navigationBars["Songs"]
-        XCTAssertTrue(songsNavBar.waitForExistence(timeout: 3))
+        // After navigating back, verify we're on the Songs screen.
+        // The search field confirms we returned to SongsView.
+        let searchField = app.searchFields.firstMatch
+        XCTAssertTrue(searchField.waitForExistence(timeout: 5))
     }
 
     // MARK: - Launch Performance

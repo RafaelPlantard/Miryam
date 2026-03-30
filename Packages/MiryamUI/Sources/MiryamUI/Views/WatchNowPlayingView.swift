@@ -2,10 +2,14 @@ import SwiftUI
 import MiryamCore
 import MiryamFeatures
 
-struct WatchNowPlayingView: View {
+public struct WatchNowPlayingView: View {
     @Bindable var viewModel: PlayerViewModel
 
-    var body: some View {
+    public init(viewModel: PlayerViewModel) {
+        self.viewModel = viewModel
+    }
+
+    public var body: some View {
         VStack(spacing: 8) {
             if let song = viewModel.currentSong {
                 Text(song.name)
@@ -44,6 +48,7 @@ struct WatchNowPlayingView: View {
                 } label: {
                     Image(systemName: "gobackward.15")
                 }
+                .accessibilityLabel("Skip backward 15 seconds")
 
                 Button {
                     Task { await viewModel.togglePlayPause() }
@@ -51,12 +56,15 @@ struct WatchNowPlayingView: View {
                     Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
                         .font(.title2)
                 }
+                .accessibilityLabel(viewModel.isPlaying ? "Pause" : "Play")
+                .accessibilityValue(viewModel.isPlaying ? "Playing" : "Paused")
 
                 Button {
                     Task { await viewModel.skipForward() }
                 } label: {
                     Image(systemName: "goforward.15")
                 }
+                .accessibilityLabel("Skip forward 15 seconds")
             }
         }
         .padding()

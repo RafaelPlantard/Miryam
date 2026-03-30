@@ -5,12 +5,12 @@ import SwiftUI
 import UIKit
 @testable import MiryamUI
 
-@Suite("SplashView Snapshots")
+@Suite("SplashView iPad Snapshots")
 @MainActor
-struct SplashViewSnapshotTests {
+struct SplashViewiPadSnapshotTests {
 
-    @Test("SplashView — Light Mode")
-    func splashLightMode() {
+    @Test("SplashView — iPad — Light Mode")
+    func splashiPadLight() {
         let view = SplashView(onComplete: {})
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -18,13 +18,13 @@ struct SplashViewSnapshotTests {
         )
         assertSnapshot(
             of: controller,
-            as: .image(on: .iPhone13Pro),
+            as: .image(on: .iPadPro11(.portrait)),
             record: false
         )
     }
 
-    @Test("SplashView — Dark Mode")
-    func splashDarkMode() {
+    @Test("SplashView — iPad — Dark Mode")
+    func splashiPadDark() {
         let view = SplashView(onComplete: {})
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -32,7 +32,7 @@ struct SplashViewSnapshotTests {
         )
         assertSnapshot(
             of: controller,
-            as: .image(on: .iPhone13Pro),
+            as: .image(on: .iPadPro11(.portrait)),
             record: false
         )
     }

@@ -21,25 +21,26 @@ public struct PlayerView: View {
     }
 
     public var body: some View {
-        VStack(spacing: isCompact ? 24 : 32) {
-            // Artwork
-            artworkView
+        ScrollView {
+            VStack(spacing: isCompact ? 24 : 32) {
+                // Artwork
+                artworkView
 
-            // Song info
-            songInfoView
+                // Song info
+                songInfoView
 
-            // Timeline (MANDATORY)
-            timelineView
+                // Timeline (MANDATORY)
+                timelineView
 
-            // Controls
-            controlsView
-
-            Spacer()
+                // Controls
+                controlsView
+            }
+            .padding(.horizontal, isCompact ? 24 : 48)
+            .padding(.top, isCompact ? 32 : 48)
+            .padding(.bottom, 24)
+            .frame(maxWidth: isCompact ? .infinity : 600)
+            .frame(maxWidth: .infinity)
         }
-        .padding(.horizontal, isCompact ? 24 : 48)
-        .padding(.top, isCompact ? 32 : 48)
-        .frame(maxWidth: isCompact ? .infinity : 600, maxHeight: .infinity)
-        .frame(maxWidth: .infinity)
         .background(Color._miryamBackground)
         #if !os(macOS)
         .navigationBarTitleDisplayMode(.inline)

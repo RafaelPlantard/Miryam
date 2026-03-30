@@ -1,3 +1,4 @@
+import Foundation
 import MiryamCore
 
 /// A Sendable mock for PlayerProtocol.

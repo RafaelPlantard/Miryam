@@ -21,6 +21,9 @@ packages:
     path: Packages/MiryamFeatures
   MiryamUI:
     path: Packages/MiryamUI
+  SnapshotTesting:
+    url: https://github.com/pointfreeco/swift-snapshot-testing
+    from: "1.17.0"
 
 targets:
   Miryam:
@@ -53,6 +56,9 @@ targets:
         CFBundleVersion: "1"
     dependencies:
       - package: MiryamUI
+      - package: MiryamFeatures
+      - package: MiryamCore
+      - package: MiryamPersistence
     settings:
       base:
         SWIFT_VERSION: "6.0"
@@ -149,6 +155,26 @@ targets:
         CODE_SIGN_STYLE: Automatic
         GENERATE_INFOPLIST_FILE: YES
 
+  MiryamSnapshotTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Packages/MiryamUI/Tests/MiryamUITests
+    dependencies:
+      - target: Miryam
+      - package: MiryamUI
+      - package: MiryamFeatures
+      - package: MiryamCore
+      - package: SnapshotTesting
+        product: SnapshotTesting
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.snapshottests
+
 schemes:
   Miryam:
     build:
@@ -162,6 +188,7 @@ schemes:
       targets:
         - MiryamTests
         - MiryamUITests
+        - MiryamSnapshotTests
       coverageTargets:
         - Miryam
     profile:
