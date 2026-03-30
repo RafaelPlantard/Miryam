@@ -3,17 +3,24 @@ name: Deploy
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*'
   workflow_dispatch:
     inputs:
-      lane:
-        description: 'Fastlane lane to run'
+      release_type:
+        description: 'Release type'
         required: true
-        default: 'beta'
+        default: 'snapshot'
         type: choice
         options:
-          - beta
+          - snapshot
           - release
+      version:
+        description: 'Version (e.g. 1.0.0). Leave empty for current.'
+        required: false
+        type: string
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
@@ -22,6 +29,8 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install Mint
         run: brew install mint
@@ -37,8 +46,25 @@ jobs:
       - name: Generate Xcode project
         run: mint run xcodegen generate
 
+      - name: Determine lane
+        id: lane
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TYPE="${{ inputs.release_type }}"
+          elif [[ "${{ github.ref_name }}" == *"-SNAPSHOT"* ]]; then
+            TYPE="snapshot"
+          else
+            TYPE="release"
+          fi
+          if [ "$TYPE" = "release" ]; then
+            echo "lane=release" >> "$GITHUB_OUTPUT"
+          else
+            echo "lane=beta" >> "$GITHUB_OUTPUT"
+          fi
+          echo "type=$TYPE" >> "$GITHUB_OUTPUT"
+
       - name: Run fastlane
-        run: bundle exec fastlane ${{ github.event.inputs.lane || 'beta' }}
+        run: bundle exec fastlane ${{ steps.lane.outputs.lane }}
         env:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
@@ -59,3 +85,60 @@ jobs:
             fastlane/builds/*.dSYM.zip
           retention-days: 90
           if-no-files-found: ignore
+
+      - name: Determine version and tag
+        if: github.event_name == 'workflow_dispatch'
+        id: version
+        run: |
+          VERSION="${{ inputs.version }}"
+          if [ -z "$VERSION" ]; then
+            VERSION=$(grep 'CFBundleShortVersionString' project.yml | head -1 | sed 's/.*"\(.*\)"/\1/')
+          fi
+          TYPE="${{ steps.lane.outputs.type }}"
+          if [ "$TYPE" = "snapshot" ]; then
+            LAST=$(git tag -l "v${VERSION}-SNAPSHOT.*" | sort -V | tail -1 | grep -oE '[0-9]+$' || echo 0)
+            NEXT=$((LAST + 1))
+            TAG="v${VERSION}-SNAPSHOT.${NEXT}"
+            PRERELEASE="true"
+          else
+            TAG="v${VERSION}"
+            PRERELEASE="false"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$PRERELEASE" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag and GitHub Release
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.version.outputs.tag }}" -m "Build ${{ steps.version.outputs.version }}"
+          git push origin "${{ steps.version.outputs.tag }}"
+          PRERELEASE_FLAG=""
+          if [ "${{ steps.version.outputs.prerelease }}" = "true" ]; then
+            PRERELEASE_FLAG="--prerelease"
+          fi
+          gh release create "${{ steps.version.outputs.tag }}" \
+            fastlane/builds/*.ipa fastlane/builds/*.dSYM.zip \
+            --title "${{ steps.version.outputs.tag }}" \
+            --generate-notes \
+            $PRERELEASE_FLAG
+
+      - name: Create GitHub Release (tag-triggered)
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ github.ref_name }}"
+          PRERELEASE_FLAG=""
+          if [[ "$TAG" == *"-SNAPSHOT"* ]]; then
+            PRERELEASE_FLAG="--prerelease"
+          fi
+          gh release create "$TAG" \
+            fastlane/builds/*.ipa fastlane/builds/*.dSYM.zip \
+            --title "$TAG" \
+            --generate-notes \
+            $PRERELEASE_FLAG
