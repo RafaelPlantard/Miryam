@@ -35,7 +35,7 @@ struct AlbumViewTVSnapshotTests {
             for: view,
             interfaceStyle: .light
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(on: .tv, precision: 0.995, perceptualPrecision: 0.98),
             record: false
@@ -55,7 +55,7 @@ struct AlbumViewTVSnapshotTests {
             for: view,
             interfaceStyle: .dark
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(on: .tv, precision: 0.995, perceptualPrecision: 0.98),
             record: false
