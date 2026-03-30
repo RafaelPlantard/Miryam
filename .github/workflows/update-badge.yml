@@ -1,0 +1,19 @@
+name: Update Version Badge
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  badge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update version badge
+        uses: schneegans/dynamic-badges-action@e9a478b16159b93555ef4c940f305c3be66bc115 # v1.7.0
+        with:
+          auth: ${{ secrets.GIST_TOKEN }}
+          gistID: 1b309b73189be09d6e6a1a163c7693e6
+          filename: miryam-version.json
+          label: version
+          message: ${{ github.ref_name }}
+          color: blue
