@@ -1,5 +1,8 @@
 import Foundation
 import MiryamCore
+import os
+
+private let logger = Logger(subsystem: "io.swift-yah.miryam", category: "Player")
 
 /// ViewModel for the Player screen.
 @Observable
@@ -35,15 +38,23 @@ public final class PlayerViewModel {
         isBuffering = true
         error = nil
 
+        logger.info("Playing: \(song.name) by \(song.artistName)")
+
         do {
             try await player.play(song)
-            try? await cacheRepository.markAsRecentlyPlayed(song)
+            do {
+                try await cacheRepository.markAsRecentlyPlayed(song)
+            } catch {
+                logger.warning("Failed to mark as recently played: \(error)")
+            }
         } catch let appError as AppError {
             error = appError
             isPlaying = false
+            logger.error("Playback failed: \(appError)")
         } catch {
             self.error = .playbackFailed(error.localizedDescription)
             isPlaying = false
+            logger.error("Playback failed (unknown): \(error)")
         }
     }
 

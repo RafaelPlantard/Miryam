@@ -1,6 +1,9 @@
 import Foundation
 import MiryamCore
+import os
 import SwiftData
+
+private let logger = Logger(subsystem: "io.swift-yah.miryam", category: "Cache")
 
 /// Actor-based cache using SwiftData for offline-first song storage.
 @ModelActor
