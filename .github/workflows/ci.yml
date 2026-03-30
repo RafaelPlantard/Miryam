@@ -132,6 +132,17 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: mint run xcodegen generate
 
+      - name: Verify snapshot references exist
+        run: |
+          echo "=== Snapshot reference images ==="
+          find Packages/MiryamUI/Tests/MiryamUITests/Snapshots/__Snapshots__ -name "*.png" | head -20
+          echo "Total: $(find Packages/MiryamUI/Tests/MiryamUITests/Snapshots/__Snapshots__ -name '*.png' | wc -l) images"
+
+      - name: Clean derived data
+        run: |
+          rm -rf ~/Library/Developer/Xcode/DerivedData/Miryam-*
+          rm -rf SnapshotTestResults.xcresult
+
       - name: Run snapshot tests
         env:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}

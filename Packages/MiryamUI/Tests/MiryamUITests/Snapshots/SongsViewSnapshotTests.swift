@@ -32,7 +32,7 @@ struct SongsViewSnapshotTests {
             for: view,
             interfaceStyle: .light
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro, precision: 0.995, perceptualPrecision: 0.98),
             record: false
@@ -52,7 +52,7 @@ struct SongsViewSnapshotTests {
             for: view,
             interfaceStyle: .dark
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro, precision: 0.995, perceptualPrecision: 0.98),
             record: false
@@ -75,7 +75,7 @@ struct SongsViewSnapshotTests {
             for: view,
             interfaceStyle: .light
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro, precision: 0.995, perceptualPrecision: 0.98),
             record: false
@@ -96,7 +96,7 @@ struct SongsViewSnapshotTests {
             for: view,
             interfaceStyle: .dark
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro, precision: 0.995, perceptualPrecision: 0.98),
             record: false
@@ -120,7 +120,7 @@ struct SongsViewSnapshotTests {
             for: view,
             interfaceStyle: .light
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro, precision: 0.995, perceptualPrecision: 0.98),
             record: false
@@ -142,7 +142,7 @@ struct SongsViewSnapshotTests {
             for: view,
             interfaceStyle: .dark
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro, precision: 0.995, perceptualPrecision: 0.98),
             record: false
@@ -166,7 +166,7 @@ struct SongsViewSnapshotTests {
             for: view,
             interfaceStyle: .light
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro, precision: 0.995, perceptualPrecision: 0.98),
             record: false
@@ -188,7 +188,7 @@ struct SongsViewSnapshotTests {
             for: view,
             interfaceStyle: .dark
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro, precision: 0.995, perceptualPrecision: 0.98),
             record: false
@@ -212,7 +212,7 @@ struct SongsViewSnapshotTests {
             for: view,
             interfaceStyle: .light
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro, precision: 0.995, perceptualPrecision: 0.98),
             record: false
@@ -234,7 +234,7 @@ struct SongsViewSnapshotTests {
             for: view,
             interfaceStyle: .dark
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(on: .iPhone13Pro, precision: 0.995, perceptualPrecision: 0.98),
             record: false

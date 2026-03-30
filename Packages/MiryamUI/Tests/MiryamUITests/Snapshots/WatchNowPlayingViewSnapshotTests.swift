@@ -41,7 +41,7 @@ struct WatchNowPlayingViewSnapshotTests {
             for: view,
             interfaceStyle: .light
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(precision: 0.995, perceptualPrecision: 0.98, size: Self.watchSize),
             record: false
@@ -67,7 +67,7 @@ struct WatchNowPlayingViewSnapshotTests {
             for: view,
             interfaceStyle: .dark
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(precision: 0.995, perceptualPrecision: 0.98, size: Self.watchSize),
             record: false
@@ -85,7 +85,7 @@ struct WatchNowPlayingViewSnapshotTests {
             for: view,
             interfaceStyle: .light
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(precision: 0.995, perceptualPrecision: 0.98, size: Self.watchSize),
             record: false
@@ -101,7 +101,7 @@ struct WatchNowPlayingViewSnapshotTests {
             for: view,
             interfaceStyle: .dark
         )
-        assertSnapshot(
+        SnapshotHelper.assertSnapshot(
             of: controller,
             as: .image(precision: 0.995, perceptualPrecision: 0.98, size: Self.watchSize),
             record: false
