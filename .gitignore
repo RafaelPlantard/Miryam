@@ -54,6 +54,7 @@ vendor/
 
 # Superpowers brainstorm artifacts
 .superpowers/
+docs/superpowers/
 
 # Coverage reports
 coverage/
