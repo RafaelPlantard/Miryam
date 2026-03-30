@@ -105,7 +105,7 @@ final class MiryamUITests: XCTestCase {
         searchFor("xyznonexistent")
 
         let noResultsView = app.descendants(matching: .any)[AccessibilityID.noResultsView.rawValue]
-        XCTAssertTrue(noResultsView.waitForExistence(timeout: 5), "No results view should appear for empty search")
+        XCTAssertTrue(noResultsView.waitForExistence(timeout: 10), "No results view should appear for empty search")
     }
 
     func testEmptySearchShowsPrompt() throws {

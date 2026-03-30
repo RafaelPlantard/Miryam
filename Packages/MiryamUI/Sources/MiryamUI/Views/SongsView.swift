@@ -24,6 +24,7 @@ public struct SongsView: View {
                 songsList
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier(AccessibilityID.songsView.rawValue)
         .background(Color._miryamBackground)
         .navigationTitle("Songs")
