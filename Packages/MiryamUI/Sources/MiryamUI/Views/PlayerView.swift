@@ -63,7 +63,7 @@ public struct PlayerView: View {
     private var artworkView: some View {
         Group {
             if let song = viewModel.currentSong {
-                AsyncImage(url: song.artworkURL(size: 600)) { phase in
+                CachedAsyncImage(url: song.artworkURL(size: 600)) { phase in
                     switch phase {
                     case let .success(image):
                         image
@@ -126,6 +126,7 @@ public struct PlayerView: View {
                         .font(.miryam.bodySmall)
                         .foregroundStyle(Color._miryamAccent)
                         .lineLimit(1)
+                        .frame(minHeight: 44)
                 }
                 .accessibilityLabel("View album \(song.albumName)")
             }

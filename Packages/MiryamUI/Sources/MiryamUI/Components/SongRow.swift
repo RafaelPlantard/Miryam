@@ -19,45 +19,42 @@ public struct SongRow: View {
 
     public var body: some View {
         HStack(spacing: 16) {
-            Button {
-                onTapped?()
-            } label: {
-                HStack(spacing: 16) {
-                    AsyncImage(url: song.artworkURL(size: 104)) { phase in
-                        switch phase {
-                        case let .success(image):
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        case .failure:
-                            albumPlaceholder
-                        case .empty:
-                            albumPlaceholder
-                                .overlay(ProgressView().tint(Color._miryamSubtitle))
-                        @unknown default:
-                            albumPlaceholder
-                        }
+            HStack(spacing: 16) {
+                CachedAsyncImage(url: song.artworkURL(size: 104)) { phase in
+                    switch phase {
+                    case let .success(image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    case .failure:
+                        albumPlaceholder
+                    case .empty:
+                        albumPlaceholder
+                            .overlay(ProgressView().tint(Color._miryamSubtitle))
+                    @unknown default:
+                        albumPlaceholder
                     }
-                    .frame(width: 52, height: 52)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(song.name)
-                            .font(.miryam.bodyLarge)
-                            .foregroundStyle(Color._miryamLabel)
-                            .lineLimit(1)
-
-                        Text(song.artistName)
-                            .font(.miryam.caption)
-                            .foregroundStyle(Color._miryamSubtitle)
-                            .lineLimit(1)
-                    }
-
-                    Spacer()
                 }
-                .contentShape(Rectangle())
+                .frame(width: 52, height: 52)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(song.name)
+                        .font(.miryam.bodyLarge)
+                        .foregroundStyle(Color._miryamLabel)
+                        .lineLimit(1)
+
+                    Text(song.artistName)
+                        .font(.miryam.caption)
+                        .foregroundStyle(Color._miryamSubtitle)
+                        .lineLimit(1)
+                }
+
+                Spacer()
             }
-            .buttonStyle(.plain)
+            .contentShape(Rectangle())
+            .onTapGesture { onTapped?() }
+            .accessibilityAddTraits(.isButton)
             .accessibilityLabel("\(song.name) by \(song.artistName)")
             .accessibilityHint("Double tap to play")
 
