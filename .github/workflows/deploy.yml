@@ -82,6 +82,8 @@ jobs:
       - name: Run fastlane
         run: bundle exec fastlane ${{ steps.lane.outputs.lane }}
         env:
+          LC_ALL: en_US.UTF-8
+          LANG: en_US.UTF-8
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           ITC_TEAM_ID: ${{ secrets.ITC_TEAM_ID }}
