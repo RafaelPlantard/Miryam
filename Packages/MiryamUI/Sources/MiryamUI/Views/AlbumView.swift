@@ -47,9 +47,9 @@ public struct AlbumView: View {
         .background(Color._miryamBackground)
         .navigationTitle(viewModel.album.name)
         .inlineNavigationTitle()
-            .task {
-                await viewModel.loadSongs()
-            }
+        .task {
+            await viewModel.loadSongs()
+        }
     }
 
     private var albumArtworkSize: CGFloat {
