@@ -3,6 +3,8 @@
 default_platform(:ios)
 
 APP_IDENTIFIER = "io.swift-yah.miryam"
+WATCH_IDENTIFIER = "io.swift-yah.miryam.watchkitapp"
+ALL_IDENTIFIERS = [APP_IDENTIFIER, WATCH_IDENTIFIER]
 PROJECT = "Miryam.xcodeproj"
 SCHEME = "Miryam"
 
@@ -68,13 +70,40 @@ platform :ios do
     )
   end
 
+  desc "Register Watch App ID and generate App Store profiles"
+  lane :setup_watch_signing do
+    api_key = asc_api_key
+
+    # Register Watch bundle ID via ASC API
+    token = Spaceship::ConnectAPI::Token.create(**api_key)
+    Spaceship::ConnectAPI.token = token
+    existing = Spaceship::ConnectAPI::BundleId.find(WATCH_IDENTIFIER)
+    if existing
+      UI.message("Bundle ID '#{WATCH_IDENTIFIER}' already exists")
+    else
+      Spaceship::ConnectAPI::BundleId.create(
+        name: "Miryam Watch",
+        identifier: WATCH_IDENTIFIER,
+        platform: "IOS"
+      )
+      UI.success("Created Bundle ID '#{WATCH_IDENTIFIER}'")
+    end
+
+    match(
+      type: "appstore",
+      app_identifier: ALL_IDENTIFIERS,
+      readonly: false,
+      api_key: api_key
+    )
+  end
+
   desc "First-time setup: generate all cert types in MiryamCertificates repo"
   lane :setup_match do
     api_key = asc_api_key
     ["development", "adhoc", "appstore"].each do |cert_type|
       match(
         type: cert_type,
-        app_identifier: APP_IDENTIFIER,
+        app_identifier: ALL_IDENTIFIERS,
         readonly: false,
         api_key: api_key
       )
@@ -162,7 +191,7 @@ platform :ios do
     api_key = asc_api_key
     match(
       type: "appstore",
-      app_identifier: APP_IDENTIFIER,
+      app_identifier: ALL_IDENTIFIERS,
       readonly: true,
       api_key: api_key
     )
@@ -196,7 +225,7 @@ platform :ios do
     api_key = asc_api_key
     match(
       type: "appstore",
-      app_identifier: APP_IDENTIFIER,
+      app_identifier: ALL_IDENTIFIERS,
       readonly: true,
       api_key: api_key
     )
