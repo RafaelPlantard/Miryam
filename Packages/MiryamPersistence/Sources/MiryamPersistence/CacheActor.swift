@@ -6,7 +6,7 @@ import MiryamCore
 @ModelActor
 public actor CacheActor: CacheRepositoryProtocol {
 
-    public func cacheSongs(_ songs: [Song]) async throws {
+    public func cacheSongs(_ songs: [Song], for query: String) async throws {
         do {
             for song in songs {
                 let songId = song.id
@@ -27,8 +27,9 @@ public actor CacheActor: CacheRepositoryProtocol {
                     cachedSong.trackNumber = song.trackNumber
                     cachedSong.releaseDate = song.releaseDate
                     cachedSong.cachedAt = Date()
+                    cachedSong.searchQuery = query
                 } else {
-                    let cached = CachedSong(from: song)
+                    let cached = CachedSong(from: song, query: query)
                     modelContext.insert(cached)
                 }
             }

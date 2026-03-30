@@ -68,8 +68,8 @@ public final class SongsViewModel {
                 pagination.advance(resultCount: result.songs.count)
                 hasMorePages = pagination.hasMorePages
 
-                // Cache results
-                try? await cacheRepository.cacheSongs(result.songs)
+                // Cache results with the search query for offline fallback
+                try? await cacheRepository.cacheSongs(result.songs, for: searchQuery)
             } catch let appError as AppError {
                 guard !Task.isCancelled else { return }
                 // Try cache on network error
@@ -107,7 +107,7 @@ public final class SongsViewModel {
             pagination.advance(resultCount: result.songs.count)
             hasMorePages = pagination.hasMorePages
 
-            try? await cacheRepository.cacheSongs(result.songs)
+            try? await cacheRepository.cacheSongs(result.songs, for: searchQuery)
         } catch {
             // Silently fail on pagination errors -- user still has current results
         }
