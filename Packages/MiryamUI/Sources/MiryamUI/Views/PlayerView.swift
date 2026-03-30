@@ -41,6 +41,18 @@ public struct PlayerView: View {
             .frame(maxWidth: isCompact ? .infinity : 600)
             .frame(maxWidth: .infinity)
         }
+        .overlay {
+            if viewModel.isBuffering {
+                ZStack {
+                    Color._miryamBackground.opacity(0.6)
+                    ProgressView()
+                        .controlSize(.large)
+                        .tint(Color._miryamAccent)
+                }
+                .ignoresSafeArea()
+                .accessibilityLabel("Loading song")
+            }
+        }
         .background(Color._miryamBackground)
         #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
