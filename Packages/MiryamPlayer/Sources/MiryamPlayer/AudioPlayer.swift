@@ -1,6 +1,9 @@
 @preconcurrency import AVFoundation
 import Foundation
 import MiryamCore
+import os
+
+private let logger = Logger(subsystem: "io.swift-yah.miryam", category: "Audio")
 
 /// AVFoundation-based audio player actor implementing ``PlayerProtocol``.
 ///
@@ -44,11 +47,14 @@ public actor AudioPlayer: PlayerProtocol {
         currentSong = song
         emitState(.init(status: .loading, currentSong: song))
 
-        #if canImport(AVFAudio)
+        logger.info("Playing: \(song.name) by \(song.artistName)")
+
+        #if os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
             do {
                 try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
                 try AVAudioSession.sharedInstance().setActive(true)
             } catch {
+                logger.error("Audio session setup failed: \(error)")
                 throw AppError.playbackFailed(
                     "Audio session setup failed: \(error.localizedDescription)"
                 )
@@ -130,7 +136,10 @@ public actor AudioPlayer: PlayerProtocol {
     // MARK: - Observers
 
     private func addTimeObserver(to avPlayer: AVPlayer) {
-        let interval = CMTime(seconds: Constants.Player.timeObserverInterval, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        let interval = CMTime(
+            seconds: Constants.Player.timeObserverInterval,
+            preferredTimescale: CMTimeScale(NSEC_PER_SEC)
+        )
         timeObserver = avPlayer.addPeriodicTimeObserver(
             forInterval: interval,
             queue: .main
@@ -190,6 +199,8 @@ public actor AudioPlayer: PlayerProtocol {
     private func handlePlaybackEnd() {
         guard let song = currentSong else { return }
         let duration = player?.currentItem?.duration.seconds ?? 0
+
+        logger.debug("Playback ended: \(song.name)")
 
         emitState(PlaybackState(
             status: .paused,
