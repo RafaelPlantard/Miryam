@@ -26,7 +26,8 @@ public struct MoreOptionsView: View {
             // Actions
             actionButton(
                 icon: "music.note.list",
-                title: "View album"
+                title: "View album",
+                identifier: AccessibilityID.viewAlbumButton.rawValue
             ) {
                 router.dismissSheet()
                 onViewAlbum()
@@ -34,6 +35,7 @@ public struct MoreOptionsView: View {
 
             Spacer()
         }
+        .accessibilityIdentifier(AccessibilityID.moreOptionsSheet.rawValue)
         .background(Color._miryamSurface)
         .presentationDetents([.medium])
         .presentationCornerRadius(16)
@@ -62,6 +64,7 @@ public struct MoreOptionsView: View {
     private func actionButton(
         icon: String,
         title: String,
+        identifier: String? = nil,
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
@@ -82,5 +85,6 @@ public struct MoreOptionsView: View {
             .contentShape(Rectangle())
         }
         .frame(minHeight: 56)
+        .accessibilityIdentifier(identifier ?? title)
     }
 }

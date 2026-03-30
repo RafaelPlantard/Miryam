@@ -50,9 +50,10 @@ public struct PlayerView: View {
                         .tint(Color._miryamAccent)
                 }
                 .ignoresSafeArea()
-                .accessibilityLabel("Loading song")
+                .accessibilityLabel(AccessibilityID.loadingSong.rawValue)
             }
         }
+        .accessibilityIdentifier(AccessibilityID.playerView.rawValue)
         .background(Color._miryamBackground)
         #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
@@ -175,7 +176,7 @@ public struct PlayerView: View {
             }
             .frame(height: 16)
             .accessibilityElement()
-            .accessibilityLabel("Song progress")
+            .accessibilityLabel(AccessibilityID.songProgress.rawValue)
             .accessibilityValue("\(Int(viewModel.playbackState.progress * 100))%")
 
             // Time labels
@@ -207,7 +208,7 @@ public struct PlayerView: View {
                     .foregroundStyle(Color._miryamIconPrimary)
             }
             .frame(minWidth: 44, minHeight: 44)
-            .accessibilityIdentifier("Skip Backward")
+            .accessibilityIdentifier(AccessibilityID.skipBackward.rawValue)
             .accessibilityLabel("Skip backward 15 seconds")
 
             Button {
@@ -218,7 +219,7 @@ public struct PlayerView: View {
                     .foregroundStyle(Color._miryamAccent)
             }
             .frame(minWidth: 44, minHeight: 44)
-            .accessibilityIdentifier("Play/Pause")
+            .accessibilityIdentifier(AccessibilityID.playPause.rawValue)
             .accessibilityLabel(viewModel.isPlaying ? "Pause" : "Play")
             .accessibilityValue(viewModel.isPlaying ? "Playing" : "Paused")
 
@@ -230,7 +231,7 @@ public struct PlayerView: View {
                     .foregroundStyle(Color._miryamIconPrimary)
             }
             .frame(minWidth: 44, minHeight: 44)
-            .accessibilityIdentifier("Skip Forward")
+            .accessibilityIdentifier(AccessibilityID.skipForward.rawValue)
             .accessibilityLabel("Skip forward 15 seconds")
         }
     }

@@ -68,10 +68,12 @@ public struct SongRow: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
                 .accessibilityLabel("More options for \(song.name)")
             }
         }
         .padding(.vertical, 8)
+        .accessibilityIdentifier(AccessibilityID.songRow(id: song.id))
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(song.name) by \(song.artistName)")
         .accessibilityHint("Double tap to play")
