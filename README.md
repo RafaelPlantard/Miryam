@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/RafaelPlantard/Miryam/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/RafaelPlantard/Miryam/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/RafaelPlantard/Miryam/branch/main/graph/badge.svg)](https://codecov.io/gh/RafaelPlantard/Miryam)
+[![Version](https://img.shields.io/github/v/tag/RafaelPlantard/Miryam?label=version&sort=semver)](https://github.com/RafaelPlantard/Miryam/tags)
 
 > Named after Miriam (Miryam) — Moses' sister, prophet, and musician who played the timbrel and led song after the crossing of the Red Sea (Exodus 15:20-21).
 > The challenge is for [Moises.ai](https://moises.ai); Miryam is who stands next to Moses and makes music.
