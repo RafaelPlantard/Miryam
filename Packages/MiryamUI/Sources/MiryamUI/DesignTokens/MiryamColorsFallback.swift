@@ -18,7 +18,7 @@ public extension Color {
 extension Color {
     /// Create an adaptive color from light and dark variants.
     init(light: Color, dark: Color) {
-        #if canImport(UIKit)
+        #if canImport(UIKit) && !os(watchOS)
         self.init(uiColor: UIColor { traitCollection in
             traitCollection.userInterfaceStyle == .dark
                 ? UIColor(dark)
