@@ -27,8 +27,9 @@ jobs:
     name: Deploy to TestFlight
     runs-on: self-hosted
     environment: production
+    timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
 
@@ -42,7 +43,17 @@ jobs:
         run: mint bootstrap
 
       - name: Generate Xcode project
+        env:
+          DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
         run: mint run xcodegen generate
+
+      - name: Validate inputs
+        if: github.event_name == 'workflow_dispatch' && inputs.version != ''
+        run: |
+          if [[ ! "${{ inputs.version }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Invalid version format '${{ inputs.version }}'. Expected semver (e.g. 1.0.0)"
+            exit 1
+          fi
 
       - name: Determine lane
         id: lane
@@ -64,6 +75,7 @@ jobs:
       - name: Run fastlane
         run: bundle exec fastlane ${{ steps.lane.outputs.lane }}
         env:
+          DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           ITC_TEAM_ID: ${{ secrets.ITC_TEAM_ID }}
@@ -75,7 +87,7 @@ jobs:
 
       - name: Upload build artifacts
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: miryam-build-${{ github.sha }}
           path: |
