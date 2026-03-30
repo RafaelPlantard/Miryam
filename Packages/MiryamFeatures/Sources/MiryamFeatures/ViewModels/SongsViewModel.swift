@@ -1,5 +1,8 @@
 import Foundation
 import MiryamCore
+import os
+
+private let logger = Logger(subsystem: "io.swift-yah.miryam", category: "Search")
 
 /// ViewModel for the Songs (Home) screen.
 @Observable
@@ -21,6 +24,7 @@ public final class SongsViewModel {
     private let cacheRepository: any CacheRepositoryProtocol
     private var pagination = Pagination(limit: Constants.Search.pageLimit)
     private var searchTask: Task<Void, Never>?
+    private var loadMoreTask: Task<Void, Never>?
 
     public init(
         songRepository: any SongRepositoryProtocol,
@@ -35,13 +39,14 @@ public final class SongsViewModel {
         do {
             recentlyPlayed = try await cacheRepository.recentlyPlayedSongs(limit: Constants.Search.recentlyPlayedLimit)
         } catch {
-            // Silently fail -- recently played is non-critical
+            logger.error("Failed to load recently played: \(error)")
         }
     }
 
     /// Search songs with debounce. Call this when searchQuery changes.
     public func search() {
         searchTask?.cancel()
+        loadMoreTask?.cancel()
 
         guard !searchQuery.trimmingCharacters(in: .whitespaces).isEmpty else {
             songs = []
@@ -50,8 +55,10 @@ public final class SongsViewModel {
             return
         }
 
+        let query = searchQuery
+        logger.debug("Search: \(query)")
+
         searchTask = Task {
-            // Debounce 300ms
             try? await Task.sleep(for: .milliseconds(Constants.Search.debounceMilliseconds))
             guard !Task.isCancelled else { return }
 
@@ -61,7 +68,7 @@ public final class SongsViewModel {
 
             do {
                 let result = try await songRepository.searchSongs(
-                    query: searchQuery,
+                    query: query,
                     limit: pagination.limit,
                     offset: pagination.offset
                 )
@@ -70,23 +77,32 @@ public final class SongsViewModel {
                 pagination.advance(resultCount: result.songs.count)
                 hasMorePages = pagination.hasMorePages
 
-                // Cache results with the search query for offline fallback
-                try? await cacheRepository.cacheSongs(result.songs, for: searchQuery)
+                logger.info("Search '\(query)': \(result.songs.count) results")
+
+                // Cache results for offline fallback
+                do {
+                    try await cacheRepository.cacheSongs(result.songs, for: query)
+                } catch {
+                    logger.warning("Cache write failed: \(error)")
+                }
             } catch let appError as AppError {
                 guard !Task.isCancelled else { return }
-                // Try cache on network error
                 if case .noInternetConnection = appError {
-                    let cached = try? await cacheRepository.cachedSongs(for: searchQuery)
+                    let cached = try? await cacheRepository.cachedSongs(for: query)
                     if let cached, !cached.isEmpty {
                         songs = cached
                         error = .noInternetConnection
+                        logger.info("Serving \(cached.count) cached results for '\(query)'")
+                        isLoading = false
                         return
                     }
                 }
                 error = appError
+                logger.error("Search failed: \(appError)")
             } catch {
                 guard !Task.isCancelled else { return }
                 self.error = .unknown(error.localizedDescription)
+                logger.error("Search failed (unknown): \(error)")
             }
 
             isLoading = false
@@ -94,27 +110,43 @@ public final class SongsViewModel {
     }
 
     /// Load next page of results.
-    public func loadMore() async {
-        guard !isLoadingMore, hasMorePages, !searchQuery.isEmpty else { return }
+    public func loadMore() {
+        guard !isLoading, !isLoadingMore, hasMorePages, !searchQuery.isEmpty else { return }
 
-        isLoadingMore = true
+        let query = searchQuery
+        let currentOffset = pagination.offset
+        logger.debug("Loading more for '\(query)' at offset \(currentOffset)")
 
-        do {
-            let result = try await songRepository.searchSongs(
-                query: searchQuery,
-                limit: pagination.limit,
-                offset: pagination.offset
-            )
-            songs.append(contentsOf: result.songs)
-            pagination.advance(resultCount: result.songs.count)
-            hasMorePages = pagination.hasMorePages
+        loadMoreTask = Task {
+            isLoadingMore = true
 
-            try? await cacheRepository.cacheSongs(result.songs, for: searchQuery)
-        } catch {
-            // Silently fail on pagination errors -- user still has current results
+            do {
+                let result = try await songRepository.searchSongs(
+                    query: query,
+                    limit: pagination.limit,
+                    offset: pagination.offset
+                )
+                guard !Task.isCancelled else {
+                    isLoadingMore = false
+                    return
+                }
+                songs.append(contentsOf: result.songs)
+                pagination.advance(resultCount: result.songs.count)
+                hasMorePages = pagination.hasMorePages
+
+                logger.info("Loaded \(result.songs.count) more for '\(query)'")
+
+                do {
+                    try await cacheRepository.cacheSongs(result.songs, for: query)
+                } catch {
+                    logger.warning("Cache write failed during pagination: \(error)")
+                }
+            } catch {
+                logger.error("Pagination failed: \(error)")
+            }
+
+            isLoadingMore = false
         }
-
-        isLoadingMore = false
     }
 
     /// Pull-to-refresh: re-execute current search from scratch.
@@ -137,7 +169,7 @@ public final class SongsViewModel {
             pagination.advance(resultCount: result.songs.count)
             hasMorePages = pagination.hasMorePages
         } catch {
-            // Keep existing results on refresh failure
+            logger.warning("Refresh failed: \(error)")
         }
     }
 }
