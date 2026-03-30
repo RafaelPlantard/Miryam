@@ -52,7 +52,7 @@ jobs:
           xcodebuild test \
             -project Miryam.xcodeproj \
             -scheme Miryam \
-            -destination 'platform=iOS Simulator,OS=latest,name=iPhone 16 Pro' \
+            -destination 'platform=iOS Simulator,OS=latest,name=iPhone 17 Pro Max' \
             -skip-testing:MiryamSnapshotTests \
             -resultBundlePath TestResults.xcresult \
             -enableCodeCoverage YES \
