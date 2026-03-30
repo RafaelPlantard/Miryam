@@ -19,7 +19,7 @@ public final class SongsViewModel {
 
     private let songRepository: any SongRepositoryProtocol
     private let cacheRepository: any CacheRepositoryProtocol
-    private var pagination = Pagination(limit: 25)
+    private var pagination = Pagination(limit: Constants.Search.pageLimit)
     private var searchTask: Task<Void, Never>?
 
     public init(
@@ -33,7 +33,7 @@ public final class SongsViewModel {
     /// Load recently played songs on first appearance.
     public func loadRecentlyPlayed() async {
         do {
-            recentlyPlayed = try await cacheRepository.recentlyPlayedSongs(limit: 10)
+            recentlyPlayed = try await cacheRepository.recentlyPlayedSongs(limit: Constants.Search.recentlyPlayedLimit)
         } catch {
             // Silently fail -- recently played is non-critical
         }
@@ -52,7 +52,7 @@ public final class SongsViewModel {
 
         searchTask = Task {
             // Debounce 300ms
-            try? await Task.sleep(for: .milliseconds(300))
+            try? await Task.sleep(for: .milliseconds(Constants.Search.debounceMilliseconds))
             guard !Task.isCancelled else { return }
 
             pagination.reset()

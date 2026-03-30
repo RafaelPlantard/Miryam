@@ -27,8 +27,8 @@ public actor HTTPClient {
             throw .networkError("Invalid response")
         }
 
-        guard (200 ... 299).contains(httpResponse.statusCode) else {
-            if httpResponse.statusCode == 404 {
+        guard APIConstants.HTTP.successRange.contains(httpResponse.statusCode) else {
+            if httpResponse.statusCode == APIConstants.HTTP.notFound {
                 throw .notFound
             }
             throw .serverError(statusCode: httpResponse.statusCode)

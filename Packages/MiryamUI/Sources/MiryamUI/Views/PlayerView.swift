@@ -16,7 +16,7 @@ public struct PlayerView: View {
     }
 
     private var artworkSize: CGFloat {
-        isCompact ? 264 : 360
+        isCompact ? Layout.Player.artworkSizeCompact : Layout.Player.artworkSizeRegular
     }
 
     public var body: some View {
@@ -37,7 +37,7 @@ public struct PlayerView: View {
             .padding(.horizontal, isCompact ? 24 : 48)
             .padding(.top, isCompact ? 32 : 48)
             .padding(.bottom, 24)
-            .frame(maxWidth: isCompact ? .infinity : 600)
+            .frame(maxWidth: isCompact ? .infinity : Layout.Player.maxContentWidth)
             .frame(maxWidth: .infinity)
         }
         .overlay {
@@ -80,17 +80,17 @@ public struct PlayerView: View {
             }
         }
         .frame(width: artworkSize, height: artworkSize)
-        .clipShape(RoundedRectangle(cornerRadius: 32))
+        .clipShape(RoundedRectangle(cornerRadius: Layout.Player.artworkCornerRadius))
         .shadow(color: .black.opacity(0.3), radius: 20, y: 10)
         .accessibilityHidden(true)
     }
 
     private var artworkPlaceholder: some View {
-        RoundedRectangle(cornerRadius: 32)
+        RoundedRectangle(cornerRadius: Layout.Player.artworkCornerRadius)
             .fill(Color._miryamSurface)
             .overlay(
-                Image(systemName: "music.note")
-                    .font(.system(size: 60))
+                Image(symbol: .musicNote)
+                    .font(.miryam.iconLarge)
                     .foregroundStyle(Color._miryamLabelSecondary)
             )
     }
@@ -143,14 +143,14 @@ public struct PlayerView: View {
                     // Track background
                     Capsule()
                         .fill(Color._miryamLabelTertiary)
-                        .frame(height: 4)
+                        .frame(height: Layout.Player.trackHeight)
 
                     // Progress fill
                     Capsule()
                         .fill(Color._miryamAccent)
                         .frame(
                             width: max(0, geometry.size.width * viewModel.playbackState.progress),
-                            height: 4
+                            height: Layout.Player.trackHeight
                         )
 
                     // Drag handle
@@ -191,14 +191,14 @@ public struct PlayerView: View {
     // MARK: - Controls
 
     private var controlsView: some View {
-        HStack(spacing: 40) {
+        HStack(spacing: Layout.Player.controlSpacing) {
             Button {
                 Task { await viewModel.skipBackward() }
             } label: {
-                Image(systemName: "gobackward.15")
-                    .font(.system(size: 20))
+                Image(symbol: .skipBackward15)
+                    .font(.miryam.controlRegular)
                     .foregroundStyle(Color._miryamIconPrimary)
-                    .frame(width: 44, height: 44)
+                    .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
                     .contentShape(Rectangle())
             }
             .accessibilityIdentifier(AccessibilityID.skipBackward.rawValue)
@@ -207,10 +207,10 @@ public struct PlayerView: View {
             Button {
                 Task { await viewModel.togglePlayPause() }
             } label: {
-                Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
-                    .font(.system(size: 28))
+                Image(symbol: viewModel.isPlaying ? .pauseFill : .playFill)
+                    .font(.miryam.controlLarge)
                     .foregroundStyle(Color._miryamIconPrimary)
-                    .frame(width: 72, height: 72)
+                    .frame(width: Layout.Player.playButtonSize, height: Layout.Player.playButtonSize)
                     .background(Color._miryamSurfaceSecondary, in: Circle())
             }
             .accessibilityIdentifier(AccessibilityID.playPause.rawValue)
@@ -220,10 +220,10 @@ public struct PlayerView: View {
             Button {
                 Task { await viewModel.skipForward() }
             } label: {
-                Image(systemName: "goforward.15")
-                    .font(.system(size: 20))
+                Image(symbol: .skipForward15)
+                    .font(.miryam.controlRegular)
                     .foregroundStyle(Color._miryamIconPrimary)
-                    .frame(width: 44, height: 44)
+                    .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
                     .contentShape(Rectangle())
             }
             .accessibilityIdentifier(AccessibilityID.skipForward.rawValue)

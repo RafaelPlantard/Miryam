@@ -22,7 +22,7 @@ public struct WatchNowPlayingView: View {
                         RoundedRectangle(cornerRadius: 12)
                             .fill(Color._miryamSurfaceSecondary)
                             .overlay(
-                                Image(systemName: "music.note")
+                                Image(symbol: .musicNote)
                                     .foregroundStyle(.secondary)
                             )
                     @unknown default:
@@ -55,7 +55,7 @@ public struct WatchNowPlayingView: View {
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
             } else {
-                Image(systemName: "music.note")
+                Image(symbol: .musicNote)
                     .font(.largeTitle)
                     .foregroundStyle(.secondary)
                 Text("Not Playing")
@@ -67,14 +67,14 @@ public struct WatchNowPlayingView: View {
                 Button {
                     Task { await viewModel.skipBackward() }
                 } label: {
-                    Image(systemName: "gobackward.15")
+                    Image(symbol: .skipBackward15)
                 }
                 .accessibilityLabel("Skip backward 15 seconds")
 
                 Button {
                     Task { await viewModel.togglePlayPause() }
                 } label: {
-                    Image(systemName: viewModel.isPlaying ? "pause.fill" : "play.fill")
+                    Image(symbol: viewModel.isPlaying ? .pauseFill : .playFill)
                         .font(.title2)
                 }
                 .accessibilityLabel(viewModel.isPlaying ? "Pause" : "Play")
@@ -83,7 +83,7 @@ public struct WatchNowPlayingView: View {
                 Button {
                     Task { await viewModel.skipForward() }
                 } label: {
-                    Image(systemName: "goforward.15")
+                    Image(symbol: .skipForward15)
                 }
                 .accessibilityLabel("Skip forward 15 seconds")
             }

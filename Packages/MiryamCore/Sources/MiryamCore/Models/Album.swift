@@ -32,7 +32,7 @@ public struct Album: Sendable, Identifiable, Hashable, Codable {
     public func artworkURL(size: Int) -> URL? {
         guard let artworkURL else { return nil }
         let urlString = artworkURL.absoluteString
-            .replacingOccurrences(of: "100x100", with: "\(size)x\(size)")
+            .replacingOccurrences(of: Constants.Artwork.defaultSizePattern, with: "\(size)x\(size)")
         return URL(string: urlString)
     }
 }

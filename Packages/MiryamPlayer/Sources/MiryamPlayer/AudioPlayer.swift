@@ -101,7 +101,7 @@ public actor AudioPlayer: PlayerProtocol {
         await player.seek(to: targetTime)
     }
 
-    public func skipForward(seconds: TimeInterval = 10) async {
+    public func skipForward(seconds: TimeInterval = Constants.Player.skipInterval) async {
         guard let player else { return }
         let currentTime = player.currentTime().seconds
         let duration = player.currentItem?.duration.seconds ?? 0
@@ -115,7 +115,7 @@ public actor AudioPlayer: PlayerProtocol {
         await player.seek(to: target)
     }
 
-    public func skipBackward(seconds: TimeInterval = 10) async {
+    public func skipBackward(seconds: TimeInterval = Constants.Player.skipInterval) async {
         guard let player else { return }
         let currentTime = player.currentTime().seconds
 
@@ -130,7 +130,7 @@ public actor AudioPlayer: PlayerProtocol {
     // MARK: - Observers
 
     private func addTimeObserver(to avPlayer: AVPlayer) {
-        let interval = CMTime(seconds: 0.25, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        let interval = CMTime(seconds: Constants.Player.timeObserverInterval, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         timeObserver = avPlayer.addPeriodicTimeObserver(
             forInterval: interval,
             queue: .main

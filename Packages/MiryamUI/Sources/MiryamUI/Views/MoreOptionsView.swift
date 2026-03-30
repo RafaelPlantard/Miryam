@@ -15,9 +15,9 @@ public struct MoreOptionsView: View {
     public var body: some View {
         VStack(spacing: 0) {
             // Grabber
-            RoundedRectangle(cornerRadius: 2.5)
+            RoundedRectangle(cornerRadius: Layout.MoreOptions.grabberCornerRadius)
                 .fill(Color._miryamLabelTertiary)
-                .frame(width: 56, height: 5)
+                .frame(width: Layout.MoreOptions.grabberWidth, height: Layout.MoreOptions.grabberHeight)
                 .padding(.top, 5)
 
             // Song info header
@@ -25,7 +25,7 @@ public struct MoreOptionsView: View {
 
             // Actions
             actionButton(
-                icon: "music.note.list",
+                icon: .musicNoteList,
                 title: "View album",
                 identifier: AccessibilityID.viewAlbumButton.rawValue
             ) {
@@ -55,24 +55,24 @@ public struct MoreOptionsView: View {
                 .foregroundStyle(Color._miryamLabel)
                 .lineLimit(1)
         }
-        .frame(height: 67)
+        .frame(height: Layout.MoreOptions.songHeaderHeight)
         .frame(maxWidth: .infinity)
     }
 
     // MARK: - Action Button
 
     private func actionButton(
-        icon: String,
+        icon: SFSymbol,
         title: String,
         identifier: String? = nil,
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
             HStack(spacing: 16) {
-                Image(systemName: icon)
+                Image(symbol: icon)
                     .font(.body)
                     .foregroundStyle(Color._miryamIconPrimary)
-                    .frame(width: 24)
+                    .frame(width: Layout.MoreOptions.iconFrameWidth)
 
                 Text(title)
                     .font(.miryam.bodyLarge)
@@ -84,7 +84,7 @@ public struct MoreOptionsView: View {
             .padding(.vertical, 16)
             .contentShape(Rectangle())
         }
-        .frame(minHeight: 56)
+        .frame(minHeight: Layout.MoreOptions.actionButtonMinHeight)
         .accessibilityIdentifier(identifier ?? title)
     }
 }

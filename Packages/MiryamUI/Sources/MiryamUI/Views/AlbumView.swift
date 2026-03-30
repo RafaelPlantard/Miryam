@@ -53,7 +53,7 @@ public struct AlbumView: View {
     }
 
     private var albumArtworkSize: CGFloat {
-        horizontalSizeClass == .compact ? 120 : 160
+        horizontalSizeClass == .compact ? Layout.Album.artworkSizeCompact : Layout.Album.artworkSizeRegular
     }
 
     private var albumHeader: some View {
@@ -65,11 +65,11 @@ public struct AlbumView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                 case .failure, .empty:
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: Layout.Album.cornerRadius)
                         .fill(Color._miryamSurface)
                         .overlay(
-                            Image(systemName: "music.note.list")
-                                .font(.system(size: 40))
+                            Image(symbol: .musicNoteList)
+                                .font(.miryam.iconSmall)
                                 .foregroundStyle(Color._miryamLabelSecondary)
                         )
                 @unknown default:
@@ -77,7 +77,7 @@ public struct AlbumView: View {
                 }
             }
             .frame(width: albumArtworkSize, height: albumArtworkSize)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .clipShape(RoundedRectangle(cornerRadius: Layout.Album.cornerRadius))
             .shadow(color: .black.opacity(0.2), radius: 10, y: 5)
 
             Text(viewModel.album.name)
@@ -130,18 +130,18 @@ public struct AlbumView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                 case .failure, .empty:
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: Layout.Album.trackRowCornerRadius)
                         .fill(Color._miryamSurfaceSecondary)
                         .overlay(
-                            Image(systemName: "music.note")
+                            Image(symbol: .musicNote)
                                 .foregroundStyle(Color._miryamSubtitle)
                         )
                 @unknown default:
                     Color._miryamSurfaceSecondary
                 }
             }
-            .frame(width: 44, height: 44)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .frame(width: Layout.Album.trackRowArtworkSize, height: Layout.Album.trackRowArtworkSize)
+            .clipShape(RoundedRectangle(cornerRadius: Layout.Album.trackRowCornerRadius))
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(song.name)

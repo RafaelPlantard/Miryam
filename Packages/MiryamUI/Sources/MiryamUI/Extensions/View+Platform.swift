@@ -39,10 +39,10 @@ public extension View {
                         Button {
                             router.presentSheet(.moreOptions(song))
                         } label: {
-                            Image(systemName: "ellipsis")
+                            Image(symbol: .ellipsis)
                                 .font(.body)
                                 .foregroundStyle(Color._miryamIconSecondary)
-                                .frame(width: 44, height: 44)
+                                .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
                                 .contentShape(Rectangle())
                         }
                         .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)

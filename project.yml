@@ -114,6 +114,7 @@ targets:
       - MiryamUITests
     dependencies:
       - target: Miryam
+      - package: MiryamUI
     settings:
       base:
         SWIFT_VERSION: "6.0"

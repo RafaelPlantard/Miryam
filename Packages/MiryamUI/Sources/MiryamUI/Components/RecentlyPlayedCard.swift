@@ -18,10 +18,10 @@ public struct RecentlyPlayedCard: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                 case .failure, .empty:
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: Layout.RecentlyPlayed.cornerRadius)
                         .fill(Color._miryamSurfaceSecondary)
                         .overlay(
-                            Image(systemName: "music.note")
+                            Image(symbol: .musicNote)
                                 .font(.title2)
                                 .foregroundStyle(Color._miryamLabelSecondary)
                         )
@@ -29,8 +29,8 @@ public struct RecentlyPlayedCard: View {
                     Color._miryamSurfaceSecondary
                 }
             }
-            .frame(width: 140, height: 140)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .frame(width: Layout.RecentlyPlayed.cardSize, height: Layout.RecentlyPlayed.cardSize)
+            .clipShape(RoundedRectangle(cornerRadius: Layout.RecentlyPlayed.cornerRadius))
 
             Text(song.name)
                 .font(.miryam.bodySmall)
@@ -42,7 +42,7 @@ public struct RecentlyPlayedCard: View {
                 .foregroundStyle(Color._miryamLabelSecondary)
                 .lineLimit(1)
         }
-        .frame(width: 140)
+        .frame(width: Layout.RecentlyPlayed.cardSize)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(song.name) by \(song.artistName)")
     }
