@@ -63,7 +63,7 @@ public struct SongRow: View {
                 Button(action: onMoreTapped) {
                     Image(systemName: "ellipsis")
                         .font(.body)
-                        .foregroundStyle(Color._miryamSubtitle)
+                        .foregroundStyle(Color._miryamIconSecondary)
                         .frame(width: 36, height: 36)
                         .contentShape(Rectangle())
                 }
