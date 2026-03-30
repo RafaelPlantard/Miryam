@@ -87,6 +87,7 @@ public struct SongsView: View {
                     }
                 }
                 .padding(.horizontal, 16)
+                .padding(.vertical, 16)
             }
             .listRowInsets(EdgeInsets())
             #if !os(watchOS)
