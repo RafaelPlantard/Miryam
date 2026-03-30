@@ -39,44 +39,49 @@ struct MiryamApp: App {
 
     @ViewBuilder
     private func mainContent(container: DependencyContainer) -> some View {
+        @Bindable var router = router
         let songsViewModel = container.makeSongsViewModel()
         let playerViewModel = container.makePlayerViewModel()
 
-        SongsView(viewModel: songsViewModel)
-            .environment(router)
-            .environment(playerViewModel)
-            .navigationDestination(for: AppRoute.self) { route in
-                switch route {
-                case .player(let song):
-                    PlayerView(viewModel: playerViewModel)
-                        .task { await playerViewModel.play(song) }
-                case .album(let album):
-                    AlbumView(
-                        viewModel: container.makeAlbumViewModel(album: album),
-                        onPlaySong: { song in
-                            Task { await playerViewModel.play(song) }
-                        }
-                    )
-                }
-            }
-            .sheet(item: $router.presentedSheet) { sheet in
-                switch sheet {
-                case .moreOptions(let song):
-                    MoreOptionsView(song: song) {
-                        let album = Album(
-                            id: song.albumId,
-                            name: song.albumName,
-                            artistName: song.artistName,
-                            artworkURL: song.artworkURL,
-                            trackCount: 0,
-                            releaseDate: nil,
-                            genre: ""
+        NavigationStack(path: $router.path) {
+            SongsView(viewModel: songsViewModel)
+                .navigationDestination(for: AppRoute.self) { route in
+                    switch route {
+                    case .player(let song):
+                        PlayerView(viewModel: playerViewModel)
+                            .environment(router)
+                            .task { await playerViewModel.play(song) }
+                    case .album(let album):
+                        AlbumView(
+                            viewModel: container.makeAlbumViewModel(album: album),
+                            onPlaySong: { song in
+                                Task { await playerViewModel.play(song) }
+                            }
                         )
-                        router.navigate(to: .album(album))
+                        .environment(router)
                     }
-                    .environment(router)
                 }
+        }
+        .environment(router)
+        .environment(playerViewModel)
+        .sheet(item: $router.presentedSheet) { sheet in
+            switch sheet {
+            case .moreOptions(let song):
+                MoreOptionsView(song: song) {
+                    let album = Album(
+                        id: song.albumId,
+                        name: song.albumName,
+                        artistName: song.artistName,
+                        artworkURL: song.artworkURL,
+                        trackCount: 0,
+                        releaseDate: nil,
+                        genre: ""
+                    )
+                    router.navigate(to: .album(album))
+                }
+                .environment(router)
             }
-            .modelContainer(container.modelContainer)
+        }
+        .modelContainer(container.modelContainer)
     }
 }

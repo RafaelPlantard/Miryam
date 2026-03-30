@@ -11,45 +11,27 @@ public struct SongsView: View {
     }
 
     public var body: some View {
-        @Bindable var router = router
-
-        NavigationStack(path: $router.path) {
-            Group {
-                if viewModel.isLoading {
-                    loadingView
-                } else if let error = viewModel.error, viewModel.songs.isEmpty {
-                    errorView(error)
-                } else if viewModel.songs.isEmpty && viewModel.searchQuery.isEmpty {
-                    emptyStateView
-                } else if viewModel.songs.isEmpty {
-                    noResultsView
-                } else {
-                    songsList
-                }
+        Group {
+            if viewModel.isLoading {
+                loadingView
+            } else if let error = viewModel.error, viewModel.songs.isEmpty {
+                errorView(error)
+            } else if viewModel.songs.isEmpty && viewModel.searchQuery.isEmpty {
+                emptyStateView
+            } else if viewModel.songs.isEmpty {
+                noResultsView
+            } else {
+                songsList
             }
-            .background(Color._miryamBackground)
-            .navigationTitle("Songs")
-            .searchable(text: $viewModel.searchQuery, prompt: "Search songs...")
-            .onChange(of: viewModel.searchQuery) {
-                viewModel.search()
-            }
-            .refreshable {
-                await viewModel.refresh()
-            }
-            .navigationDestination(for: AppRoute.self) { route in
-                switch route {
-                case .player(let song):
-                    Text("Player: \(song.name)")
-                case .album(let album):
-                    Text("Album: \(album.name)")
-                }
-            }
-            .sheet(item: $router.presentedSheet) { sheet in
-                switch sheet {
-                case .moreOptions(let song):
-                    Text("Options: \(song.name)")
-                }
-            }
+        }
+        .background(Color._miryamBackground)
+        .navigationTitle("Songs")
+        .searchable(text: $viewModel.searchQuery, prompt: "Search songs...")
+        .onChange(of: viewModel.searchQuery) {
+            viewModel.search()
+        }
+        .refreshable {
+            await viewModel.refresh()
         }
         .task {
             await viewModel.loadRecentlyPlayed()
