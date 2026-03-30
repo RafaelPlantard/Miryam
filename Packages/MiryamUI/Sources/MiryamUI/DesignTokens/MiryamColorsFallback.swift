@@ -4,15 +4,16 @@ import SwiftUI
 /// These provide correct dark/light adaptive behavior.
 public extension Color {
     // swiftlint:disable identifier_name
-    static let _miryamBackground = Color(light: Color(hex: "F5F5F7"), dark: Color(hex: "0D1117"))
+    static let _miryamBackground = Color(light: Color(hex: "F5F5F7"), dark: Color(hex: "000000"))
     static let _miryamSurface = Color(light: Color(hex: "FFFFFF").opacity(0.85), dark: Color(hex: "262626").opacity(0.80))
     static let _miryamSurfaceSecondary = Color(light: Color(hex: "E5E5EA"), dark: Color(hex: "2C2C2E"))
     static let _miryamLabel = Color(light: .black, dark: .white)
-    static let _miryamLabelSecondary = Color(light: Color(hex: "6C6C70"), dark: Color(hex: "8E8E93"))
+    static let _miryamLabelSecondary = Color(light: Color(hex: "6C6C70"), dark: Color(hex: "A8A8A8"))
     static let _miryamLabelTertiary = Color(light: .black.opacity(0.25), dark: .white.opacity(0.25))
     static let _miryamIconPrimary = Color(light: Color(hex: "1C1C1E"), dark: .white)
     static let _miryamAccent = Color(light: Color(hex: "006B80"), dark: Color(hex: "0086A0"))
     static let _miryamSubtitle = Color(light: Color(hex: "545454"), dark: Color(hex: "737373"))
+    static let _miryamIconSecondary = Color(light: Color(hex: "737373"), dark: Color(hex: "545454"))
     // swiftlint:enable identifier_name
 }
 
