@@ -90,11 +90,8 @@ jobs:
         run: |
           bundle exec fastlane ${{ steps.lane.outputs.lane }} 2>&1 | tee fastlane_output.log
           EXIT_CODE=${PIPESTATUS[0]}
-          # Extract TestFlight build number from fastlane output
-          BUILD_NUMBER=$(grep -oE 'build_number: [0-9]+' fastlane_output.log | head -1 | grep -oE '[0-9]+' || echo "")
-          if [ -z "$BUILD_NUMBER" ]; then
-            BUILD_NUMBER=$(grep -oE 'Current build number: [0-9]+' fastlane_output.log | head -1 | grep -oE '[0-9]+' || echo "")
-          fi
+          # Extract TestFlight build number from explicit marker in Fastfile
+          BUILD_NUMBER=$(grep -oE 'MIRYAM_BUILD_NUMBER:[0-9]+' fastlane_output.log | head -1 | grep -oE '[0-9]+' || echo "")
           echo "build_number=$BUILD_NUMBER" >> "$GITHUB_OUTPUT"
           exit $EXIT_CODE
         env:
