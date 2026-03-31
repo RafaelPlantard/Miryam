@@ -20,6 +20,10 @@ public actor AudioPlayer: PlayerProtocol {
 
     private let _stateStream: AsyncStream<PlaybackState>
 
+    #if canImport(MediaPlayer)
+        private let nowPlayingService = NowPlayingService()
+    #endif
+
     // MARK: - PlayerProtocol
 
     public nonisolated var stateStream: AsyncStream<PlaybackState> {
@@ -32,7 +36,37 @@ public actor AudioPlayer: PlayerProtocol {
         let (stream, continuation) = AsyncStream<PlaybackState>.makeStream()
         self._stateStream = stream
         self.continuation = continuation
+
+        #if canImport(MediaPlayer)
+            Task { await setupRemoteCommands() }
+        #endif
     }
+
+    #if canImport(MediaPlayer)
+        private func setupRemoteCommands() async {
+            await nowPlayingService.setCallbacks(
+                onPlay: { [weak self] in await self?.resume() },
+                onPause: { [weak self] in await self?.pause() },
+                onTogglePlayPause: { [weak self] in
+                    guard let self else { return }
+                    if await self.player?.rate ?? 0 > 0 {
+                        await self.pause()
+                    } else {
+                        await self.resume()
+                    }
+                },
+                onSkipForward: { [weak self] in
+                    await self?.skipForward(seconds: Constants.Player.skipInterval)
+                },
+                onSkipBackward: { [weak self] in
+                    await self?.skipBackward(seconds: Constants.Player.skipInterval)
+                },
+                onSeek: { [weak self] progress in
+                    await self?.seek(to: progress)
+                }
+            )
+        }
+    #endif
 
     // MARK: - Playback
 
@@ -75,14 +109,22 @@ public actor AudioPlayer: PlayerProtocol {
     public func pause() async {
         player?.pause()
         if let song = currentSong {
-            emitState(makeCurrentState(status: .paused, song: song))
+            let state = makeCurrentState(status: .paused, song: song)
+            emitState(state)
+            #if canImport(MediaPlayer)
+                Task { await nowPlayingService.updatePlaybackRate(0.0, elapsed: state.currentTime) }
+            #endif
         }
     }
 
     public func resume() async {
         player?.play()
         if let song = currentSong {
-            emitState(makeCurrentState(status: .playing, song: song))
+            let state = makeCurrentState(status: .playing, song: song)
+            emitState(state)
+            #if canImport(MediaPlayer)
+                Task { await nowPlayingService.updatePlaybackRate(1.0, elapsed: state.currentTime) }
+            #endif
         }
     }
 
@@ -93,6 +135,9 @@ public actor AudioPlayer: PlayerProtocol {
         player = nil
         currentSong = nil
         emitState(.init(status: .idle))
+        #if canImport(MediaPlayer)
+            Task { await nowPlayingService.clearNowPlaying() }
+        #endif
     }
 
     public func seek(to progress: Double) async {
@@ -194,6 +239,17 @@ public actor AudioPlayer: PlayerProtocol {
             duration: duration,
             progress: currentTime / duration
         ))
+
+        #if canImport(MediaPlayer)
+            Task {
+                await nowPlayingService.updateNowPlaying(
+                    song: song,
+                    currentTime: currentTime,
+                    duration: duration,
+                    isPlaying: true
+                )
+            }
+        #endif
     }
 
     private func handlePlaybackEnd() {
