@@ -33,6 +33,12 @@ jobs:
     environment: production
     timeout-minutes: 60
     steps:
+      - name: Restrict deploy to main branch
+        if: github.event_name == 'workflow_dispatch' && github.ref_name != 'main'
+        run: |
+          echo "::error::Deploy is only allowed from the main branch. Current branch: ${{ github.ref_name }}"
+          exit 1
+
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           fetch-depth: 0
@@ -80,7 +86,17 @@ jobs:
           echo "type=$TYPE" >> "$GITHUB_OUTPUT"
 
       - name: Run fastlane
-        run: bundle exec fastlane ${{ steps.lane.outputs.lane }}
+        id: fastlane
+        run: |
+          bundle exec fastlane ${{ steps.lane.outputs.lane }} 2>&1 | tee fastlane_output.log
+          EXIT_CODE=${PIPESTATUS[0]}
+          # Extract TestFlight build number from fastlane output
+          BUILD_NUMBER=$(grep -oE 'build_number: [0-9]+' fastlane_output.log | head -1 | grep -oE '[0-9]+' || echo "")
+          if [ -z "$BUILD_NUMBER" ]; then
+            BUILD_NUMBER=$(grep -oE 'Current build number: [0-9]+' fastlane_output.log | head -1 | grep -oE '[0-9]+' || echo "")
+          fi
+          echo "build_number=$BUILD_NUMBER" >> "$GITHUB_OUTPUT"
+          exit $EXIT_CODE
         env:
           LC_ALL: en_US.UTF-8
           LANG: en_US.UTF-8
@@ -110,13 +126,19 @@ jobs:
         run: |
           VERSION="${{ inputs.version }}"
           if [ -z "$VERSION" ]; then
-            VERSION=$(grep 'CFBundleShortVersionString' project.yml | head -1 | sed 's/.*"\(.*\)"/\1/')
+            VERSION=$(grep 'MARKETING_VERSION' project.yml | head -1 | sed 's/.*"\(.*\)"/\1/')
           fi
           TYPE="${{ steps.lane.outputs.type }}"
+          BUILD_NUMBER="${{ steps.fastlane.outputs.build_number }}"
           if [ "$TYPE" = "snapshot" ]; then
-            LAST=$(git tag -l "v${VERSION}-SNAPSHOT.*" | sort -V | tail -1 | grep -oE '[0-9]+$' || echo 0)
-            NEXT=$((LAST + 1))
-            TAG="v${VERSION}-SNAPSHOT.${NEXT}"
+            if [ -n "$BUILD_NUMBER" ]; then
+              TAG="v${VERSION}-SNAPSHOT.${BUILD_NUMBER}"
+            else
+              # Fallback: increment from existing tags
+              LAST=$(git tag -l "v${VERSION}-SNAPSHOT.*" | sort -V | tail -1 | grep -oE '[0-9]+$' || echo 0)
+              NEXT=$((LAST + 1))
+              TAG="v${VERSION}-SNAPSHOT.${NEXT}"
+            fi
             PRERELEASE="true"
           else
             TAG="v${VERSION}"
