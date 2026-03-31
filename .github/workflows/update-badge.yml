@@ -3,11 +3,26 @@ name: Update Version Badge
 on:
   push:
     tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version badge text (e.g. v1.0.0-SNAPSHOT.22)'
+        required: true
+        type: string
 
 jobs:
   badge:
     runs-on: ubuntu-latest
     steps:
+      - name: Determine version label
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "value=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Update version badge
         uses: schneegans/dynamic-badges-action@0e50b8bad39e7e1afd3e4e9c2b7dd145fad07501 # v1.8.0
         with:
@@ -15,5 +30,5 @@ jobs:
           gistID: 1b309b73189be09d6e6a1a163c7693e6
           filename: miryam-version.json
           label: version
-          message: ${{ github.ref_name }}
+          message: ${{ steps.version.outputs.value }}
           color: blue

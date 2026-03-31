@@ -1,7 +1,7 @@
 # Miryam
 
 [![CI](https://github.com/RafaelPlantard/Miryam/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/RafaelPlantard/Miryam/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/RafaelPlantard/Miryam/branch/main/graph/badge.svg)](https://codecov.io/gh/RafaelPlantard/Miryam)
+[![codecov](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/RafaelPlantard/1b309b73189be09d6e6a1a163c7693e6/raw/miryam-coverage.json)](https://app.codecov.io/github/RafaelPlantard/Miryam)
 [![Version](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/RafaelPlantard/1b309b73189be09d6e6a1a163c7693e6/raw/miryam-version.json)](https://github.com/RafaelPlantard/Miryam/tags)
 
 > Named after Miriam (Miryam) — Moses' sister, prophet, and musician who played the timbrel and led song after the crossing of the Red Sea (Exodus 15:20-21).
