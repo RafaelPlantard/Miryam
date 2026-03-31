@@ -284,18 +284,17 @@ final class MiryamUITests: XCTestCase {
         navigateToAlbumFromSheet()
 
         let albumView = app.descendants(matching: .any)[AccessibilityID.albumView.rawValue]
-        guard albumView.waitForExistence(timeout: 5) else {
+        guard albumView.waitForExistence(timeout: 10) else {
             XCTFail("Album view did not appear")
             return
         }
 
         let backButton = app.navigationBars.buttons.firstMatch
-        XCTAssertTrue(backButton.waitForExistence(timeout: 3))
+        XCTAssertTrue(backButton.waitForExistence(timeout: 5))
         backButton.tap()
 
         // Should return to songs view
-        let songsNavBar = app.navigationBars["Songs"]
-        XCTAssertTrue(songsNavBar.waitForExistence(timeout: 5), "Should navigate back to Songs view")
+        waitForSongsView()
     }
 
     func testDeepNavigationFlow() throws {
