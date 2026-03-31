@@ -9,6 +9,7 @@ public enum AccessibilityID: String {
     case playerView = "PlayerView"
     case albumView = "AlbumView"
     case moreOptionsSheet = "MoreOptionsSheet"
+    case watchNowPlayingView = "WatchNowPlayingView"
 
     // MARK: - Songs View
 

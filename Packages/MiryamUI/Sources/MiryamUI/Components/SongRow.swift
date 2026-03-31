@@ -8,6 +8,10 @@ public struct SongRow: View {
     var onTapped: (() -> Void)?
     var onMoreTapped: (() -> Void)?
 
+    private var moreButtonHitTarget: CGFloat {
+        max(Layout.Player.minTapTarget, Layout.Player.secondaryControlSize)
+    }
+
     public init(
         song: Song,
         isPlaying: Bool = false,
@@ -99,21 +103,20 @@ public struct SongRow: View {
                 .accessibilityHidden(true)
         } else if let onMoreTapped {
             Button(action: onMoreTapped) {
-                ZStack {
-                    Circle()
-                        .fill(Color.clear)
-                        .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
-
-                    Image(symbol: .ellipsis)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(Color._miryamIconSecondary)
-                        .frame(width: Layout.SongRow.moreButtonSize, height: Layout.SongRow.moreButtonSize)
-                }
+                Image(symbol: .ellipsis)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(Color._miryamIconSecondary)
+                    .frame(width: Layout.SongRow.moreButtonSize, height: Layout.SongRow.moreButtonSize)
+                    .background(Color.black.opacity(0.001), in: Circle())
+                    .frame(width: moreButtonHitTarget, height: moreButtonHitTarget)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
+            .frame(width: moreButtonHitTarget, height: moreButtonHitTarget)
+            .contentShape(Rectangle())
             .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
             .accessibilityLabel("More options for \(song.name)")
+            .accessibilityHint("Double tap for additional actions")
         }
     }
 
