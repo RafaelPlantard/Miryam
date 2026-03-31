@@ -17,7 +17,7 @@ public struct NowPlayingIndicator: View {
 
     public var body: some View {
         HStack(alignment: .bottom, spacing: spacing) {
-            ForEach(0..<barCount, id: \.self) { index in
+            ForEach(0 ..< barCount, id: \.self) { index in
                 bar(phase: phases[index])
             }
         }
