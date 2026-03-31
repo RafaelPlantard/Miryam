@@ -61,6 +61,13 @@ public actor RemotePlayer: PlayerProtocol {
         sendCommand(["command": "setRepeatMode", "mode": mode.rawValue])
     }
 
+    public func setTrackNavigationCallbacks(
+        onNext: @escaping @Sendable () async -> Void,
+        onPrevious: @escaping @Sendable () async -> Void
+    ) async {
+        // No-op: Watch doesn't own the queue
+    }
+
     // MARK: - State Reception
 
     /// Called by ``WatchSessionDelegate`` when new playback state arrives from iPhone.

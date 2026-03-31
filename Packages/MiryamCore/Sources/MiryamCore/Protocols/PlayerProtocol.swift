@@ -26,6 +26,12 @@ public protocol PlayerProtocol: Sendable {
     /// Set repeat mode.
     func setRepeatMode(_ mode: RepeatMode) async
 
+    /// Set callbacks for next/previous track navigation from lock screen.
+    func setTrackNavigationCallbacks(
+        onNext: @escaping @Sendable () async -> Void,
+        onPrevious: @escaping @Sendable () async -> Void
+    ) async
+
     /// Current playback state stream.
     var stateStream: AsyncStream<PlaybackState> { get }
 }

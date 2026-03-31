@@ -88,6 +88,33 @@ public final class PlayerViewModel {
         await player.skipBackward(seconds: Constants.Player.skipInterval)
     }
 
+    /// Skip to the next song in the queue.
+    public func skipToNext() async {
+        guard let current = currentSong,
+              let currentIndex = queue.firstIndex(where: { $0.id == current.id }),
+              currentIndex + 1 < queue.count
+        else { return }
+        await play(queue[currentIndex + 1])
+    }
+
+    /// Skip to the previous song, or restart if more than 3 seconds in.
+    public func skipToPrevious() async {
+        guard let current = currentSong else { return }
+
+        if playbackState.currentTime > 3 {
+            await seek(to: 0)
+            return
+        }
+
+        guard let currentIndex = queue.firstIndex(where: { $0.id == current.id }),
+              currentIndex > 0
+        else {
+            await seek(to: 0)
+            return
+        }
+        await play(queue[currentIndex - 1])
+    }
+
     /// Cycle repeat mode: off → all → one → off.
     public func toggleRepeat() async {
         switch repeatMode {

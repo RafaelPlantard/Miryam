@@ -4,9 +4,11 @@ import SwiftUI
 /// Compact card for the recently played horizontal scroll.
 public struct RecentlyPlayedCard: View {
     let song: Song
+    let isPlaying: Bool
 
-    public init(song: Song) {
+    public init(song: Song, isPlaying: Bool = false) {
         self.song = song
+        self.isPlaying = isPlaying
     }
 
     public var body: some View {
@@ -31,6 +33,12 @@ public struct RecentlyPlayedCard: View {
             }
             .frame(width: Layout.RecentlyPlayed.cardSize, height: Layout.RecentlyPlayed.cardSize)
             .clipShape(RoundedRectangle(cornerRadius: Layout.RecentlyPlayed.cornerRadius))
+            .overlay(alignment: .bottomTrailing) {
+                if isPlaying {
+                    NowPlayingIndicator()
+                        .padding(8)
+                }
+            }
 
             Text(song.name)
                 .font(.miryam.bodySmall)

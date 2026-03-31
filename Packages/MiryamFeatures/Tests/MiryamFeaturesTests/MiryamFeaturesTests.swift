@@ -134,6 +134,11 @@ actor MockPlayer: PlayerProtocol {
     func skipForward(seconds: TimeInterval) async { skipForwardSeconds = seconds }
     func skipBackward(seconds: TimeInterval) async { skipBackwardSeconds = seconds }
     func setRepeatMode(_ mode: RepeatMode) async {}
+
+    func setTrackNavigationCallbacks(
+        onNext: @escaping @Sendable () async -> Void,
+        onPrevious: @escaping @Sendable () async -> Void
+    ) async {}
 }
 
 // MARK: - SongsViewModel Tests

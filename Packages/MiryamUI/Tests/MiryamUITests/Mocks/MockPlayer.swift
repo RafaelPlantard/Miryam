@@ -17,4 +17,9 @@ final class MockPlayer: PlayerProtocol, @unchecked Sendable {
     func skipForward(seconds: TimeInterval) async {}
     func skipBackward(seconds: TimeInterval) async {}
     func setRepeatMode(_ mode: RepeatMode) async {}
+
+    func setTrackNavigationCallbacks(
+        onNext: @escaping @Sendable () async -> Void,
+        onPrevious: @escaping @Sendable () async -> Void
+    ) async {}
 }

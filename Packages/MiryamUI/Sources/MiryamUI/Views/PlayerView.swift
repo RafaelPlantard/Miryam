@@ -41,6 +41,7 @@ public struct PlayerView: View {
         }
         .accessibilityIdentifier(AccessibilityID.playerView.rawValue)
         .background(Color._miryamBackground)
+        .navigationTitle(viewModel.currentSong?.albumName ?? "")
         .inlineNavigationTitle()
         .playerToolbar(song: viewModel.currentSong, router: router)
     }
@@ -140,37 +141,39 @@ public struct PlayerView: View {
                 .foregroundStyle(Color._miryamLabel)
                 .lineLimit(1)
 
-            Text(viewModel.currentSong?.artistName ?? "")
-                .font(.miryam.bodyLarge)
-                .foregroundStyle(Color._miryamLabelSecondary)
-                .lineLimit(1)
+            HStack(spacing: 8) {
+                Text(viewModel.currentSong?.artistName ?? "")
+                    .font(.miryam.bodyLarge)
+                    .foregroundStyle(Color._miryamLabelSecondary)
+                    .lineLimit(1)
 
-            if let song = viewModel.currentSong {
-                HStack(spacing: 8) {
-                    Button {
-                        let album = Album(
-                            id: song.albumId,
-                            name: song.albumName,
-                            artistName: song.artistName,
-                            artworkURL: song.artworkURL,
-                            trackCount: 0,
-                            releaseDate: nil,
-                            genre: ""
-                        )
-                        router.navigate(to: .album(album))
-                    } label: {
-                        Text(song.albumName)
-                            .font(.miryam.bodySmall)
-                            .foregroundStyle(Color._miryamAccent)
-                            .lineLimit(1)
-                            .frame(minHeight: Layout.Player.minTapTarget)
-                            .contentShape(Rectangle())
-                    }
-                    .accessibilityLabel("View album \(song.albumName)")
-
+                if viewModel.currentSong != nil {
                     repeatButton
                 }
-                .frame(minHeight: Layout.Player.minTapTarget)
+            }
+            .frame(minHeight: Layout.Player.minTapTarget)
+
+            if let song = viewModel.currentSong {
+                Button {
+                    let album = Album(
+                        id: song.albumId,
+                        name: song.albumName,
+                        artistName: song.artistName,
+                        artworkURL: song.artworkURL,
+                        trackCount: 0,
+                        releaseDate: nil,
+                        genre: ""
+                    )
+                    router.navigate(to: .album(album))
+                } label: {
+                    Text(song.albumName)
+                        .font(.miryam.bodySmall)
+                        .foregroundStyle(Color._miryamAccent)
+                        .lineLimit(1)
+                        .frame(minHeight: Layout.Player.minTapTarget)
+                        .contentShape(Rectangle())
+                }
+                .accessibilityLabel("View album \(song.albumName)")
             }
         }
     }
@@ -264,6 +267,18 @@ public struct PlayerView: View {
     private var controlsView: some View {
         HStack(spacing: Layout.Player.controlSpacing) {
             Button {
+                Task { await viewModel.skipToPrevious() }
+            } label: {
+                Image(symbol: .backwardEnd)
+                    .font(.miryam.controlRegular)
+                    .foregroundStyle(Color._miryamIconPrimary)
+                    .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
+                    .contentShape(Rectangle())
+            }
+            .accessibilityIdentifier(AccessibilityID.previousTrack.rawValue)
+            .accessibilityLabel("Previous track")
+
+            Button {
                 Task { await viewModel.skipBackward() }
             } label: {
                 Image(symbol: .skipBackward15)
@@ -299,6 +314,18 @@ public struct PlayerView: View {
             }
             .accessibilityIdentifier(AccessibilityID.skipForward.rawValue)
             .accessibilityLabel("Skip forward 15 seconds")
+
+            Button {
+                Task { await viewModel.skipToNext() }
+            } label: {
+                Image(symbol: .forwardEnd)
+                    .font(.miryam.controlRegular)
+                    .foregroundStyle(Color._miryamIconPrimary)
+                    .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
+                    .contentShape(Rectangle())
+            }
+            .accessibilityIdentifier(AccessibilityID.nextTrack.rawValue)
+            .accessibilityLabel("Next track")
         }
     }
 }

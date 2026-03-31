@@ -36,6 +36,7 @@ public struct MoreOptionsView: View {
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier(AccessibilityID.moreOptionsSheet.rawValue)
         .background(Color._miryamSurface)
+        .presentationBackground(Color._miryamSurface)
         .presentationDetents([.height(Layout.MoreOptions.sheetHeight)])
         .presentationCornerRadius(16)
     }

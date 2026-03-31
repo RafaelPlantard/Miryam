@@ -13,6 +13,8 @@ public enum SFSymbol: String, Sendable {
     case magnifyingGlass = "magnifyingglass"
     case repeatIcon = "repeat"
     case repeatOne = "repeat.1"
+    case backwardEnd = "backward.end.fill"
+    case forwardEnd = "forward.end.fill"
 }
 
 public extension Image {
