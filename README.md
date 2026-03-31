@@ -7,7 +7,7 @@
 > Named after Miriam (Miryam) — Moses' sister, prophet, and musician who played the timbrel and led song after the crossing of the Red Sea (Exodus 15:20-21).
 > The challenge is for [Moises.ai](https://moises.ai); Miryam is who stands next to Moses and makes music.
 
-A multi-platform Apple music search app built as a code challenge for Moises.ai. Search the iTunes catalog, play song previews, browse albums, and keep track of recently played songs — all with offline-first caching.
+A SwiftUI music search app built as a code challenge for Moises.ai, centered on the required iPhone/iPad flow: search the iTunes catalog, play song previews, browse albums, and keep track of recently played songs with offline-first caching. watchOS, tvOS, CarPlay, and visionOS are additive extensions of the same package architecture, not the primary review target.
 
 ## Getting Started
 
@@ -19,6 +19,15 @@ just bootstrap          # installs everything else, generates project, opens Xco
 ```
 
 `bootstrap` auto-detects and installs missing tools (rbenv, Mint, Ruby, SwiftLint, SwiftFormat, XcodeGen) — just confirm with Enter.
+
+Validated on Xcode 26.4, using the simulator set bundled with that toolchain for local checks and CI.
+
+## Reviewer Fast Path
+
+- Review the required 5-surface iPhone/iPad challenge flow from [CHALLENGE.md](CHALLENGE.md) first.
+- Use [docs/challenge-audit.md](docs/challenge-audit.md) for a requirement-to-code map of every must-have.
+- Treat watchOS, tvOS, CarPlay, and visionOS as additive architecture proofs rather than the main evaluation surface.
+- CI intentionally uses self-hosted macOS runners for the full Apple simulator matrix and auto-installs any missing host tools needed by the workflows.
 
 ## Platforms
 
@@ -57,17 +66,22 @@ graph TD
 
 ## Features
 
+### Challenge Scope
+
 - **Song Search** — Real-time search with 300ms debounce, pagination, pull-to-refresh
 - **Audio Playback** — 30-second iTunes previews with play/pause, skip forward/backward, drag-to-seek timeline
 - **Album View** — Browse all tracks in an album, tap to play
 - **Recently Played** — Persisted via SwiftData, shown on home screen
 - **Offline-First** — Search results cached; falls back to cache on network errors
-- **Dark & Light Mode** — Semantic color tokens adapt automatically
 - **iPad Responsive** — Adaptive artwork sizing and spacing for larger displays
+- **Accessibility** — WCAG AA contrast, VoiceOver labels, 44pt tap targets, Dynamic Type
+
+### Additive Platforms And Polish
+
+- **Dark & Light Mode** — Semantic color tokens adapt automatically
 - **Apple Watch** — Now playing controls on watchOS
 - **Apple TV** — Full-screen experience with focus-based navigation
 - **CarPlay** — Now playing template for in-car audio control
-- **Accessibility** — WCAG AA contrast, VoiceOver labels, 44pt tap targets, Dynamic Type
 
 ## Tech Stack
 
@@ -76,7 +90,6 @@ graph TD
 | ---------------- | ---------------------------------------------- |
 | Language         | Swift 6 (strict concurrency)                   |
 | IDE              | Xcode 26.4                                     |
-| Apple SDKs       | 26.4 (iOS, watchOS, tvOS, visionOS, macOS)     |
 | UI               | SwiftUI                                        |
 | Architecture     | MVVM (enforced by SPM package graph)           |
 | State            | `@Observable`, `@MainActor` ViewModels, actors |
