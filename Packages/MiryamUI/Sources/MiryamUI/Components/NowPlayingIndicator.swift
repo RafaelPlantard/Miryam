@@ -23,8 +23,7 @@ public struct NowPlayingIndicator: View {
         }
         .frame(width: CGFloat(barCount) * barWidth + CGFloat(barCount - 1) * spacing, height: maxHeight)
         .onAppear { animating = true }
-        .accessibilityIdentifier(AccessibilityID.nowPlayingIndicator.rawValue)
-        .accessibilityLabel("Now playing")
+        .accessibilityHidden(true)
     }
 
     private func bar(phase: Double) -> some View {
