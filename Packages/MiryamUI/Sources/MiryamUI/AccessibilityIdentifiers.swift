@@ -15,6 +15,7 @@ public enum AccessibilityID: String {
     case recentlyPlayedSection = "RecentlyPlayedSection"
     case emptyStateText = "EmptyStateText"
     case noResultsView = "NoResultsView"
+    case songsSearchField = "SongsSearchField"
 
     // MARK: - Song Row
 

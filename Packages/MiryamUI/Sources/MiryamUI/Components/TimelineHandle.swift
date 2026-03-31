@@ -9,6 +9,7 @@ import SwiftUI
 struct TimelineHandle: View {
     let progress: Double
     let trackWidth: CGFloat
+    let color: Color
     let onSeek: @MainActor (Double) -> Void
 
     #if !os(tvOS)
@@ -26,12 +27,12 @@ struct TimelineHandle: View {
     var body: some View {
         #if os(tvOS)
             Circle()
-                .fill(Color._miryamAccent)
+                .fill(color)
                 .frame(width: handleSize, height: handleSize)
                 .offset(x: offsetX)
         #else
             Circle()
-                .fill(Color._miryamAccent)
+                .fill(color)
                 .frame(
                     width: isDragging ? handleSize + 4 : handleSize,
                     height: isDragging ? handleSize + 4 : handleSize

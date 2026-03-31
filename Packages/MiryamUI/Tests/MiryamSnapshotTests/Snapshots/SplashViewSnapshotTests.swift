@@ -18,7 +18,7 @@ struct SplashViewSnapshotTests {
         )
         SnapshotHelper.assertSnapshot(
             of: controller,
-            as: .image(on: .iPhone13Pro, precision: 0.995, perceptualPrecision: 0.98),
+            as: .image(on: SnapshotHelper.phoneConfig, precision: 0.995, perceptualPrecision: 0.98),
             record: false
         )
     }
@@ -32,7 +32,7 @@ struct SplashViewSnapshotTests {
         )
         SnapshotHelper.assertSnapshot(
             of: controller,
-            as: .image(on: .iPhone13Pro, precision: 0.995, perceptualPrecision: 0.98),
+            as: .image(on: SnapshotHelper.phoneConfig, precision: 0.995, perceptualPrecision: 0.98),
             record: false
         )
     }

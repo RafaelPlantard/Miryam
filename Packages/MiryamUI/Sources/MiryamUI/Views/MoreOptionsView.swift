@@ -23,6 +23,9 @@ public struct MoreOptionsView: View {
             // Song info header
             songHeader
 
+            Spacer()
+                .frame(height: Layout.MoreOptions.contentTopSpacing)
+
             // Actions
             actionButton(
                 icon: .musicNoteList,
@@ -49,11 +52,13 @@ public struct MoreOptionsView: View {
                 .font(.miryam.display)
                 .foregroundStyle(Color._miryamLabel)
                 .lineLimit(1)
+                .frame(maxWidth: .infinity)
 
             Text(song.artistName)
                 .font(.miryam.bodySmall)
                 .foregroundStyle(Color._miryamLabel)
                 .lineLimit(1)
+                .frame(maxWidth: .infinity)
         }
         .frame(height: Layout.MoreOptions.songHeaderHeight)
         .frame(maxWidth: .infinity)
