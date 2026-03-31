@@ -89,6 +89,9 @@
         }
       }
     },
+    "More options" : {
+
+    },
     "More options for %@" : {
       "comment" : "Accessibility label for the more button on a song row",
       "localizations" : {
@@ -224,6 +227,9 @@
           }
         }
       }
+    },
+    "Retry" : {
+
     },
     "Search" : {
       "comment" : "Search field placeholder",
