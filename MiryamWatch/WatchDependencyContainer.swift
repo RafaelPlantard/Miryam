@@ -2,15 +2,18 @@ import Foundation
 import MiryamCore
 import MiryamFeatures
 import MiryamNetworking
-import MiryamPlayer
 
 @MainActor
 final class WatchDependencyContainer {
     let playerViewModel: PlayerViewModel
+    let sessionDelegate: WatchSessionDelegate
+    private let remotePlayer: RemotePlayer
     private let songRepository: SongRepositoryProtocol
 
     init() {
-        let player = AudioPlayer()
+        let player = RemotePlayer()
+        self.remotePlayer = player
+        self.sessionDelegate = WatchSessionDelegate(remotePlayer: player)
         let cache = WatchCacheRepository()
         let songRepo = SongRepository()
         self.songRepository = songRepo
