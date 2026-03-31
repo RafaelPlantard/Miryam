@@ -114,12 +114,12 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.tests
 
-  MiryamUITests:
+  MiryamSmokeXCUITests:
     type: bundle.ui-testing
     platform: iOS
     deploymentTarget: "17.0"
     sources:
-      - MiryamUITests
+      - MiryamSmokeXCUITests
     dependencies:
       - target: Miryam
       - package: MiryamUI
@@ -127,7 +127,22 @@ targets:
       base:
         SWIFT_VERSION: "6.0"
         GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.uitests
+        PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.smokexcuitests
+
+  MiryamAccessibilityXCUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - MiryamAccessibilityXCUITests
+    dependencies:
+      - target: Miryam
+      - package: MiryamUI
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.accessibilityxcuitests
 
   MiryamWatch:
     type: application
@@ -243,7 +258,7 @@ targets:
     platform: iOS
     deploymentTarget: "17.0"
     sources:
-      - path: Packages/MiryamUI/Tests/MiryamUITests
+      - path: Packages/MiryamUI/Tests/MiryamSnapshotTests
     dependencies:
       - target: Miryam
       - package: MiryamUI
@@ -263,7 +278,7 @@ targets:
     platform: tvOS
     deploymentTarget: "17.0"
     sources:
-      - path: Packages/MiryamUI/Tests/MiryamUITests
+      - path: Packages/MiryamUI/Tests/MiryamSnapshotTests
     dependencies:
       - target: MiryamTV
       - package: MiryamUI
@@ -286,18 +301,71 @@ schemes:
         MiryamWatch: all
     run:
       config: Debug
-    test:
-      config: Debug
-      targets:
-        - MiryamTests
-        - MiryamUITests
-        - MiryamSnapshotTests
-      coverageTargets:
-        - Miryam
     profile:
       config: Release
     archive:
       config: Release
+
+  MiryamAppUnitTests:
+    build:
+      targets:
+        Miryam: all
+    test:
+      config: Debug
+      targets:
+        - MiryamTests
+      coverageTargets:
+        - Miryam
+
+  MiryamSnapshotTests:
+    build:
+      targets:
+        Miryam: all
+    test:
+      config: Debug
+      targets:
+        - MiryamSnapshotTests
+      coverageTargets:
+        - Miryam
+
+  MiryamAccessibilityXCUITests:
+    build:
+      targets:
+        Miryam: all
+    test:
+      config: Debug
+      targets:
+        - MiryamAccessibilityXCUITests
+      coverageTargets:
+        - Miryam
+
+  MiryamSmokeXCUITests:
+    build:
+      targets:
+        Miryam: all
+    test:
+      config: Debug
+      targets:
+        - MiryamSmokeXCUITests
+      coverageTargets:
+        - Miryam
+
+  AllTests:
+    build:
+      targets:
+        Miryam: all
+        MiryamTV: all
+    test:
+      config: Debug
+      targets:
+        - MiryamTests
+        - MiryamSnapshotTests
+        - MiryamAccessibilityXCUITests
+        - MiryamSmokeXCUITests
+        - MiryamSnapshotTestsTV
+      coverageTargets:
+        - Miryam
+        - MiryamTV
 
   MiryamWatch:
     build:
@@ -312,6 +380,11 @@ schemes:
         MiryamTV: all
     run:
       config: Debug
+
+  MiryamTVSnapshotTests:
+    build:
+      targets:
+        MiryamTV: all
     test:
       config: Debug
       targets:

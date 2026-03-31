@@ -27,13 +27,14 @@ let package = Package(
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
         .testTarget(
-            name: "MiryamUITests",
+            name: "MiryamUISnapshotTests",
             dependencies: [
                 "MiryamUI",
                 "MiryamFeatures",
                 "MiryamCore",
                 .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
-            ]
+            ],
+            path: "Tests/MiryamSnapshotTests"
         )
     ]
 )

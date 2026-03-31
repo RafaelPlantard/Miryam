@@ -86,30 +86,35 @@ graph TD
 | Navigation       | NavigationStack + typed `AppRoute` enum        |
 | Font             | DM Sans (Google Fonts)                         |
 | Snapshot Testing | swift-snapshot-testing (Point-Free)            |
-| Testing          | Swift Testing, XCUITest                        |
+| Testing          | Swift Testing, XCTest, XCUITest                |
 | Tooling          | XcodeGen, Mint, Fastlane, Just                 |
 | CI/CD            | GitHub Actions                                 |
 
 
 ## Testing
 
-Unit tests, snapshot tests, and UI tests across all packages:
+The test strategy is split into explicit lanes so the pyramid stays focused on unit and snapshot coverage, with only the smallest necessary XCUITest surface area.
 
 
-| Suite             | Tests | Description                                 |
-| ----------------- | ----- | ------------------------------------------- |
-| MiryamTests       | 5     | Domain model integration tests              |
-| MiryamUITests     | 8     | XCUITest search, playback, navigation flows |
-| Snapshot — iPhone | 28    | All screens x dark/light x states           |
-| Snapshot — iPad   | 14    | All screens x dark/light + landscape        |
-| Snapshot — Watch  | 4     | Now playing x dark/light x states           |
-| Snapshot — TV     | 13    | All screens x dark/light x states           |
+| Lane          | Schemes / Targets                                                                 | Responsibility                                        |
+| ------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Unit          | `MiryamAppUnitTests`, `MiryamCore`, `MiryamNetworking`, `MiryamPersistence`, `MiryamPlayer`, `MiryamFeatures` | Logic, repositories, state machines, view models     |
+| Snapshot      | `MiryamSnapshotTests`, `MiryamTVSnapshotTests`                                     | Visual regressions, layout states, screen fidelity   |
+| Accessibility | `MiryamAccessibilityXCUITests`                                                     | Runtime accessibility audits and app accessibility    |
+| UI Smoke      | `MiryamSmokeXCUITests`                                                             | Minimal end-to-end launch, player, and album flows   |
 
 
 ```bash
-just test    # run all tests
-just lint    # SwiftLint + SwiftFormat check
+just test           # run every lane in order
+just test-unit      # app + package unit suites
+just test-snapshots # iOS + tvOS snapshot suites
+just test-a11y      # runtime accessibility audits
+just test-ui-smoke  # minimal end-to-end XCUI flows
+just snapshot-update # re-record iOS + tvOS reference images
+just lint           # SwiftLint + SwiftFormat check
 ```
+
+`AllTests` is available as a shared Xcode scheme for app-owned test targets. For the full cross-platform run, `just test` remains the authoritative local entry point.
 
 ## Project Structure
 
@@ -119,15 +124,16 @@ Miryam/
   MiryamWatch/               # watchOS app target
   MiryamTV/                  # tvOS app target
   MiryamVision/              # visionOS app target
-  MiryamTests/               # Integration tests
-  MiryamUITests/             # XCUITests
+  MiryamTests/               # App-owned unit tests
+  MiryamSmokeXCUITests/      # Minimal smoke XCUITests
+  MiryamAccessibilityXCUITests/ # Runtime accessibility XCUITests
   Packages/
     MiryamCore/              # Domain models, protocols, errors
     MiryamNetworking/        # iTunes API client, DTOs
     MiryamPersistence/       # SwiftData cache, offline-first
     MiryamPlayer/            # AVFoundation audio player
     MiryamFeatures/          # ViewModels, Router, DI container
-    MiryamUI/                # Design system, views, components, snapshot tests
+    MiryamUI/                # Design system, views, components
   project.yml                # XcodeGen project definition
   justfile                   # Task runner
   fastlane/                  # Automation lanes

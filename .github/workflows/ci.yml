@@ -36,8 +36,202 @@ jobs:
       - name: SwiftFormat check
         run: mint run swiftformat --lint .
 
-  test:
-    name: Test
+  unit-tests:
+    name: Unit Tests
+    runs-on: self-hosted
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Install Mint
+        run: which mint || brew install mint
+
+      - name: Bootstrap Mint tools
+        run: mint bootstrap
+
+      - name: Generate Xcode project
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: mint run xcodegen generate
+
+      - name: Prepare unit test output directories
+        run: mkdir -p TestResults/Unit Coverage/Unit
+
+      - name: Run app unit tests
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          xcodebuild test \
+            -project Miryam.xcodeproj \
+            -scheme MiryamAppUnitTests \
+            -destination 'platform=iOS Simulator,OS=latest,name=iPhone 17 Pro Max' \
+            -resultBundlePath TestResults/Unit/MiryamAppUnitTests.xcresult \
+            -enableCodeCoverage YES \
+            2>&1 | mint run xcbeautify
+
+      - name: Run package unit tests
+        run: |
+          set -euo pipefail
+          for scheme in MiryamCore MiryamNetworking MiryamPersistence MiryamPlayer MiryamFeatures; do
+            xcodebuild test \
+              -project Miryam.xcodeproj \
+              -scheme "$scheme" \
+              -destination 'platform=macOS' \
+              -resultBundlePath "TestResults/Unit/${scheme}.xcresult" \
+              -enableCodeCoverage YES \
+              2>&1 | mint run xcbeautify
+          done
+
+      - name: Report coverage
+        if: always()
+        run: |
+          if ls TestResults/Unit/*.xcresult >/dev/null 2>&1; then
+            for bundle in TestResults/Unit/*.xcresult; do
+              COVERAGE=$(xcrun xccov view --report --json "$bundle" \
+                | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['lineCoverage']*100)" 2>/dev/null || echo "0")
+              echo "$(basename "$bundle"): ${COVERAGE}%"
+            done
+          else
+            echo "No test results found — skipping coverage report"
+          fi
+
+      - name: Install xcresultparser
+        if: always()
+        run: which xcresultparser || brew install xcresultparser
+
+      - name: Export coverage reports
+        if: always()
+        run: |
+          for bundle in TestResults/Unit/*.xcresult; do
+            [ -d "$bundle" ] || continue
+            name=$(basename "$bundle" .xcresult)
+            xcresultparser --output-format cobertura "$bundle" > "Coverage/Unit/${name}.xml"
+          done
+
+      - name: Install gpg (needed by Codecov)
+        if: always()
+        run: which gpg || brew install gnupg
+
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@3f20e214133d0983f9a10f3d63b0faf9241a3daa # v6.0.0
+        with:
+          files: Coverage/Unit/MiryamAppUnitTests.xml,Coverage/Unit/MiryamCore.xml,Coverage/Unit/MiryamNetworking.xml,Coverage/Unit/MiryamPersistence.xml,Coverage/Unit/MiryamPlayer.xml,Coverage/Unit/MiryamFeatures.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: RafaelPlantard/Miryam
+          flags: unit-tests
+          fail_ci_if_error: false
+
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
+        if: always()
+        with:
+          name: unit-test-results
+          path: TestResults/Unit
+
+  snapshot-tests:
+    name: Snapshot Tests
+    needs: unit-tests
+    runs-on: self-hosted
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Install Mint
+        run: which mint || brew install mint
+
+      - name: Bootstrap Mint tools
+        run: mint bootstrap
+
+      - name: Generate Xcode project
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: mint run xcodegen generate
+
+      - name: Verify snapshot references exist
+        run: |
+          COUNT=$(find Packages/MiryamUI/Tests/MiryamSnapshotTests/Snapshots/__Snapshots__ -name '*.png' | wc -l)
+          echo "Found $COUNT snapshot reference images"
+          if [ "$COUNT" -eq 0 ]; then
+            echo "::error::No snapshot references found. Record locally with SNAPSHOT_RECORD=all"
+            exit 1
+          fi
+
+      - name: Prepare snapshot output directories
+        run: mkdir -p TestResults/Snapshots Coverage/Snapshots
+
+      - name: Run iOS snapshot tests
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          xcodebuild test \
+            -project Miryam.xcodeproj \
+            -scheme MiryamSnapshotTests \
+            -destination 'platform=iOS Simulator,OS=latest,name=iPhone 17 Pro Max' \
+            -resultBundlePath TestResults/Snapshots/MiryamSnapshotTests.xcresult \
+            -enableCodeCoverage YES \
+            2>&1 | mint run xcbeautify
+
+      - name: Run tvOS snapshot tests
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          xcodebuild test \
+            -project Miryam.xcodeproj \
+            -scheme MiryamTVSnapshotTests \
+            -destination 'platform=tvOS Simulator,OS=latest,name=Apple TV 4K (3rd generation)' \
+            -resultBundlePath TestResults/Snapshots/MiryamTVSnapshotTests.xcresult \
+            -enableCodeCoverage YES \
+            2>&1 | mint run xcbeautify
+
+      - name: Install xcresultparser
+        if: always()
+        run: which xcresultparser || brew install xcresultparser
+
+      - name: Export coverage reports
+        if: always()
+        run: |
+          for bundle in TestResults/Snapshots/*.xcresult; do
+            [ -d "$bundle" ] || continue
+            name=$(basename "$bundle" .xcresult)
+            xcresultparser --output-format cobertura "$bundle" > "Coverage/Snapshots/${name}.xml"
+          done
+
+      - name: Install gpg (needed by Codecov)
+        if: always()
+        run: which gpg || brew install gnupg
+
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@3f20e214133d0983f9a10f3d63b0faf9241a3daa # v6.0.0
+        with:
+          files: Coverage/Snapshots/MiryamSnapshotTests.xml,Coverage/Snapshots/MiryamTVSnapshotTests.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: RafaelPlantard/Miryam
+          flags: snapshot-tests
+          fail_ci_if_error: false
+
+      - name: Upload snapshot diffs
+        if: failure()
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
+        with:
+          name: snapshot-diffs
+          path: Packages/MiryamUI/Tests/MiryamSnapshotTests/Snapshots/__Snapshots__/
+          if-no-files-found: ignore
+
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
+        if: always()
+        with:
+          name: snapshot-test-results
+          path: TestResults/Snapshots
+
+  accessibility-tests:
+    name: Accessibility Tests
+    needs: snapshot-tests
     runs-on: self-hosted
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     timeout-minutes: 30
@@ -55,69 +249,32 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: mint run xcodegen generate
 
-      - name: Run tests
+      - name: Prepare accessibility output directories
+        run: mkdir -p TestResults/Accessibility
+
+      - name: Run accessibility tests
         env:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
-          set -o pipefail
+          set -euo pipefail
           xcodebuild test \
             -project Miryam.xcodeproj \
-            -scheme Miryam \
+            -scheme MiryamAccessibilityXCUITests \
             -destination 'platform=iOS Simulator,OS=latest,name=iPhone 17 Pro Max' \
-            -skip-testing:MiryamSnapshotTests \
-            -resultBundlePath TestResults.xcresult \
-            -enableCodeCoverage YES \
+            -resultBundlePath TestResults/Accessibility/MiryamAccessibilityXCUITests.xcresult \
             2>&1 | mint run xcbeautify
-
-      # TODO(ci): Raise threshold to 80% after Wave 3 adds unit tests
-      # for MiryamNetworking, MiryamPersistence, and MiryamPlayer
-      - name: Report coverage
-        if: always()
-        run: |
-          if [ -d TestResults.xcresult ]; then
-            COVERAGE=$(xcrun xccov view --report --json TestResults.xcresult \
-              | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['lineCoverage']*100)" 2>/dev/null || echo "0")
-            echo "Coverage: ${COVERAGE}%"
-          else
-            echo "No test results found — skipping coverage report"
-          fi
-
-      - name: Install xcresultparser
-        if: always()
-        run: which xcresultparser || brew install xcresultparser
-
-      - name: Export coverage report
-        if: always()
-        run: |
-          if [ -d TestResults.xcresult ]; then
-            xcresultparser --output-format cobertura TestResults.xcresult > coverage.xml
-          fi
-
-      - name: Install gpg (needed by Codecov)
-        if: always()
-        run: which gpg || brew install gnupg
-
-      - name: Upload coverage to Codecov
-        if: always()
-        uses: codecov/codecov-action@3f20e214133d0983f9a10f3d63b0faf9241a3daa # v6.0.0
-        with:
-          files: coverage.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: RafaelPlantard/Miryam
-          flags: unit-tests
-          fail_ci_if_error: false
 
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         if: always()
         with:
-          name: test-results
-          path: TestResults.xcresult
+          name: accessibility-test-results
+          path: TestResults/Accessibility
 
-  snapshot-test:
-    name: Snapshot Tests
-    needs: test
+  ui-smoke-tests:
+    name: UI Smoke Tests
+    needs: accessibility-tests
     runs-on: self-hosted
-    if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -133,67 +290,23 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: mint run xcodegen generate
 
-      - name: Verify snapshot references exist
-        run: |
-          COUNT=$(find Packages/MiryamUI/Tests/MiryamUITests/Snapshots/__Snapshots__ -name '*.png' | wc -l)
-          echo "Found $COUNT snapshot reference images"
-          if [ "$COUNT" -eq 0 ]; then
-            echo "::error::No snapshot references found. Record locally with SNAPSHOT_RECORD=all"
-            exit 1
-          fi
+      - name: Prepare UI smoke output directories
+        run: mkdir -p TestResults/UI
 
-      - name: Clean previous results
-        run: rm -rf SnapshotTestResults.xcresult
-
-      - name: Run snapshot tests
+      - name: Run UI smoke tests
         env:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
-          set -o pipefail
+          set -euo pipefail
           xcodebuild test \
             -project Miryam.xcodeproj \
-            -scheme Miryam \
+            -scheme MiryamSmokeXCUITests \
             -destination 'platform=iOS Simulator,OS=latest,name=iPhone 17 Pro Max' \
-            -only-testing:MiryamSnapshotTests \
-            -resultBundlePath SnapshotTestResults.xcresult \
-            -enableCodeCoverage YES \
+            -resultBundlePath TestResults/UI/MiryamSmokeXCUITests.xcresult \
             2>&1 | mint run xcbeautify
-
-      - name: Install xcresultparser
-        if: always()
-        run: which xcresultparser || brew install xcresultparser
-
-      - name: Export coverage report
-        if: always()
-        run: |
-          if [ -d SnapshotTestResults.xcresult ]; then
-            xcresultparser --output-format cobertura SnapshotTestResults.xcresult > snapshot-coverage.xml
-          fi
-
-      - name: Install gpg (needed by Codecov)
-        if: always()
-        run: which gpg || brew install gnupg
-
-      - name: Upload coverage to Codecov
-        if: always()
-        uses: codecov/codecov-action@3f20e214133d0983f9a10f3d63b0faf9241a3daa # v6.0.0
-        with:
-          files: snapshot-coverage.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: RafaelPlantard/Miryam
-          flags: snapshot-tests
-          fail_ci_if_error: false
-
-      - name: Upload snapshot diffs
-        if: failure()
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
-        with:
-          name: snapshot-diffs
-          path: Packages/MiryamUI/Tests/MiryamUITests/Snapshots/__Snapshots__/
-          if-no-files-found: ignore
 
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         if: always()
         with:
-          name: snapshot-test-results
-          path: SnapshotTestResults.xcresult
+          name: ui-smoke-test-results
+          path: TestResults/UI
