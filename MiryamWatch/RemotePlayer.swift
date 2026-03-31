@@ -1,9 +1,8 @@
 import Foundation
 import MiryamCore
 import WatchConnectivity
-import os
 
-private let logger = Logger(subsystem: "io.swift-yah.miryam.watchkitapp", category: "RemotePlayer")
+private let logger = Log.watchSession
 
 /// A ``PlayerProtocol`` implementation that proxies commands to the paired
 /// iPhone via WatchConnectivity and receives playback state updates.

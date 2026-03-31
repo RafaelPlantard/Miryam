@@ -32,6 +32,12 @@ public enum Log: Sendable {
     /// SwiftData cache reads, writes, and cleanup (CacheActor).
     public static let cache = Logger(subsystem: subsystem, category: "Cache")
 
+    /// iPhone → Watch connectivity (PhoneSessionService).
+    public static let phoneSession = Logger(subsystem: subsystem, category: "PhoneSession")
+
+    /// Watch → iPhone connectivity (RemotePlayer, WatchSessionDelegate).
+    public static let watchSession = Logger(subsystem: subsystem, category: "WatchSession")
+
     // MARK: - Factory
 
     /// Creates a Logger for a category not covered by the predefined ones.
