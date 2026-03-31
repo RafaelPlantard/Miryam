@@ -56,7 +56,7 @@ struct TimelineHandle: View {
         #endif
     }
 
-    #if os(iOS) || os(visionOS)
+    #if os(iOS)
         private func triggerHaptic() {
             let generator = UIImpactFeedbackGenerator(style: .light)
             generator.impactOccurred()

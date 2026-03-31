@@ -98,7 +98,7 @@ The test strategy is split into explicit lanes so the pyramid stays focused on u
 
 | Lane          | Local Entry Points                                                                 | Responsibility                                        |
 | ------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| Unit          | `MiryamAppUnitTests`, `swift test --package-path Packages/MiryamCore`, `Packages/MiryamNetworking`, `Packages/MiryamPersistence`, `Packages/MiryamPlayer`, `Packages/MiryamFeatures` | Logic, repositories, state machines, view models     |
+| Unit          | `MiryamAppUnitTests`, `MiryamWatchUnitTests`, `MiryamVisionUnitTests`, `swift test --package-path Packages/MiryamCore`, `Packages/MiryamNetworking`, `Packages/MiryamPersistence`, `Packages/MiryamPlayer`, `Packages/MiryamFeatures` | Logic, repositories, state machines, view models, watchOS smoke coverage, visionOS smoke coverage |
 | Snapshot      | `MiryamSnapshotTests`, `MiryamTVSnapshotTests`                                     | Visual regressions, layout states, screen fidelity   |
 | Accessibility | `MiryamAccessibilityXCUITests`                                                     | Runtime accessibility audits and app accessibility    |
 | UI Smoke      | `MiryamSmokeXCUITests`                                                             | Minimal end-to-end launch, player, and album flows   |
@@ -106,7 +106,7 @@ The test strategy is split into explicit lanes so the pyramid stays focused on u
 
 ```bash
 just test           # run every lane in order
-just test-unit      # app + package unit suites
+just test-unit      # iOS + watchOS + visionOS app unit suites + package tests
 just test-snapshots # iOS + tvOS snapshot suites
 just test-a11y      # runtime accessibility audits
 just test-ui-smoke  # minimal end-to-end XCUI flows
@@ -116,9 +116,9 @@ just lint           # SwiftLint + SwiftFormat check
 
 `AllTests` is available as a shared Xcode scheme for app-owned test targets. For the full cross-platform run, `just test` remains the authoritative local entry point.
 
-CI runs the same gated lane sequence after `lint`, then publishes reporting per lane to Codecov. `Unit Tests` uploads app Cobertura coverage plus SwiftPM Codecov JSON coverage and JUnit/xUnit reports, `Snapshot Tests` uploads iOS and tvOS Cobertura coverage plus JUnit reports, and the `Accessibility` and `UI Smoke` lanes upload coverage derived from their `.xcresult` bundles along with JUnit analytics.
+CI runs the same gated lane sequence after `lint`, then publishes reporting per lane to Codecov. `Unit Tests` uploads normalized Cobertura coverage for iOS, watchOS, and visionOS app targets plus SwiftPM Codecov JSON coverage and JUnit/xUnit reports, `Snapshot Tests` uploads normalized iOS and tvOS Cobertura coverage plus JUnit reports, and the `Accessibility` and `UI Smoke` lanes upload normalized coverage derived from their `.xcresult` bundles along with JUnit analytics.
 
-Raw `.xcresult` bundles remain attached to each GitHub Actions run as artifacts for debugging, alongside the generated JUnit and coverage exports. Local `just test*` commands mirror the lane structure, but report generation and Codecov uploads remain CI-only.
+Raw `.xcresult` bundles remain attached to each GitHub Actions run as artifacts for debugging, alongside the generated JUnit and normalized coverage exports. Local `just test*` commands mirror the lane structure, but report generation and Codecov uploads remain CI-only.
 
 ## Project Structure
 
@@ -129,6 +129,8 @@ Miryam/
   MiryamTV/                  # tvOS app target
   MiryamVision/              # visionOS app target
   MiryamTests/               # App-owned unit tests
+  MiryamWatchTests/          # watchOS unit smoke tests
+  MiryamVisionTests/         # visionOS unit smoke tests
   MiryamSmokeXCUITests/      # Minimal smoke XCUITests
   MiryamAccessibilityXCUITests/ # Runtime accessibility XCUITests
   Packages/

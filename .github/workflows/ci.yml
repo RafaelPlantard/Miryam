@@ -74,6 +74,38 @@ jobs:
               --report-path TestReports/Unit \
               --junit-report-filename MiryamAppUnitTests.junit.xml
 
+      - name: Run watch unit tests
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          xcodebuild test \
+            -project Miryam.xcodeproj \
+            -scheme MiryamWatchUnitTests \
+            -destination 'platform=watchOS Simulator,OS=latest,name=Apple Watch Series 11 (46mm)' \
+            -resultBundlePath TestResults/Unit/MiryamWatchUnitTests.xcresult \
+            -enableCodeCoverage YES \
+            2>&1 | mint run xcbeautify \
+              --report junit \
+              --report-path TestReports/Unit \
+              --junit-report-filename MiryamWatchUnitTests.junit.xml
+
+      - name: Run vision unit tests
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          xcodebuild test \
+            -project Miryam.xcodeproj \
+            -scheme MiryamVisionUnitTests \
+            -destination 'platform=visionOS Simulator,OS=latest,name=Apple Vision Pro' \
+            -resultBundlePath TestResults/Unit/MiryamVisionUnitTests.xcresult \
+            -enableCodeCoverage YES \
+            2>&1 | mint run xcbeautify \
+              --report junit \
+              --report-path TestReports/Unit \
+              --junit-report-filename MiryamVisionUnitTests.junit.xml
+
       - name: Run package unit tests
         run: |
           set -euo pipefail
@@ -113,9 +145,15 @@ jobs:
       - name: Export coverage reports
         if: always()
         run: |
-          if [ -d TestResults/Unit/MiryamAppUnitTests.xcresult ]; then
-            xcresultparser --output-format cobertura TestResults/Unit/MiryamAppUnitTests.xcresult > Coverage/Unit/MiryamAppUnitTests.xml
-          fi
+          for bundle in TestResults/Unit/*.xcresult; do
+            [ -d "$bundle" ] || continue
+            name=$(basename "$bundle" .xcresult)
+            xcresultparser --output-format cobertura "$bundle" > "Coverage/Unit/${name}.xml"
+          done
+
+      - name: Normalize unit coverage reports
+        if: always()
+        run: python3 scripts/normalize_coverage_reports.py --workspace "$GITHUB_WORKSPACE" Coverage/Unit
 
       - name: Install gpg (needed by Codecov)
         if: always()
@@ -125,7 +163,7 @@ jobs:
         if: always()
         uses: codecov/codecov-action@3f20e214133d0983f9a10f3d63b0faf9241a3daa # v6.0.0
         with:
-          files: Coverage/Unit/MiryamAppUnitTests.xml,Coverage/Unit/MiryamCore.json,Coverage/Unit/MiryamNetworking.json,Coverage/Unit/MiryamPersistence.json,Coverage/Unit/MiryamPlayer.json,Coverage/Unit/MiryamFeatures.json
+          files: Coverage/Unit/*.xml,Coverage/Unit/*.json
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: RafaelPlantard/Miryam
           flags: unit-tests
@@ -136,7 +174,7 @@ jobs:
         if: always()
         uses: codecov/codecov-action@3f20e214133d0983f9a10f3d63b0faf9241a3daa # v6.0.0
         with:
-          files: TestReports/Unit/MiryamAppUnitTests.junit.xml,TestReports/Unit/MiryamCore.junit.xml,TestReports/Unit/MiryamNetworking.junit.xml,TestReports/Unit/MiryamPersistence.junit.xml,TestReports/Unit/MiryamPlayer.junit.xml,TestReports/Unit/MiryamFeatures.junit.xml
+          files: TestReports/Unit/*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: RafaelPlantard/Miryam
           flags: unit-tests
@@ -230,6 +268,10 @@ jobs:
             xcresultparser --output-format cobertura "$bundle" > "Coverage/Snapshots/${name}.xml"
           done
 
+      - name: Normalize snapshot coverage reports
+        if: always()
+        run: python3 scripts/normalize_coverage_reports.py --workspace "$GITHUB_WORKSPACE" Coverage/Snapshots
+
       - name: Install gpg (needed by Codecov)
         if: always()
         run: which gpg || brew install gnupg
@@ -238,7 +280,7 @@ jobs:
         if: always()
         uses: codecov/codecov-action@3f20e214133d0983f9a10f3d63b0faf9241a3daa # v6.0.0
         with:
-          files: Coverage/Snapshots/MiryamSnapshotTests.xml,Coverage/Snapshots/MiryamTVSnapshotTests.xml
+          files: Coverage/Snapshots/*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: RafaelPlantard/Miryam
           flags: snapshot-tests
@@ -249,7 +291,7 @@ jobs:
         if: always()
         uses: codecov/codecov-action@3f20e214133d0983f9a10f3d63b0faf9241a3daa # v6.0.0
         with:
-          files: TestReports/Snapshots/MiryamSnapshotTests.junit.xml,TestReports/Snapshots/MiryamTVSnapshotTests.junit.xml
+          files: TestReports/Snapshots/*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: RafaelPlantard/Miryam
           flags: snapshot-tests
@@ -323,6 +365,10 @@ jobs:
           if [ -d TestResults/Accessibility/MiryamAccessibilityXCUITests.xcresult ]; then
             xcresultparser --output-format cobertura TestResults/Accessibility/MiryamAccessibilityXCUITests.xcresult > Coverage/Accessibility/MiryamAccessibilityXCUITests.xml
           fi
+
+      - name: Normalize accessibility coverage reports
+        if: always()
+        run: python3 scripts/normalize_coverage_reports.py --workspace "$GITHUB_WORKSPACE" Coverage/Accessibility
 
       - name: Install gpg (needed by Codecov)
         if: always()
@@ -409,6 +455,10 @@ jobs:
           if [ -d TestResults/UI/MiryamSmokeXCUITests.xcresult ]; then
             xcresultparser --output-format cobertura TestResults/UI/MiryamSmokeXCUITests.xcresult > Coverage/UI/MiryamSmokeXCUITests.xml
           fi
+
+      - name: Normalize UI smoke coverage reports
+        if: always()
+        run: python3 scripts/normalize_coverage_reports.py --workspace "$GITHUB_WORKSPACE" Coverage/UI
 
       - name: Install gpg (needed by Codecov)
         if: always()

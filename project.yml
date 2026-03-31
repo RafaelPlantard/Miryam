@@ -114,6 +114,36 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.tests
 
+  MiryamWatchTests:
+    type: bundle.unit-test
+    platform: watchOS
+    deploymentTarget: "10.0"
+    sources:
+      - MiryamWatchTests
+    dependencies:
+      - target: MiryamWatch
+      - package: MiryamCore
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.watchtests
+
+  MiryamVisionTests:
+    type: bundle.unit-test
+    platform: visionOS
+    deploymentTarget: "1.0"
+    sources:
+      - MiryamVisionTests
+    dependencies:
+      - target: MiryamVision
+      - package: MiryamCore
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.visiontests
+
   MiryamSmokeXCUITests:
     type: bundle.ui-testing
     platform: iOS
@@ -317,6 +347,28 @@ schemes:
       coverageTargets:
         - Miryam
 
+  MiryamWatchUnitTests:
+    build:
+      targets:
+        MiryamWatch: all
+    test:
+      config: Debug
+      targets:
+        - MiryamWatchTests
+      coverageTargets:
+        - MiryamWatch
+
+  MiryamVisionUnitTests:
+    build:
+      targets:
+        MiryamVision: all
+    test:
+      config: Debug
+      targets:
+        - MiryamVisionTests
+      coverageTargets:
+        - MiryamVision
+
   MiryamSnapshotTests:
     build:
       targets:
@@ -354,18 +406,24 @@ schemes:
     build:
       targets:
         Miryam: all
+        MiryamWatch: all
         MiryamTV: all
+        MiryamVision: all
     test:
       config: Debug
       targets:
         - MiryamTests
+        - MiryamWatchTests
+        - MiryamVisionTests
         - MiryamSnapshotTests
         - MiryamAccessibilityXCUITests
         - MiryamSmokeXCUITests
         - MiryamSnapshotTestsTV
       coverageTargets:
         - Miryam
+        - MiryamWatch
         - MiryamTV
+        - MiryamVision
 
   MiryamWatch:
     build:
