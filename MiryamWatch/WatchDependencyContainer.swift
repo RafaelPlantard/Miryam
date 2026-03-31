@@ -1,16 +1,24 @@
 import Foundation
 import MiryamCore
 import MiryamFeatures
+import MiryamNetworking
 import MiryamPlayer
 
 @MainActor
 final class WatchDependencyContainer {
     let playerViewModel: PlayerViewModel
+    private let songRepository: SongRepositoryProtocol
 
     init() {
         let player = AudioPlayer()
         let cache = WatchCacheRepository()
+        let songRepo = SongRepository()
+        self.songRepository = songRepo
         self.playerViewModel = PlayerViewModel(player: player, cacheRepository: cache)
+    }
+
+    func makeAlbumViewModel(album: Album) -> AlbumViewModel {
+        AlbumViewModel(album: album, songRepository: songRepository)
     }
 }
 
