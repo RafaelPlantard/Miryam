@@ -6,6 +6,7 @@ public enum Layout: Sendable {
     public enum Player {
         public static let artworkSizeCompact: CGFloat = 264
         public static let artworkSizeRegular: CGFloat = 360
+        public static let artworkSizeiPadLandscape: CGFloat = 286
         public static let maxContentWidth: CGFloat = 600
         public static let artworkCornerRadius: CGFloat = 32
         public static let controlSpacing: CGFloat = 40
@@ -13,6 +14,7 @@ public enum Layout: Sendable {
         public static let playButtonSize: CGFloat = 72
         public static let trackHeight: CGFloat = 8
         public static let handleSize: CGFloat = 24
+        public static let queuePanelWidth: CGFloat = 288
     }
 
     /// Song row / list item dimensions.
