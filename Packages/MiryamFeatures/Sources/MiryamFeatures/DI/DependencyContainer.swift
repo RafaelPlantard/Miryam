@@ -13,6 +13,8 @@ public final class DependencyContainer {
     public let player: any PlayerProtocol
     public let modelContainer: ModelContainer
 
+    private var albumViewModels: [Int: AlbumViewModel] = [:]
+
     public init() throws {
         let httpClient = HTTPClient()
         self.songRepository = SongRepository(httpClient: httpClient)
@@ -49,9 +51,14 @@ public final class DependencyContainer {
     }
 
     public func makeAlbumViewModel(album: Album) -> AlbumViewModel {
-        AlbumViewModel(
+        if let cached = albumViewModels[album.id] {
+            return cached
+        }
+        let viewModel = AlbumViewModel(
             album: album,
             songRepository: songRepository
         )
+        albumViewModels[album.id] = viewModel
+        return viewModel
     }
 }
