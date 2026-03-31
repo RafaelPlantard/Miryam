@@ -1,5 +1,5 @@
-import Testing
 @testable import MiryamVision
+import Testing
 
 @MainActor
 @Suite("Vision App Smoke")
