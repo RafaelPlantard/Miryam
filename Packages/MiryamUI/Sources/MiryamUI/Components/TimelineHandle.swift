@@ -1,5 +1,9 @@
 import SwiftUI
 
+#if canImport(UIKit)
+    import UIKit
+#endif
+
 /// A draggable (iOS/macOS/visionOS) or static (tvOS) timeline handle
 /// that abstracts platform gesture differences.
 struct TimelineHandle: View {
@@ -36,13 +40,28 @@ struct TimelineHandle: View {
                 .gesture(
                     DragGesture(minimumDistance: 0)
                         .updating($isDragging) { _, state, _ in
+                            if !state {
+                                triggerHaptic()
+                            }
                             state = true
                         }
                         .onChanged { value in
                             let seekProgress = max(0, min(1, value.location.x / trackWidth))
                             onSeek(seekProgress)
                         }
+                        .onEnded { _ in
+                            triggerHaptic()
+                        }
                 )
         #endif
     }
+
+    #if os(iOS) || os(visionOS)
+        private func triggerHaptic() {
+            let generator = UIImpactFeedbackGenerator(style: .light)
+            generator.impactOccurred()
+        }
+    #else
+        private func triggerHaptic() {}
+    #endif
 }

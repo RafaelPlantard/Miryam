@@ -7,7 +7,7 @@ public enum Constants: Sendable {
         /// Seconds to skip forward/backward.
         public static let skipInterval: TimeInterval = 15
         /// Periodic time observer interval in seconds.
-        public static let timeObserverInterval: TimeInterval = 0.25
+        public static let timeObserverInterval: TimeInterval = 0.05
     }
 
     /// Search and pagination defaults.

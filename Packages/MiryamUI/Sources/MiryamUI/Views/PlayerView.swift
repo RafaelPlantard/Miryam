@@ -183,6 +183,7 @@ public struct PlayerView: View {
                             width: max(0, geometry.size.width * viewModel.playbackState.progress),
                             height: Layout.Player.trackHeight
                         )
+                        .animation(.linear(duration: 0.05), value: viewModel.playbackState.progress)
 
                     // Drag handle
                     TimelineHandle(
