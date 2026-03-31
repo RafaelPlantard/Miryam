@@ -20,6 +20,7 @@ xcuserdata/
 *.moved-aside
 *.xcuserstate
 *.xcscmblueprint
+*.xcresult/
 
 # XcodeGen — .xcodeproj is generated, not committed
 Miryam.xcodeproj/
