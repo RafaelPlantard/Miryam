@@ -32,13 +32,11 @@ public struct MoreOptionsView: View {
                 router.dismissSheet()
                 onViewAlbum()
             }
-
-            Spacer()
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier(AccessibilityID.moreOptionsSheet.rawValue)
         .background(Color._miryamSurface)
-        .presentationDetents([.medium])
+        .presentationDetents([.height(Layout.MoreOptions.sheetHeight)])
         .presentationCornerRadius(16)
     }
 
