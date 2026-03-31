@@ -7,6 +7,7 @@ WATCH_IDENTIFIER = "io.swift-yah.miryam.watchkitapp"
 ALL_IDENTIFIERS = [APP_IDENTIFIER, WATCH_IDENTIFIER]
 PROJECT = "Miryam.xcodeproj"
 SCHEME = "Miryam"
+TV_SCHEME = "MiryamTV"
 
 platform :ios do
 
@@ -104,6 +105,14 @@ platform :ios do
       match(
         type: cert_type,
         app_identifier: ALL_IDENTIFIERS,
+        readonly: false,
+        api_key: api_key
+      )
+      # tvOS profiles (same bundle ID, different platform)
+      match(
+        type: cert_type,
+        app_identifier: [APP_IDENTIFIER],
+        platform: "tvos",
         readonly: false,
         api_key: api_key
       )
@@ -209,6 +218,30 @@ platform :ios do
       scheme: SCHEME,
       export_method: "app-store",
       output_directory: "fastlane/builds",
+      export_options: {
+        iCloudContainerEnvironment: "Production"
+      }
+    )
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      api_key: api_key
+    )
+
+    # tvOS — fetch tvOS-specific profiles (same bundle ID, tvOS platform)
+    match(
+      type: "appstore",
+      app_identifier: [APP_IDENTIFIER],
+      platform: "tvos",
+      readonly: false,
+      api_key: api_key
+    )
+    build_app(
+      project: PROJECT,
+      scheme: TV_SCHEME,
+      destination: "generic/platform=tvOS",
+      export_method: "app-store",
+      output_directory: "fastlane/builds",
+      output_name: "MiryamTV.ipa",
       export_options: {
         iCloudContainerEnvironment: "Production"
       }
