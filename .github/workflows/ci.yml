@@ -142,10 +142,8 @@ jobs:
             exit 1
           fi
 
-      - name: Clean derived data
-        run: |
-          rm -rf ~/Library/Developer/Xcode/DerivedData/Miryam-*
-          rm -rf SnapshotTestResults.xcresult
+      - name: Clean previous results
+        run: rm -rf SnapshotTestResults.xcresult
 
       - name: Run snapshot tests
         env:
