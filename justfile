@@ -47,6 +47,16 @@ test-unit:
 		-scheme MiryamAppUnitTests \
 		-destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' \
 		| mint run xcbeautify
+	set -o pipefail; xcodebuild test \
+		-project Miryam.xcodeproj \
+		-scheme MiryamWatchUnitTests \
+		-destination 'platform=watchOS Simulator,OS=latest,name=Apple Watch Series 11 (46mm)' \
+		| mint run xcbeautify
+	set -o pipefail; xcodebuild test \
+		-project Miryam.xcodeproj \
+		-scheme MiryamVisionUnitTests \
+		-destination 'platform=visionOS Simulator,OS=latest,name=Apple Vision Pro' \
+		| mint run xcbeautify
 	set -o pipefail; swift test --package-path Packages/MiryamCore | mint run xcbeautify
 	set -o pipefail; swift test --package-path Packages/MiryamNetworking | mint run xcbeautify
 	set -o pipefail; swift test --package-path Packages/MiryamPersistence | mint run xcbeautify

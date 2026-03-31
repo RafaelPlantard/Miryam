@@ -170,7 +170,10 @@ public struct PlayerView: View {
                         .font(.miryam.bodySmall)
                         .foregroundStyle(Color._miryamAccent)
                         .lineLimit(1)
-                        .frame(minHeight: Layout.Player.minTapTarget)
+                        .frame(
+                            minWidth: Layout.Player.minTapTarget,
+                            minHeight: Layout.Player.minTapTarget
+                        )
                         .contentShape(Rectangle())
                 }
                 .accessibilityLabel("View album \(song.albumName)")

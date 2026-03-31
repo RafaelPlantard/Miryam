@@ -77,6 +77,9 @@ enum SnapshotHelper {
             column: column
         )
         guard let message = failure else { return }
+        if let effectiveRecord, effectiveRecord != .never {
+            return
+        }
         recordIssue(
             message,
             fileID: fileID,

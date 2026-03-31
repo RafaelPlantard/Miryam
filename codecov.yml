@@ -1,3 +1,15 @@
+ignore:
+  - "MiryamTests/**"
+  - "MiryamWatchTests/**"
+  - "MiryamVisionTests/**"
+  - "Packages/**/Tests/**"
+  - "Packages/**/.build/**"
+  - "**/*.derived/**"
+  - "**/Snapshots/__Snapshots__/**"
+  - "TestResults/**"
+  - "TestReports/**"
+  - "Coverage/**"
+
 coverage:
   status:
     project:
@@ -11,6 +23,18 @@ coverage:
 flag_management:
   individual_flags:
     - name: unit-tests
+      statuses:
+        - type: project
+          target: auto
+    - name: snapshot-tests
+      statuses:
+        - type: project
+          target: auto
+    - name: accessibility-tests
+      statuses:
+        - type: project
+          target: auto
+    - name: ui-smoke-tests
       statuses:
         - type: project
           target: auto
