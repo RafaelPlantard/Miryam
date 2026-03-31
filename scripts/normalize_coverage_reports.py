@@ -104,6 +104,39 @@ def normalize_json(path: Path, workspace: Path) -> None:
     path.write_text(json.dumps(payload, separators=(",", ":")))
 
 
+def normalize_lcov(path: Path, workspace: Path) -> None:
+    output_lines: list[str] = []
+    record_lines: list[str] = []
+
+    def flush_record() -> None:
+        nonlocal record_lines
+        if not record_lines:
+            return
+
+        source_index = next((index for index, line in enumerate(record_lines) if line.startswith("SF:")), None)
+        if source_index is None:
+            record_lines = []
+            return
+
+        filename = record_lines[source_index][3:].strip()
+        relative = to_relative(filename, workspace)
+        if relative is None or should_ignore(relative):
+            record_lines = []
+            return
+
+        record_lines[source_index] = f"SF:{relative}\n"
+        output_lines.extend(record_lines)
+        record_lines = []
+
+    for line in path.read_text().splitlines(keepends=True):
+        record_lines.append(line if line.endswith("\n") else f"{line}\n")
+        if line.strip() == "end_of_record":
+            flush_record()
+
+    flush_record()
+    path.write_text("".join(output_lines))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Normalize coverage report paths for Codecov")
     parser.add_argument("coverage_dir", type=Path)
@@ -121,6 +154,8 @@ def main() -> None:
             normalize_xml(path, workspace)
         elif path.suffix == ".json":
             normalize_json(path, workspace)
+        elif path.suffix == ".lcov":
+            normalize_lcov(path, workspace)
 
 
 if __name__ == "__main__":

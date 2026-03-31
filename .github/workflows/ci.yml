@@ -121,7 +121,20 @@ jobs:
               --show-codecov-path)
 
             if [ -f "$coverage_path" ]; then
-              cp "$coverage_path" "Coverage/Unit/${package}.json"
+              coverage_dir=$(dirname "$coverage_path")
+              build_dir=$(dirname "$coverage_dir")
+              profdata="${coverage_dir}/default.profdata"
+              test_binary="${build_dir}/${package}PackageTests.xctest/Contents/MacOS/${package}PackageTests"
+
+              if [ -f "$profdata" ] && [ -f "$test_binary" ]; then
+                xcrun llvm-cov export \
+                  -format=lcov \
+                  -instr-profile "$profdata" \
+                  "$test_binary" \
+                  > "Coverage/Unit/${package}.lcov"
+              else
+                echo "::warning::Coverage artifacts missing for ${package} (profdata: $profdata, binary: $test_binary)"
+              fi
             else
               echo "::warning::Coverage file not found for ${package} at ${coverage_path}"
             fi
@@ -163,7 +176,7 @@ jobs:
         if: always()
         uses: codecov/codecov-action@3f20e214133d0983f9a10f3d63b0faf9241a3daa # v6.0.0
         with:
-          files: Coverage/Unit/*.xml,Coverage/Unit/*.json
+          files: Coverage/Unit/*.xml,Coverage/Unit/*.lcov
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: RafaelPlantard/Miryam
           flags: unit-tests
