@@ -53,8 +53,20 @@ public struct AlbumView: View {
         }
     }
 
+    private var isCompact: Bool {
+        horizontalSizeClass == .compact
+    }
+
     private var albumArtworkSize: CGFloat {
-        horizontalSizeClass == .compact ? Layout.Album.artworkSizeCompact : Layout.Album.artworkSizeRegular
+        isCompact ? Layout.Album.artworkSizeCompact : Layout.Album.artworkSizeRegular
+    }
+
+    private var trackArtworkSize: CGFloat {
+        isCompact ? Layout.Album.trackRowArtworkSize : Layout.Album.trackRowArtworkSizeiPad
+    }
+
+    private var trackCornerRadius: CGFloat {
+        isCompact ? Layout.Album.trackRowCornerRadius : Layout.Album.trackRowCornerRadiusiPad
     }
 
     private var albumHeader: some View {
@@ -82,12 +94,12 @@ public struct AlbumView: View {
             .shadow(color: .black.opacity(0.2), radius: 10, y: 5)
 
             Text(viewModel.album.name)
-                .font(.miryam.display20)
+                .font(isCompact ? .miryam.display20 : .miryam.display32)
                 .foregroundStyle(Color._miryamLabel)
                 .multilineTextAlignment(.center)
 
             Text(viewModel.album.artistName)
-                .font(.miryam.bodyLarge)
+                .font(isCompact ? .miryam.bodyLarge : .miryam.display20)
                 .foregroundStyle(Color._miryamLabelSecondary)
 
             if viewModel.album.trackCount > 0 || !viewModel.album.genre.isEmpty {
@@ -116,22 +128,22 @@ public struct AlbumView: View {
 
                 if song.id != viewModel.songs.last?.id {
                     Divider()
-                        .padding(.leading, 76)
+                        .padding(.leading, trackArtworkSize + (isCompact ? 32 : 36))
                 }
             }
         }
     }
 
     private func trackRow(_ song: Song) -> some View {
-        HStack(spacing: 12) {
-            AsyncImage(url: song.artworkURL(size: 88)) { phase in
+        HStack(spacing: isCompact ? 12 : 16) {
+            AsyncImage(url: song.artworkURL(size: isCompact ? 88 : 156)) { phase in
                 switch phase {
                 case let .success(image):
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                 case .failure, .empty:
-                    RoundedRectangle(cornerRadius: Layout.Album.trackRowCornerRadius)
+                    RoundedRectangle(cornerRadius: trackCornerRadius)
                         .fill(Color._miryamSurfaceSecondary)
                         .overlay(
                             Image(symbol: .musicNote)
@@ -141,17 +153,17 @@ public struct AlbumView: View {
                     Color._miryamSurfaceSecondary
                 }
             }
-            .frame(width: Layout.Album.trackRowArtworkSize, height: Layout.Album.trackRowArtworkSize)
-            .clipShape(RoundedRectangle(cornerRadius: Layout.Album.trackRowCornerRadius))
+            .frame(width: trackArtworkSize, height: trackArtworkSize)
+            .clipShape(RoundedRectangle(cornerRadius: trackCornerRadius))
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(song.name)
-                    .font(.miryam.bodyLarge)
+                    .font(isCompact ? .miryam.bodyLarge : .miryam.display20)
                     .foregroundStyle(Color._miryamLabel)
                     .lineLimit(1)
 
                 Text(song.artistName)
-                    .font(.miryam.bodySmall)
+                    .font(isCompact ? .miryam.bodySmall : .miryam.bodyLarge)
                     .foregroundStyle(Color._miryamLabelSecondary)
                     .lineLimit(1)
             }
