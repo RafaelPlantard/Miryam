@@ -149,3 +149,6 @@ Miryam/
 ## Challenge Spec
 
 See [CHALLENGE.md](CHALLENGE.md) for the original code challenge specification.
+
+For the fastest reviewer path through the required scope, see [docs/challenge-audit.md](docs/challenge-audit.md).
+That audit maps each must-have requirement to its implementation and highlights which extra platform surfaces are additive rather than challenge-critical.
