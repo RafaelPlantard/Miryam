@@ -42,7 +42,9 @@ public enum Layout: Sendable {
         public static let artworkSizeRegular: CGFloat = 160
         public static let cornerRadius: CGFloat = 20
         public static let trackRowArtworkSize: CGFloat = 44
+        public static let trackRowArtworkSizeiPad: CGFloat = 78
         public static let trackRowCornerRadius: CGFloat = 8
+        public static let trackRowCornerRadiusiPad: CGFloat = 10
     }
 
     /// More options sheet dimensions.
