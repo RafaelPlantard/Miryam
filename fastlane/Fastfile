@@ -197,6 +197,7 @@ platform :ios do
 
   desc "Build and upload to TestFlight"
   lane :beta do
+    setup_ci if ENV["CI"]
     api_key = asc_api_key
     match(
       type: "appstore",
@@ -254,6 +255,7 @@ platform :ios do
 
   desc "Build and release to App Store"
   lane :release do
+    setup_ci if ENV["CI"]
     api_key = asc_api_key
     match(
       type: "appstore",
