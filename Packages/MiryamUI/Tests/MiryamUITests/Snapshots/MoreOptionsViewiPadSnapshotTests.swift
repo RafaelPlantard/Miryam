@@ -50,6 +50,46 @@ struct MoreOptionsViewiPadSnapshotTests {
             record: false
         )
     }
+
+    @Test("MoreOptionsView — iPad Landscape — Default — Light Mode")
+    func moreOptionsiPadLandscapeLight() {
+        let router = Router()
+        let song = TestData.makeSong()
+        let view = NavigationStack {
+            MoreOptionsView(song: song, onViewAlbum: {})
+        }
+        .environment(router)
+
+        let controller = SnapshotHelper.hostingController(
+            for: view,
+            interfaceStyle: .light
+        )
+        SnapshotHelper.assertSnapshot(
+            of: controller,
+            as: .image(on: .iPadPro11(.landscape), precision: 0.995, perceptualPrecision: 0.98),
+            record: false
+        )
+    }
+
+    @Test("MoreOptionsView — iPad Landscape — Default — Dark Mode")
+    func moreOptionsiPadLandscapeDark() {
+        let router = Router()
+        let song = TestData.makeSong()
+        let view = NavigationStack {
+            MoreOptionsView(song: song, onViewAlbum: {})
+        }
+        .environment(router)
+
+        let controller = SnapshotHelper.hostingController(
+            for: view,
+            interfaceStyle: .dark
+        )
+        SnapshotHelper.assertSnapshot(
+            of: controller,
+            as: .image(on: .iPadPro11(.landscape), precision: 0.995, perceptualPrecision: 0.98),
+            record: false
+        )
+    }
 }
 
 #endif // os(iOS)

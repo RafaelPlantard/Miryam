@@ -51,5 +51,7 @@ public enum Layout: Sendable {
         public static let songHeaderHeight: CGFloat = 67
         public static let actionButtonMinHeight: CGFloat = 56
         public static let iconFrameWidth: CGFloat = 24
+        /// Content-fitting sheet height: grabber area + header + action + bottom padding.
+        public static let sheetHeight: CGFloat = 230
     }
 }
