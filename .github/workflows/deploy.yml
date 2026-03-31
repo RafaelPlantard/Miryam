@@ -126,6 +126,9 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "prerelease=$PRERELEASE" >> "$GITHUB_OUTPUT"
 
+      - name: Install GitHub CLI
+        run: which gh || brew install gh
+
       - name: Create tag and GitHub Release
         if: github.event_name == 'workflow_dispatch'
         env:
