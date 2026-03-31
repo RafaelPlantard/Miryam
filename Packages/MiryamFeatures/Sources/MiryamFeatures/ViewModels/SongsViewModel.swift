@@ -151,24 +151,46 @@ public final class SongsViewModel {
 
     /// Pull-to-refresh: re-execute current search from scratch.
     public func refresh() async {
-        guard !searchQuery.isEmpty else {
+        guard !searchQuery.trimmingCharacters(in: .whitespaces).isEmpty else {
             await loadRecentlyPlayed()
             return
         }
 
+        let query = searchQuery
         pagination.reset()
         error = nil
 
         do {
             let result = try await songRepository.searchSongs(
-                query: searchQuery,
+                query: query,
                 limit: pagination.limit,
                 offset: pagination.offset
             )
             songs = result.songs
             pagination.advance(resultCount: result.songs.count)
             hasMorePages = pagination.hasMorePages
+            logger.info("Refresh '\(query)': \(result.songs.count) results")
+
+            do {
+                try await cacheRepository.cacheSongs(result.songs, for: query)
+            } catch {
+                logger.warning("Cache write failed during refresh: \(error)")
+            }
+        } catch let appError as AppError {
+            if case .noInternetConnection = appError {
+                let cached = try? await cacheRepository.cachedSongs(for: query)
+                if let cached, !cached.isEmpty {
+                    songs = cached
+                    error = .noInternetConnection
+                    logger.info("Serving \(cached.count) cached refresh results for '\(query)'")
+                    return
+                }
+            }
+
+            error = appError
+            logger.warning("Refresh failed: \(appError)")
         } catch {
+            self.error = .unknown(error.localizedDescription)
             logger.warning("Refresh failed: \(error)")
         }
     }

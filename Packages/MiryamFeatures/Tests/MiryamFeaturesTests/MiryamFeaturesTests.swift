@@ -413,6 +413,45 @@ struct SongsViewModelTests {
 
         #expect(viewModel.songs.count == 2)
         #expect(viewModel.songs[0].name == "Refreshed")
+        #expect(viewModel.error == nil)
+    }
+
+    @Test("refresh caches refreshed results via cacheRepository")
+    @MainActor
+    func refreshCachesResults() async throws {
+        let songRepo = MockSongRepository()
+        let cacheRepo = MockCacheRepository()
+        let songs = [makeSong(id: 7, name: "Refresh Cache")]
+        await songRepo.setSearchResult(SearchResult(songs: songs, totalCount: 1))
+
+        let viewModel = SongsViewModel(songRepository: songRepo, cacheRepository: cacheRepo)
+        viewModel.searchQuery = "refresh cache"
+
+        await viewModel.refresh()
+
+        let cachedCalls = await cacheRepo.getCachedSongsCalls()
+        #expect(cachedCalls.count == 1)
+        #expect(cachedCalls[0].count == 1)
+        #expect(cachedCalls[0][0].name == "Refresh Cache")
+    }
+
+    @Test("refresh falls back to cached songs when offline")
+    @MainActor
+    func refreshFallsBackToCachedSongsWhenOffline() async {
+        let songRepo = MockSongRepository()
+        let cacheRepo = MockCacheRepository()
+        let cachedSongs = [makeSong(id: 8, name: "Cached Refresh")]
+        await songRepo.setShouldThrow(.noInternetConnection)
+        await cacheRepo.setCachedSongsResult(cachedSongs)
+
+        let viewModel = SongsViewModel(songRepository: songRepo, cacheRepository: cacheRepo)
+        viewModel.searchQuery = "offline refresh"
+
+        await viewModel.refresh()
+
+        #expect(viewModel.songs.count == 1)
+        #expect(viewModel.songs[0].name == "Cached Refresh")
+        #expect(viewModel.error == .noInternetConnection)
     }
 
     @Test("refresh with empty query loads recently played")
