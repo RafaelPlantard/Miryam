@@ -1,8 +1,8 @@
 import Foundation
+import MiryamCore
 import WatchConnectivity
-import os
 
-private let logger = Logger(subsystem: "io.swift-yah.miryam.watchkitapp", category: "WatchSession")
+private let logger = Log.watchSession
 
 /// WCSession delegate for the Watch side.
 ///

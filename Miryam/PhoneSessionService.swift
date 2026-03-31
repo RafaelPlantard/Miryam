@@ -1,9 +1,8 @@
 import Foundation
 import MiryamCore
 @preconcurrency import WatchConnectivity
-import os
 
-private let logger = Logger(subsystem: "io.swift-yah.miryam", category: "PhoneSession")
+private let logger = Log.phoneSession
 
 /// Bridges iPhone playback state to the paired Apple Watch via WatchConnectivity.
 ///
