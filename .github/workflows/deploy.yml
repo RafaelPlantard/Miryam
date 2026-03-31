@@ -79,8 +79,17 @@ jobs:
           fi
           echo "type=$TYPE" >> "$GITHUB_OUTPUT"
 
+      - name: Debug environment
+        run: |
+          eval "$(rbenv init - zsh)"
+          ruby -ropenssl -e 'puts "Ruby: #{RUBY_VERSION}"; puts "OpenSSL: #{OpenSSL::OPENSSL_VERSION}"'
+          echo "MATCH_PASSWORD length: ${#MATCH_PASSWORD}"
+          echo "MATCH_PASSWORD hex check: $(echo -n "$MATCH_PASSWORD" | xxd -l 4 | head -1)"
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+
       - name: Run fastlane
-        run: bundle exec fastlane ${{ steps.lane.outputs.lane }}
+        run: bundle exec fastlane ${{ steps.lane.outputs.lane }} --verbose
         env:
           LC_ALL: en_US.UTF-8
           LANG: en_US.UTF-8
