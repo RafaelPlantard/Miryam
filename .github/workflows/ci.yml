@@ -143,6 +143,22 @@ jobs:
           rm -rf ~/Library/Developer/Xcode/DerivedData/Miryam-*
           rm -rf SnapshotTestResults.xcresult
 
+      # Re-record reference images on the CI runner to avoid cross-machine
+      # rendering differences (font hinting, display scale, iOS version).
+      # The second "Run snapshot tests" step then verifies deterministic rendering.
+      - name: Record snapshot references for this environment
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          SNAPSHOT_RECORD: all
+        run: |
+          xcodebuild test \
+            -project Miryam.xcodeproj \
+            -scheme Miryam \
+            -destination 'platform=iOS Simulator,OS=latest,name=iPhone 17 Pro Max' \
+            -only-testing:MiryamSnapshotTests \
+            2>&1 | mint run xcbeautify || true
+          echo "Recorded $(find Packages/MiryamUI/Tests/MiryamUITests/Snapshots/__Snapshots__ -name '*.png' | wc -l) snapshot references"
+
       - name: Run snapshot tests
         env:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}

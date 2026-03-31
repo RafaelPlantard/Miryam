@@ -1,10 +1,30 @@
 #if os(iOS) || os(tvOS)
 @_spi(Internals) import SnapshotTesting
+import Foundation
 import SwiftUI
 import UIKit
 
 @MainActor
 enum SnapshotHelper {
+
+    /// Determines the record mode from the `SNAPSHOT_RECORD` environment variable.
+    ///
+    /// Set `SNAPSHOT_RECORD=1` or `SNAPSHOT_RECORD=all` to re-record every snapshot.
+    /// Set `SNAPSHOT_RECORD=missing` to record only missing snapshots.
+    /// When unset or empty the caller-supplied `record` parameter is used as-is.
+    private static var environmentRecordMode: SnapshotTestingConfiguration.Record? = {
+        guard let value = ProcessInfo.processInfo.environment["SNAPSHOT_RECORD"]?.lowercased(),
+              !value.isEmpty
+        else { return nil }
+        switch value {
+        case "1", "true", "all": return .all
+        case "missing": return .missing
+        case "failed": return .failed
+        case "0", "false", "never": return .never
+        default: return nil
+        }
+    }()
+
     /// Wraps a SwiftUI view in a UIHostingController configured for snapshot testing.
     static func hostingController<V: View>(
         for view: V,
@@ -40,11 +60,14 @@ enum SnapshotHelper {
             .appendingPathComponent(fileName)
             .path
 
+        // Environment variable overrides the caller-supplied record parameter.
+        let effectiveRecord = Self.environmentRecordMode ?? record
+
         let failure = verifySnapshot(
             of: try value(),
             as: snapshotting,
             named: name,
-            record: record,
+            record: effectiveRecord,
             snapshotDirectory: snapshotDir,
             timeout: timeout,
             fileID: fileID,
