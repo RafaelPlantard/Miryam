@@ -96,9 +96,9 @@ graph TD
 The test strategy is split into explicit lanes so the pyramid stays focused on unit and snapshot coverage, with only the smallest necessary XCUITest surface area.
 
 
-| Lane          | Schemes / Targets                                                                 | Responsibility                                        |
+| Lane          | Local Entry Points                                                                 | Responsibility                                        |
 | ------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| Unit          | `MiryamAppUnitTests`, `MiryamCore`, `MiryamNetworking`, `MiryamPersistence`, `MiryamPlayer`, `MiryamFeatures` | Logic, repositories, state machines, view models     |
+| Unit          | `MiryamAppUnitTests`, `swift test --package-path Packages/MiryamCore`, `Packages/MiryamNetworking`, `Packages/MiryamPersistence`, `Packages/MiryamPlayer`, `Packages/MiryamFeatures` | Logic, repositories, state machines, view models     |
 | Snapshot      | `MiryamSnapshotTests`, `MiryamTVSnapshotTests`                                     | Visual regressions, layout states, screen fidelity   |
 | Accessibility | `MiryamAccessibilityXCUITests`                                                     | Runtime accessibility audits and app accessibility    |
 | UI Smoke      | `MiryamSmokeXCUITests`                                                             | Minimal end-to-end launch, player, and album flows   |

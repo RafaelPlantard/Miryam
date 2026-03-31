@@ -111,13 +111,13 @@ struct AudioPlayerTests {
         let player = AudioPlayer()
         let song = makeSong(previewURL: nil)
 
-        var emittedPlaying = false
-        let task = Task {
+        let task = Task<Bool, Never> {
             for await state in player.stateStream {
                 if case .playing = state.status {
-                    emittedPlaying = true
+                    return true
                 }
             }
+            return false
         }
 
         try? await player.play(song)
@@ -125,6 +125,7 @@ struct AudioPlayerTests {
         try? await Task.sleep(nanoseconds: 100_000_000)
         task.cancel()
 
+        let emittedPlaying = await task.value
         #expect(!emittedPlaying)
     }
 
@@ -198,14 +199,15 @@ struct AudioPlayerTests {
         let song1 = makeSong(id: 1, name: "Song 1")
         let song2 = makeSong(id: 2, name: "Song 2")
 
-        var statuses: [PlaybackState.Status] = []
-        let task = Task {
+        let task = Task<[PlaybackState.Status], Never> {
+            var statuses: [PlaybackState.Status] = []
             for await state in player.stateStream {
                 statuses.append(state.status)
                 if statuses.filter({ if case .loading = $0 { true } else { false } }).count >= 2 {
                     break
                 }
             }
+            return statuses
         }
 
         try? await Task.sleep(nanoseconds: 50_000_000)
@@ -214,22 +216,8 @@ struct AudioPlayerTests {
         try? await Task.sleep(nanoseconds: 200_000_000)
         task.cancel()
 
+        let statuses = await task.value
         let hasIdle = statuses.contains { if case .idle = $0 { true } else { false } }
         #expect(hasIdle, "Expected idle state between two play() calls")
-    }
-}
-
-// MARK: - PlaybackState.Status Equatable
-
-extension PlaybackState.Status: @retroactive Equatable {
-    public static func == (lhs: Self, rhs: Self) -> Bool {
-        switch (lhs, rhs) {
-        case (.idle, .idle): true
-        case (.loading, .loading): true
-        case (.playing, .playing): true
-        case (.paused, .paused): true
-        case let (.failed(a), .failed(b)): a.localizedDescription == b.localizedDescription
-        default: false
-        }
     }
 }
