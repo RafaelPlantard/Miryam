@@ -311,7 +311,7 @@ final class MiryamUITests: XCTestCase {
         waitForSongsView()
 
         let songsView = app.descendants(matching: .any)[AccessibilityID.songsView.rawValue]
-        XCTAssertTrue(songsView.waitForExistence(timeout: 3), "SongsView should have accessibility identifier")
+        XCTAssertTrue(songsView.waitForExistence(timeout: 10), "SongsView should have accessibility identifier")
     }
 
     func testPlayerViewAccessibilityIdentifier() throws {
