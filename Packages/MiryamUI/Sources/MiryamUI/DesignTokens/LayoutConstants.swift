@@ -11,7 +11,8 @@ public enum Layout: Sendable {
         public static let controlSpacing: CGFloat = 40
         public static let minTapTarget: CGFloat = 44
         public static let playButtonSize: CGFloat = 72
-        public static let trackHeight: CGFloat = 4
+        public static let trackHeight: CGFloat = 8
+        public static let handleSize: CGFloat = 24
     }
 
     /// Song row / list item dimensions.

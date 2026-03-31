@@ -109,6 +109,37 @@ struct PlayerViewiPadSnapshotTests {
             record: false
         )
     }
+
+    @Test("PlayerView — iPad Landscape — Playing — Light Mode")
+    func playerPlayingiPadLandscapeLight() {
+        let router = Router()
+        let viewModel = makeViewModel()
+        let song = TestData.makeSong()
+        viewModel.currentSong = song
+        viewModel.isPlaying = true
+        viewModel.playbackState = PlaybackState(
+            status: .playing,
+            currentSong: song,
+            currentTime: 90,
+            duration: 354,
+            progress: 90.0 / 354.0
+        )
+
+        let view = NavigationStack {
+            PlayerView(viewModel: viewModel)
+        }
+        .environment(router)
+
+        let controller = SnapshotHelper.hostingController(
+            for: view,
+            interfaceStyle: .light
+        )
+        SnapshotHelper.assertSnapshot(
+            of: controller,
+            as: .image(on: .iPadPro11(.landscape), precision: 0.995, perceptualPrecision: 0.98),
+            record: false
+        )
+    }
 }
 
 #endif // os(iOS)
