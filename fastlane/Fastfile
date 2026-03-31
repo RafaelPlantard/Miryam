@@ -210,10 +210,12 @@ platform :ios do
       app_identifier: APP_IDENTIFIER,
       initial_build_number: 0
     )
+    new_build = current_build + 1
     increment_build_number(
-      build_number: current_build + 1,
+      build_number: new_build,
       xcodeproj: PROJECT
     )
+    UI.message("MIRYAM_BUILD_NUMBER:#{new_build}")
     build_app(
       project: PROJECT,
       scheme: SCHEME,
