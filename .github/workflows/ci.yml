@@ -135,30 +135,17 @@ jobs:
 
       - name: Verify snapshot references exist
         run: |
-          echo "=== Snapshot reference images ==="
-          find Packages/MiryamUI/Tests/MiryamUITests/Snapshots/__Snapshots__ -name "*.png" | head -20
-          echo "Total: $(find Packages/MiryamUI/Tests/MiryamUITests/Snapshots/__Snapshots__ -name '*.png' | wc -l) images"
+          COUNT=$(find Packages/MiryamUI/Tests/MiryamUITests/Snapshots/__Snapshots__ -name '*.png' | wc -l)
+          echo "Found $COUNT snapshot reference images"
+          if [ "$COUNT" -eq 0 ]; then
+            echo "::error::No snapshot references found. Record locally with SNAPSHOT_RECORD=all"
+            exit 1
+          fi
 
       - name: Clean derived data
         run: |
           rm -rf ~/Library/Developer/Xcode/DerivedData/Miryam-*
           rm -rf SnapshotTestResults.xcresult
-
-      # Re-record reference images on the CI runner to avoid cross-machine
-      # rendering differences (font hinting, display scale, iOS version).
-      # The second "Run snapshot tests" step then verifies deterministic rendering.
-      - name: Record snapshot references for this environment
-        env:
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          TEST_RUNNER_SNAPSHOT_RECORD: all
-        run: |
-          xcodebuild test \
-            -project Miryam.xcodeproj \
-            -scheme Miryam \
-            -destination 'platform=iOS Simulator,OS=latest,name=iPhone 17 Pro Max' \
-            -only-testing:MiryamSnapshotTests \
-            2>&1 | mint run xcbeautify || true
-          echo "Recorded $(find Packages/MiryamUI/Tests/MiryamUITests/Snapshots/__Snapshots__ -name '*.png' | wc -l) snapshot references"
 
       - name: Run snapshot tests
         env:
