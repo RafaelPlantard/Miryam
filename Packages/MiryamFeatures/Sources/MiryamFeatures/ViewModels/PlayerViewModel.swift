@@ -15,6 +15,7 @@ public final class PlayerViewModel {
     public var isPlaying = false
     public var isBuffering = false
     public var error: AppError?
+    public var repeatMode: RepeatMode = .off
 
     // MARK: - Private
 
@@ -84,6 +85,16 @@ public final class PlayerViewModel {
     /// Skip backward 15 seconds.
     public func skipBackward() async {
         await player.skipBackward(seconds: Constants.Player.skipInterval)
+    }
+
+    /// Cycle repeat mode: off → all → one → off.
+    public func toggleRepeat() async {
+        switch repeatMode {
+        case .off: repeatMode = .all
+        case .all: repeatMode = .one
+        case .one: repeatMode = .off
+        }
+        await player.setRepeatMode(repeatMode)
     }
 
     /// Stop playback.

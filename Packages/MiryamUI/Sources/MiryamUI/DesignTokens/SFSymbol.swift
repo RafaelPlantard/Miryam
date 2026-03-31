@@ -11,6 +11,8 @@ public enum SFSymbol: String, Sendable {
     case ellipsis
     case warningTriangle = "exclamationmark.triangle"
     case magnifyingGlass = "magnifyingglass"
+    case repeatIcon = "repeat"
+    case repeatOne = "repeat.1"
 }
 
 public extension Image {

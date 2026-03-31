@@ -17,6 +17,7 @@ public actor AudioPlayer: PlayerProtocol {
     private var currentSong: Song?
     private var continuation: AsyncStream<PlaybackState>.Continuation?
     private var endObservation: (any NSObjectProtocol)?
+    private var repeatMode: RepeatMode = .off
 
     private let _stateStream: AsyncStream<PlaybackState>
 
@@ -178,6 +179,10 @@ public actor AudioPlayer: PlayerProtocol {
         await player.seek(to: target)
     }
 
+    public func setRepeatMode(_ mode: RepeatMode) async {
+        repeatMode = mode
+    }
+
     // MARK: - Observers
 
     private func addTimeObserver(to avPlayer: AVPlayer) {
@@ -258,13 +263,30 @@ public actor AudioPlayer: PlayerProtocol {
 
         logger.debug("Playback ended: \(song.name)")
 
-        emitState(PlaybackState(
-            status: .paused,
-            currentSong: song,
-            currentTime: duration.isFinite ? duration : 0,
-            duration: duration.isFinite ? duration : 0,
-            progress: 1.0
-        ))
+        switch repeatMode {
+        case .one, .all:
+            // Seek back to start and play again
+            let start = CMTime.zero
+            player?.seek(to: start) { [weak self] _ in
+                guard let self else { return }
+                Task { await self.player?.play() }
+            }
+            emitState(PlaybackState(
+                status: .playing,
+                currentSong: song,
+                currentTime: 0,
+                duration: duration.isFinite ? duration : 0,
+                progress: 0
+            ))
+        case .off:
+            emitState(PlaybackState(
+                status: .paused,
+                currentSong: song,
+                currentTime: duration.isFinite ? duration : 0,
+                duration: duration.isFinite ? duration : 0,
+                progress: 1.0
+            ))
+        }
     }
 
     private func makeCurrentState(status: PlaybackState.Status, song: Song) -> PlaybackState {

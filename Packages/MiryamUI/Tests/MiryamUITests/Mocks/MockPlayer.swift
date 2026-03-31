@@ -16,4 +16,5 @@ final class MockPlayer: PlayerProtocol, @unchecked Sendable {
     func seek(to progress: Double) async {}
     func skipForward(seconds: TimeInterval) async {}
     func skipBackward(seconds: TimeInterval) async {}
+    func setRepeatMode(_ mode: RepeatMode) async {}
 }

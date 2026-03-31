@@ -23,6 +23,9 @@ public protocol PlayerProtocol: Sendable {
     /// Skip backward by seconds.
     func skipBackward(seconds: TimeInterval) async
 
+    /// Set repeat mode.
+    func setRepeatMode(_ mode: RepeatMode) async
+
     /// Current playback state stream.
     var stateStream: AsyncStream<PlaybackState> { get }
 }
