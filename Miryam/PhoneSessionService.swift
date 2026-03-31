@@ -103,32 +103,32 @@ final class PhoneSessionService: NSObject, WCSessionDelegate, @unchecked Sendabl
         logger.debug("Received command from Watch: \(command)")
 
         switch command {
-        case "play":
-            guard let songData = message["song"] as? Data,
-                  let song = try? JSONDecoder().decode(Song.self, from: songData)
-            else { return nil }
-            return .play(song)
+        case "play": return parseSong(from: message).map { .play($0) }
         case "pause": return .pause
         case "resume": return .resume
         case "stop": return .stop
-        case "seek":
-            guard let progress = message["progress"] as? Double else { return nil }
-            return .seek(progress: progress)
-        case "skipForward":
-            let seconds = message["seconds"] as? TimeInterval ?? Constants.Player.skipInterval
-            return .skipForward(seconds: seconds)
-        case "skipBackward":
-            let seconds = message["seconds"] as? TimeInterval ?? Constants.Player.skipInterval
-            return .skipBackward(seconds: seconds)
-        case "setRepeatMode":
-            guard let rawValue = message["mode"] as? String,
-                  let mode = RepeatMode(rawValue: rawValue)
-            else { return nil }
-            return .setRepeatMode(mode)
+        case "seek": return (message["progress"] as? Double).map { .seek(progress: $0) }
+        case "skipForward": return .skipForward(seconds: skipSeconds(from: message))
+        case "skipBackward": return .skipBackward(seconds: skipSeconds(from: message))
+        case "setRepeatMode": return parseRepeatMode(from: message).map { .setRepeatMode($0) }
         default:
             logger.warning("Unknown command from Watch: \(command)")
             return nil
         }
+    }
+
+    private static func parseSong(from message: [String: Any]) -> Song? {
+        guard let data = message["song"] as? Data else { return nil }
+        return try? JSONDecoder().decode(Song.self, from: data)
+    }
+
+    private static func skipSeconds(from message: [String: Any]) -> TimeInterval {
+        message["seconds"] as? TimeInterval ?? Constants.Player.skipInterval
+    }
+
+    private static func parseRepeatMode(from message: [String: Any]) -> RepeatMode? {
+        guard let rawValue = message["mode"] as? String else { return nil }
+        return RepeatMode(rawValue: rawValue)
     }
 
     private static func executeCommand(_ command: PlayerCommand, player: any PlayerProtocol) async {

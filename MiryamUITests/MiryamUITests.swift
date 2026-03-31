@@ -409,8 +409,8 @@ final class MiryamUITests: XCTestCase {
             // missing descriptions on cell images).
             let desc = issue.compactDescription
             let element = issue.element
-            if desc.contains("Contrast") && element?.elementType == .staticText { return true }
-            if desc.contains("no description") && element?.elementType == .image { return true }
+            if desc.contains("Contrast"), element?.elementType == .staticText { return true }
+            if desc.contains("no description"), element?.elementType == .image { return true }
             return false
         }
     }
