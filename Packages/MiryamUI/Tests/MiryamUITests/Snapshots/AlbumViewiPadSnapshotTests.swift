@@ -61,6 +61,46 @@ struct AlbumViewiPadSnapshotTests {
             record: false
         )
     }
+
+    @Test("AlbumView — iPad Landscape — Loaded — Light Mode")
+    func albumLoadediPadLandscapeLight() {
+        let router = Router()
+        let viewModel = makeViewModel()
+        let view = NavigationStack {
+            AlbumView(viewModel: viewModel, onPlaySong: { _ in })
+        }
+        .environment(router)
+
+        let controller = SnapshotHelper.hostingController(
+            for: view,
+            interfaceStyle: .light
+        )
+        SnapshotHelper.assertSnapshot(
+            of: controller,
+            as: .image(on: .iPadPro11(.landscape), precision: 0.995, perceptualPrecision: 0.98),
+            record: false
+        )
+    }
+
+    @Test("AlbumView — iPad Landscape — Loaded — Dark Mode")
+    func albumLoadediPadLandscapeDark() {
+        let router = Router()
+        let viewModel = makeViewModel()
+        let view = NavigationStack {
+            AlbumView(viewModel: viewModel, onPlaySong: { _ in })
+        }
+        .environment(router)
+
+        let controller = SnapshotHelper.hostingController(
+            for: view,
+            interfaceStyle: .dark
+        )
+        SnapshotHelper.assertSnapshot(
+            of: controller,
+            as: .image(on: .iPadPro11(.landscape), precision: 0.995, perceptualPrecision: 0.98),
+            record: false
+        )
+    }
 }
 
 #endif // os(iOS)
