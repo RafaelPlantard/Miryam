@@ -279,6 +279,66 @@ final class MiryamUITests: XCTestCase {
         XCTAssertTrue(searchField.waitForExistence(timeout: 3))
     }
 
+    func testBackNavigationFromAlbum() throws {
+        app.launch()
+        navigateToAlbumFromSheet()
+
+        let albumView = app.descendants(matching: .any)[AccessibilityID.albumView.rawValue]
+        guard albumView.waitForExistence(timeout: 5) else {
+            XCTFail("Album view did not appear")
+            return
+        }
+
+        let backButton = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(backButton.waitForExistence(timeout: 3))
+        backButton.tap()
+
+        // Should return to songs view
+        let songsNavBar = app.navigationBars["Songs"]
+        XCTAssertTrue(songsNavBar.waitForExistence(timeout: 5), "Should navigate back to Songs view")
+    }
+
+    func testDeepNavigationFlow() throws {
+        app.launch()
+        // Search → Player
+        navigateToPlayer()
+
+        let playPauseButton = app.buttons[AccessibilityID.playPause.rawValue]
+        guard playPauseButton.waitForExistence(timeout: 5) else {
+            XCTFail("Player did not appear")
+            return
+        }
+
+        // Player → back to Songs
+        let backButton = app.navigationBars.buttons.firstMatch
+        XCTAssertTrue(backButton.waitForExistence(timeout: 3))
+        backButton.tap()
+
+        // Songs → More Options → Album
+        let firstCell = app.cells.firstMatch
+        guard firstCell.waitForExistence(timeout: 5) else {
+            XCTFail("No search results after back navigation")
+            return
+        }
+
+        let moreButton = app.buttons[AccessibilityID.moreOptionsButton.rawValue].firstMatch
+        guard moreButton.waitForExistence(timeout: 5) else {
+            XCTFail("More options button not found")
+            return
+        }
+        moreButton.tap()
+
+        let viewAlbumButton = app.buttons[AccessibilityID.viewAlbumButton.rawValue]
+        guard viewAlbumButton.waitForExistence(timeout: 5) else {
+            XCTFail("View album button not found in sheet")
+            return
+        }
+        viewAlbumButton.tap()
+
+        let albumView = app.descendants(matching: .any)[AccessibilityID.albumView.rawValue]
+        XCTAssertTrue(albumView.waitForExistence(timeout: 5), "Album view should appear after full navigation flow")
+    }
+
     // MARK: - Recently Played (SwiftData Cache)
 
     func testRecentlyPlayedShowsAfterPlaying() throws {
@@ -349,6 +409,22 @@ final class MiryamUITests: XCTestCase {
     func testMoreOptionsAccessibilityAudit() throws {
         app.launch()
         openMoreOptions()
+        try app.performAccessibilityAudit(for: [
+            .dynamicType,
+            .sufficientElementDescription,
+            .contrast,
+            .hitRegion,
+        ])
+    }
+
+    func testAlbumViewAccessibilityAudit() throws {
+        app.launch()
+        navigateToAlbumFromSheet()
+        let albumView = app.descendants(matching: .any)[AccessibilityID.albumView.rawValue]
+        guard albumView.waitForExistence(timeout: 5) else {
+            XCTFail("Album view did not appear")
+            return
+        }
         try app.performAccessibilityAudit(for: [
             .dynamicType,
             .sufficientElementDescription,
