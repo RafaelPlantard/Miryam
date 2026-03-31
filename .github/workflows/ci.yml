@@ -508,3 +508,59 @@ jobs:
             TestResults/UI
             TestReports/UI
             Coverage/UI
+
+  update-coverage-badge:
+    name: Update Coverage Badge
+    needs: ui-smoke-tests
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Download unit test artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: unit-test-results
+          path: artifacts/unit
+
+      - name: Download snapshot test artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: snapshot-test-results
+          path: artifacts/snapshots
+
+      - name: Download accessibility test artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: accessibility-test-results
+          path: artifacts/accessibility
+
+      - name: Download UI smoke test artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: ui-smoke-test-results
+          path: artifacts/ui
+
+      - name: Compute coverage badge values
+        id: coverage
+        run: |
+          python3 scripts/build_coverage_badge.py artifacts > coverage_badge.json
+          python3 - <<'PY'
+          import json
+          payload = json.load(open("coverage_badge.json"))
+          with open(__import__("os").environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
+              fh.write(f"message={payload['message']}\n")
+              fh.write(f"color={payload['color']}\n")
+              fh.write(f"covered={payload['covered']}\n")
+              fh.write(f"tracked={payload['tracked']}\n")
+          PY
+
+      - name: Update coverage badge
+        uses: schneegans/dynamic-badges-action@0e50b8bad39e7e1afd3e4e9c2b7dd145fad07501 # v1.8.0
+        with:
+          auth: ${{ secrets.GIST_TOKEN }}
+          gistID: 1b309b73189be09d6e6a1a163c7693e6
+          filename: miryam-coverage.json
+          label: codecov
+          message: ${{ steps.coverage.outputs.message }}
+          color: ${{ steps.coverage.outputs.color }}
