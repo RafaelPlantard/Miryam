@@ -69,6 +69,7 @@ public struct WatchNowPlayingView: View {
                 } label: {
                     Image(symbol: .skipBackward15)
                 }
+                .accessibilityIdentifier(AccessibilityID.skipBackward.rawValue)
                 .accessibilityLabel("Skip backward 15 seconds")
 
                 Button {
@@ -77,6 +78,7 @@ public struct WatchNowPlayingView: View {
                     Image(symbol: viewModel.isPlaying ? .pauseFill : .playFill)
                         .font(.title2)
                 }
+                .accessibilityIdentifier(AccessibilityID.playPause.rawValue)
                 .accessibilityLabel(viewModel.isPlaying ? "Pause" : "Play")
                 .accessibilityValue(viewModel.isPlaying ? "Playing" : "Paused")
 
@@ -85,9 +87,11 @@ public struct WatchNowPlayingView: View {
                 } label: {
                     Image(symbol: .skipForward15)
                 }
+                .accessibilityIdentifier(AccessibilityID.skipForward.rawValue)
                 .accessibilityLabel("Skip forward 15 seconds")
             }
         }
         .padding()
+        .accessibilityIdentifier(AccessibilityID.watchNowPlayingView.rawValue)
     }
 }

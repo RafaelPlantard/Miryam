@@ -354,7 +354,9 @@ public struct PlayerView: View {
             .frame(height: Layout.Player.minTapTarget)
             .contentShape(Rectangle())
             .accessibilityElement()
-            .accessibilityLabel(AccessibilityID.songProgress.rawValue)
+            .accessibilityIdentifier(AccessibilityID.songProgress.rawValue)
+            .accessibilityLabel("Playback progress")
+            .accessibilityHint("Drag to seek within the song")
             .accessibilityValue("\(Int(viewModel.playbackState.progress * 100))%")
 
             // Time labels

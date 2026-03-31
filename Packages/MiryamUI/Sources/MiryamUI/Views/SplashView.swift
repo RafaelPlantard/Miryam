@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 
 public struct SplashView: View {
@@ -36,6 +37,8 @@ public struct SplashView: View {
     }
 
     private func scheduleTransition() {
+        guard !ProcessInfo.processInfo.arguments.contains("-UITestHoldSplash") else { return }
+
         Task {
             try? await Task.sleep(for: .seconds(Layout.Splash.transitionDelay))
             await MainActor.run {

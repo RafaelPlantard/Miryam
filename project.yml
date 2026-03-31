@@ -165,6 +165,7 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - MiryamAccessibilityXCUITests
+      - path: Packages/MiryamUI/Tests/TestSupport
     dependencies:
       - target: Miryam
       - package: MiryamUI
@@ -289,6 +290,7 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: Packages/MiryamUI/Tests/MiryamSnapshotTests
+      - path: Packages/MiryamUI/Tests/TestSupport
     dependencies:
       - target: Miryam
       - package: MiryamUI
@@ -309,6 +311,7 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: Packages/MiryamUI/Tests/MiryamSnapshotTests
+      - path: Packages/MiryamUI/Tests/TestSupport
     dependencies:
       - target: MiryamTV
       - package: MiryamUI
