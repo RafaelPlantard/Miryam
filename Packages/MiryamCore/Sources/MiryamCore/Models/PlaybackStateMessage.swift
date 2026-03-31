@@ -46,13 +46,12 @@ public struct PlaybackStateMessage: Codable, Sendable {
     }
 
     public func toPlaybackState() -> PlaybackState {
-        let playbackStatus: PlaybackState.Status
-        switch status {
-        case "loading": playbackStatus = .loading
-        case "playing": playbackStatus = .playing
-        case "paused": playbackStatus = .paused
-        case "failed": playbackStatus = .failed(.playbackFailed(errorMessage ?? "Unknown error"))
-        default: playbackStatus = .idle
+        let playbackStatus: PlaybackState.Status = switch status {
+        case "loading": .loading
+        case "playing": .playing
+        case "paused": .paused
+        case "failed": .failed(.playbackFailed(errorMessage ?? "Unknown error"))
+        default: .idle
         }
         return PlaybackState(
             status: playbackStatus,
