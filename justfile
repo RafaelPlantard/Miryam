@@ -23,7 +23,7 @@ bootstrap: _ensure-deps
 	open Miryam.xcodeproj
 	@echo ""
 	@echo "✅ Bootstrap complete! Miryam is ready to build."
-	@echo "   Run 'just test' to run all tests."
+	@echo "   Run 'just test' to run all test lanes."
 	@echo "   Run 'just lint' to check code style."
 
 # Regenerate .xcodeproj and open workspace
@@ -33,13 +33,73 @@ open:
 
 # ── Development ────────────────────────────────────────────────────────────────
 
-# Run all tests (unit + UI)
+# Run every test lane in order
 test:
+	just test-unit
+	just test-snapshots
+	just test-a11y
+	just test-ui-smoke
+
+# Run app + package unit tests
+test-unit:
 	xcodebuild test \
 		-project Miryam.xcodeproj \
-		-scheme Miryam \
-		-destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
-		-resultBundlePath TestResults.xcresult \
+		-scheme MiryamAppUnitTests \
+		-destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' \
+		| mint run xcbeautify
+	xcodebuild test \
+		-project Miryam.xcodeproj \
+		-scheme MiryamCore \
+		-destination 'platform=macOS' \
+		| mint run xcbeautify
+	xcodebuild test \
+		-project Miryam.xcodeproj \
+		-scheme MiryamNetworking \
+		-destination 'platform=macOS' \
+		| mint run xcbeautify
+	xcodebuild test \
+		-project Miryam.xcodeproj \
+		-scheme MiryamPersistence \
+		-destination 'platform=macOS' \
+		| mint run xcbeautify
+	xcodebuild test \
+		-project Miryam.xcodeproj \
+		-scheme MiryamPlayer \
+		-destination 'platform=macOS' \
+		| mint run xcbeautify
+	xcodebuild test \
+		-project Miryam.xcodeproj \
+		-scheme MiryamFeatures \
+		-destination 'platform=macOS' \
+		| mint run xcbeautify
+
+# Run iOS + tvOS snapshot suites
+test-snapshots:
+	xcodebuild test \
+		-project Miryam.xcodeproj \
+		-scheme MiryamSnapshotTests \
+		-destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' \
+		| mint run xcbeautify
+	xcodebuild test \
+		-project Miryam.xcodeproj \
+		-scheme MiryamTVSnapshotTests \
+		-destination 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)' \
+		| mint run xcbeautify
+
+# Run runtime accessibility audits
+test-a11y:
+	xcodebuild test \
+		-project Miryam.xcodeproj \
+		-scheme MiryamAccessibilityXCUITests \
+		-destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' \
+		| mint run xcbeautify
+
+# Run minimal end-to-end XCUITest coverage
+test-ui-smoke:
+	xcodebuild test \
+		-project Miryam.xcodeproj \
+		-scheme MiryamSmokeXCUITests \
+		-destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' \
 		| mint run xcbeautify
 
 # Lint Swift code
@@ -54,11 +114,15 @@ format:
 
 # Regenerate snapshot reference images
 snapshot-update:
-	xcodebuild test \
+	SNAPSHOT_RECORD=all xcodebuild test \
 		-project Miryam.xcodeproj \
-		-scheme MiryamTests \
-		-destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
-		-testArguments "-recordSnapshots YES" \
+		-scheme MiryamSnapshotTests \
+		-destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' \
+		| mint run xcbeautify
+	SNAPSHOT_RECORD=all xcodebuild test \
+		-project Miryam.xcodeproj \
+		-scheme MiryamTVSnapshotTests \
+		-destination 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)' \
 		| mint run xcbeautify
 
 # ── Security ───────────────────────────────────────────────────────────────────

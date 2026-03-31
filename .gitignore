@@ -72,3 +72,6 @@ docs/superpowers/
 coverage/
 *.xccovreport
 *.xccovarchive
+
+# Local planning scratchpad
+tasks/todo.md
