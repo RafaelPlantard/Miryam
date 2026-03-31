@@ -25,11 +25,13 @@ struct AlbumViewiPadSnapshotTests {
     @Test("AlbumView — iPad — Loaded — Light Mode")
     func albumLoadediPadLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             AlbumView(viewModel: viewModel, onPlaySong: { _ in })
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -45,11 +47,13 @@ struct AlbumViewiPadSnapshotTests {
     @Test("AlbumView — iPad — Loaded — Dark Mode")
     func albumLoadediPadDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             AlbumView(viewModel: viewModel, onPlaySong: { _ in })
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -65,11 +69,13 @@ struct AlbumViewiPadSnapshotTests {
     @Test("AlbumView — iPad Landscape — Loaded — Light Mode")
     func albumLoadediPadLandscapeLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             AlbumView(viewModel: viewModel, onPlaySong: { _ in })
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -85,11 +91,13 @@ struct AlbumViewiPadSnapshotTests {
     @Test("AlbumView — iPad Landscape — Loaded — Dark Mode")
     func albumLoadediPadLandscapeDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             AlbumView(viewModel: viewModel, onPlaySong: { _ in })
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,

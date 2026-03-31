@@ -20,11 +20,13 @@ struct SongsViewTVSnapshotTests {
     @Test("SongsView — TV — Empty State — Light Mode")
     func songsEmptyTVLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -40,11 +42,13 @@ struct SongsViewTVSnapshotTests {
     @Test("SongsView — TV — Empty State — Dark Mode")
     func songsEmptyTVDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -60,6 +64,7 @@ struct SongsViewTVSnapshotTests {
     @Test("SongsView — TV — With Results — Light Mode")
     func songsWithResultsTVLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         viewModel.songs = TestData.sampleSongs
         viewModel.searchQuery = "Queen"
@@ -67,6 +72,7 @@ struct SongsViewTVSnapshotTests {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -82,6 +88,7 @@ struct SongsViewTVSnapshotTests {
     @Test("SongsView — TV — With Results — Dark Mode")
     func songsWithResultsTVDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         viewModel.songs = TestData.sampleSongs
         viewModel.searchQuery = "Queen"
@@ -89,6 +96,7 @@ struct SongsViewTVSnapshotTests {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,

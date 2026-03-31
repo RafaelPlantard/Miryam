@@ -8,20 +8,20 @@ import SwiftUI
 struct MiryamVisionApp: App {
     @State private var container: DependencyContainer?
     @State private var router = Router()
+    @State private var playerViewModel: PlayerViewModel?
 
     var body: some Scene {
         WindowGroup {
             Group {
-                if let container {
+                if let container, let playerViewModel {
                     NavigationStack(path: Bindable(router).path) {
                         SongsView(viewModel: container.makeSongsViewModel())
                             .navigationDestination(for: AppRoute.self) { route in
                                 switch route {
                                 case let .player(song):
-                                    let playerVM = container.makePlayerViewModel()
-                                    PlayerView(viewModel: playerVM)
+                                    PlayerView(viewModel: playerViewModel)
                                         .environment(router)
-                                        .task { await playerVM.play(song) }
+                                        .task { await playerViewModel.play(song) }
                                 case let .album(album):
                                     AlbumView(
                                         viewModel: container.makeAlbumViewModel(album: album),
@@ -34,6 +34,7 @@ struct MiryamVisionApp: App {
                             }
                     }
                     .environment(router)
+                    .environment(playerViewModel)
                 } else {
                     ProgressView("Loading...")
                 }
@@ -41,7 +42,9 @@ struct MiryamVisionApp: App {
             .task {
                 FontRegistration.registerFonts()
                 do {
-                    container = try DependencyContainer()
+                    let di = try DependencyContainer()
+                    container = di
+                    playerViewModel = di.makePlayerViewModel()
                 } catch {
                     fatalError("Failed to create DependencyContainer: \(error)")
                 }

@@ -20,11 +20,13 @@ struct SongsViewiPadSnapshotTests {
     @Test("SongsView — iPad — Empty State — Light Mode")
     func songsEmptyiPadLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -40,11 +42,13 @@ struct SongsViewiPadSnapshotTests {
     @Test("SongsView — iPad — Empty State — Dark Mode")
     func songsEmptyiPadDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -60,6 +64,7 @@ struct SongsViewiPadSnapshotTests {
     @Test("SongsView — iPad — With Results — Light Mode")
     func songsWithResultsiPadLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         viewModel.songs = TestData.sampleSongs
         viewModel.searchQuery = "Queen"
@@ -67,6 +72,7 @@ struct SongsViewiPadSnapshotTests {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -82,6 +88,7 @@ struct SongsViewiPadSnapshotTests {
     @Test("SongsView — iPad — With Results — Dark Mode")
     func songsWithResultsiPadDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         viewModel.songs = TestData.sampleSongs
         viewModel.searchQuery = "Queen"
@@ -89,6 +96,7 @@ struct SongsViewiPadSnapshotTests {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -104,6 +112,7 @@ struct SongsViewiPadSnapshotTests {
     @Test("SongsView — iPad Landscape — With Results — Dark Mode")
     func songsWithResultsiPadLandscapeDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         viewModel.songs = TestData.sampleSongs
         viewModel.searchQuery = "Queen"
@@ -111,6 +120,7 @@ struct SongsViewiPadSnapshotTests {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -126,6 +136,7 @@ struct SongsViewiPadSnapshotTests {
     @Test("SongsView — iPad Landscape — With Results — Light Mode")
     func songsWithResultsiPadLandscapeLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         viewModel.songs = TestData.sampleSongs
         viewModel.searchQuery = "Queen"
@@ -133,6 +144,7 @@ struct SongsViewiPadSnapshotTests {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -148,11 +160,13 @@ struct SongsViewiPadSnapshotTests {
     @Test("SongsView — iPad Landscape — Empty State — Light Mode")
     func songsEmptyiPadLandscapeLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -168,11 +182,13 @@ struct SongsViewiPadSnapshotTests {
     @Test("SongsView — iPad Landscape — Empty State — Dark Mode")
     func songsEmptyiPadLandscapeDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
