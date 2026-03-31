@@ -16,7 +16,7 @@ public enum Layout: Sendable {
 
     /// Song row / list item dimensions.
     public enum SongRow {
-        public static let thumbnailSize: CGFloat = 52
+        public static let thumbnailSize: CGFloat = 44
         public static let thumbnailCornerRadius: CGFloat = 8
     }
 
