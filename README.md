@@ -116,6 +116,10 @@ just lint           # SwiftLint + SwiftFormat check
 
 `AllTests` is available as a shared Xcode scheme for app-owned test targets. For the full cross-platform run, `just test` remains the authoritative local entry point.
 
+CI runs the same gated lane sequence after `lint`, then publishes reporting per lane to Codecov. `Unit Tests` uploads app Cobertura coverage plus SwiftPM Codecov JSON coverage and JUnit/xUnit reports, `Snapshot Tests` uploads iOS and tvOS Cobertura coverage plus JUnit reports, and the `Accessibility` and `UI Smoke` lanes upload coverage derived from their `.xcresult` bundles along with JUnit analytics.
+
+Raw `.xcresult` bundles remain attached to each GitHub Actions run as artifacts for debugging, alongside the generated JUnit and coverage exports. Local `just test*` commands mirror the lane structure, but report generation and Codecov uploads remain CI-only.
+
 ## Project Structure
 
 ```
