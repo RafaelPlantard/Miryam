@@ -1,8 +1,8 @@
 import Foundation
 import MiryamCore
+@testable import MiryamWatch
 import Testing
 import WatchConnectivity
-@testable import MiryamWatch
 
 @MainActor
 @Suite("Watch App Smoke")
@@ -16,7 +16,7 @@ struct MiryamWatchTests {
             albumId: 10,
             artworkURL: URL(string: "https://example.com/100x100.jpg"),
             previewURL: URL(string: "https://example.com/preview.m4a"),
-            durationInMilliseconds: 30_000,
+            durationInMilliseconds: 30000,
             genre: "Pop",
             trackNumber: 1,
             releaseDate: nil
