@@ -33,8 +33,10 @@ public struct AlbumView: View {
                         Text(error.userMessage)
                             .font(.miryam.bodyLarge)
                             .foregroundStyle(Color._miryamLabelSecondary)
-                        Button("Try Again") {
+                        Button {
                             Task { await viewModel.loadSongs() }
+                        } label: {
+                            Text(L10n.tryAgain)
                         }
                         .tint(Color._miryamAccent)
                     }
@@ -105,10 +107,10 @@ public struct AlbumView: View {
             if viewModel.album.trackCount > 0 || !viewModel.album.genre.isEmpty {
                 HStack(spacing: 8) {
                     if viewModel.album.trackCount > 0 {
-                        Text("\(viewModel.album.trackCount) tracks")
+                        Text(L10n.trackCount(viewModel.album.trackCount))
                     }
                     if viewModel.album.trackCount > 0, !viewModel.album.genre.isEmpty {
-                        Text("·")
+                        Text(L10n.metadataSeparator)
                     }
                     if !viewModel.album.genre.isEmpty {
                         Text(viewModel.album.genre)

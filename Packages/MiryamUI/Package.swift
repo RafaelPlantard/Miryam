@@ -34,7 +34,16 @@ let package = Package(
                 "MiryamCore",
                 .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
             ],
-            path: "Tests/MiryamSnapshotTests"
+            path: "Tests",
+            exclude: [
+                "MiryamSnapshotTests/.DS_Store",
+                "MiryamSnapshotTests/Snapshots/.DS_Store",
+                "MiryamSnapshotTests/Snapshots/__Snapshots__",
+            ],
+            sources: [
+                "MiryamSnapshotTests",
+                "TestSupport"
+            ]
         )
     ]
 )

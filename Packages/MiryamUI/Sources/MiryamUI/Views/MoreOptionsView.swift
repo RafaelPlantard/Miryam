@@ -29,7 +29,7 @@ public struct MoreOptionsView: View {
             // Actions
             actionButton(
                 icon: .musicNoteList,
-                title: "View album",
+                title: L10n.viewAlbum,
                 identifier: AccessibilityID.viewAlbumButton.rawValue
             ) {
                 router.dismissSheet()
@@ -68,7 +68,7 @@ public struct MoreOptionsView: View {
 
     private func actionButton(
         icon: SFSymbol,
-        title: String,
+        title: LocalizedStringResource,
         identifier: String? = nil,
         action: @escaping () -> Void
     ) -> some View {
@@ -91,6 +91,6 @@ public struct MoreOptionsView: View {
         }
         .buttonStyle(.plain)
         .frame(minHeight: Layout.MoreOptions.actionButtonMinHeight)
-        .accessibilityIdentifier(identifier ?? title)
+        .accessibilityIdentifier(identifier ?? "")
     }
 }

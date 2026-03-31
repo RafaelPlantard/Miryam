@@ -18,21 +18,35 @@ struct SongsSearchHeader: View {
 
     @ViewBuilder
     private var searchField: some View {
-        let field = TextField(text: $query) {
-            Text("Search")
-                .foregroundStyle(Color._miryamLabelSecondary)
-        }
-        .foregroundStyle(Color._miryamLabel)
-        .font(.miryam.bodyLarge)
-        .accessibilityIdentifier(AccessibilityID.songsSearchField.rawValue)
-        .accessibilityLabel("Search")
-
         #if os(tvOS)
-            field
+            TextField(text: $query) {
+                Text(L10n.search)
+                    .foregroundStyle(Color._miryamLabelSecondary)
+            }
+            .foregroundStyle(Color._miryamLabel)
+            .font(.miryam.bodyLarge)
+            .accessibilityIdentifier(AccessibilityID.songsSearchField.rawValue)
+            .accessibilityLabel(Text(L10n.search))
+        #elseif os(iOS) || os(visionOS)
+            TextField(text: $query) {
+                Text(L10n.search)
+                    .foregroundStyle(Color._miryamLabelSecondary)
+            }
+            .foregroundStyle(Color._miryamLabel)
+            .font(.miryam.bodyLarge)
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
+            .accessibilityIdentifier(AccessibilityID.songsSearchField.rawValue)
+            .accessibilityLabel(Text(L10n.search))
         #else
-            field
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
+            TextField(text: $query) {
+                Text(L10n.search)
+                    .foregroundStyle(Color._miryamLabelSecondary)
+            }
+            .foregroundStyle(Color._miryamLabel)
+            .font(.miryam.bodyLarge)
+            .accessibilityIdentifier(AccessibilityID.songsSearchField.rawValue)
+            .accessibilityLabel(Text(L10n.search))
         #endif
     }
 }

@@ -14,6 +14,23 @@
         }
       }
     },
+    "All" : {
+      "comment" : "Repeat mode accessibility value when repeating the full queue",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas"
+          }
+        }
+      }
+    },
     "%lld tracks" : {
       "comment" : "Track count in album header",
       "localizations" : {
@@ -32,7 +49,38 @@
       }
     },
     "%lld%%" : {
-
+      "comment" : "Accessibility value for playback progress percentage",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        }
+      }
+    },
+    "Close player" : {
+      "comment" : "Accessibility label for dismissing the compact player",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close player"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fechar player"
+          }
+        }
+      }
     },
     "Double tap to play" : {
       "comment" : "Accessibility hint for song rows",
@@ -51,12 +99,59 @@
         }
       }
     },
+    "Double tap for additional actions" : {
+      "comment" : "Accessibility hint for secondary song actions",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Double tap for additional actions"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toque duas vezes para ações adicionais"
+          }
+        }
+      }
+    },
+    "Drag to seek within the song" : {
+      "comment" : "Accessibility hint for the player timeline",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drag to seek within the song"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arraste para navegar na música"
+          }
+        }
+      }
+    },
     "Loading song" : {
-
+      "comment" : "Accessibility label while the player is buffering a song",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading song"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carregando música"
+          }
+        }
+      }
     },
     "Loading..." : {
       "comment" : "Loading state message",
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -90,7 +185,21 @@
       }
     },
     "More options" : {
-
+      "comment" : "Accessibility label for extra actions",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More options"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mais opções"
+          }
+        }
+      }
     },
     "More options for %@" : {
       "comment" : "Accessibility label for the more button on a song row",
@@ -139,6 +248,57 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sem Reprodução"
+          }
+        }
+      }
+    },
+    "Next track" : {
+      "comment" : "Accessibility label for jumping to the next track",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next track"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Próxima faixa"
+          }
+        }
+      }
+    },
+    "Off" : {
+      "comment" : "Repeat mode accessibility value when repeat is disabled",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desativado"
+          }
+        }
+      }
+    },
+    "One" : {
+      "comment" : "Repeat mode accessibility value when repeating one track",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uma"
           }
         }
       }
@@ -194,6 +354,23 @@
         }
       }
     },
+    "Playback progress" : {
+      "comment" : "Accessibility label for the playback timeline",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Playback progress"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Progresso da reprodução"
+          }
+        }
+      }
+    },
     "Playing" : {
       "comment" : "Accessibility value when music is playing",
       "localizations" : {
@@ -207,6 +384,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reproduzindo"
+          }
+        }
+      }
+    },
+    "Previous track" : {
+      "comment" : "Accessibility label for jumping to the previous track",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous track"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faixa anterior"
+          }
+        }
+      }
+    },
+    "Queue" : {
+      "comment" : "Sidebar title for the current playback queue",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queue"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fila"
           }
         }
       }
@@ -230,6 +441,23 @@
     },
     "Retry" : {
 
+    },
+    "Repeat" : {
+      "comment" : "Accessibility label for the repeat control",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repeat"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repetir"
+          }
+        }
+      }
     },
     "Search" : {
       "comment" : "Search field placeholder",
@@ -346,6 +574,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tentar Novamente"
+          }
+        }
+      }
+    },
+    "Unable to Load" : {
+      "comment" : "App startup error title when dependencies cannot be created",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to Load"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível carregar"
           }
         }
       }

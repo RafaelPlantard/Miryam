@@ -21,7 +21,7 @@ public struct SplashView: View {
                 .frame(width: Layout.Splash.logoSize, height: Layout.Splash.logoSize)
                 .opacity(isActive ? 1 : 0)
                 .scaleEffect(isActive ? 1 : 0.8)
-                .accessibilityLabel("Miryam")
+                .accessibilityLabel(Text(L10n.appName))
         }
         .accessibilityIdentifier(AccessibilityID.splashScreen.rawValue)
         .onAppear {

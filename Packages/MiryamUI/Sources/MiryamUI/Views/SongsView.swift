@@ -31,7 +31,7 @@ public struct SongsView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Songs")
+            Text(L10n.songs)
                 .font(.miryam.display32)
                 .foregroundStyle(Color._miryamLabel)
                 .padding(.top, Layout.Songs.titleTopPadding)
@@ -105,7 +105,7 @@ public struct SongsView: View {
 
     private var recentlyPlayedSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Recently Played")
+            Text(L10n.recentlyPlayed)
                 .font(.miryam.display)
                 .foregroundStyle(Color._miryamLabel)
                 .padding(.horizontal, Layout.Songs.sectionHorizontalPadding)
@@ -151,8 +151,10 @@ public struct SongsView: View {
                 .font(.miryam.bodyLarge)
                 .foregroundStyle(Color._miryamLabelSecondary)
                 .multilineTextAlignment(.center)
-            Button("Try Again") {
+            Button {
                 viewModel.search()
+            } label: {
+                Text(L10n.tryAgain)
             }
             .buttonStyle(.borderedProminent)
             .tint(Color._miryamAccent)
@@ -171,7 +173,7 @@ public struct SongsView: View {
                 Image(symbol: .musicNoteList)
                     .font(.miryam.iconMedium)
                     .foregroundStyle(Color._miryamLabelSecondary)
-                Text("Search for songs")
+                Text(L10n.searchForSongs)
                     .font(.miryam.bodyLarge)
                     .foregroundStyle(Color._miryamLabelSecondary)
                     .accessibilityIdentifier(AccessibilityID.emptyStateText.rawValue)
@@ -187,7 +189,7 @@ public struct SongsView: View {
             Image(symbol: .magnifyingGlass)
                 .font(.miryam.iconMedium)
                 .foregroundStyle(Color._miryamLabelSecondary)
-            Text("No results found")
+            Text(L10n.noResultsFound)
                 .font(.miryam.bodyLarge)
                 .foregroundStyle(Color._miryamLabelSecondary)
             Spacer()
