@@ -51,10 +51,10 @@ public actor AudioPlayer: PlayerProtocol {
                     onPause: { [weak self] in await self?.pause() },
                     onTogglePlayPause: { [weak self] in
                         guard let self else { return }
-                        if await self.player?.rate ?? 0 > 0 {
-                            await self.pause()
+                        if await player?.rate ?? 0 > 0 {
+                            await pause()
                         } else {
-                            await self.resume()
+                            await resume()
                         }
                     },
                     onSkipForward: { [weak self] in
