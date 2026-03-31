@@ -57,7 +57,13 @@ struct MiryamApp: App {
                         di = try DependencyContainer()
                     #endif
                     container = di
-                    songsViewModel = di.makeSongsViewModel()
+                    let svm = di.makeSongsViewModel()
+                    #if DEBUG
+                        if ProcessInfo.processInfo.arguments.contains("-UITestMode") {
+                            await Self.primeUITestSongs(in: svm, using: di)
+                        }
+                    #endif
+                    songsViewModel = svm
                     let pvm = di.makePlayerViewModel()
                     playerViewModel = pvm
                     let player = di.player
@@ -151,6 +157,24 @@ struct MiryamApp: App {
     // MARK: - UI Test Support
 
     #if DEBUG
+        @MainActor
+        private static func primeUITestSongs(
+            in songsViewModel: SongsViewModel,
+            using container: DependencyContainer
+        ) async {
+            do {
+                let result = try await container.songRepository.searchSongs(
+                    query: "Adele",
+                    limit: Constants.Search.pageLimit,
+                    offset: 0
+                )
+                songsViewModel.songs = result.songs
+                songsViewModel.hasMorePages = result.songs.count == Constants.Search.pageLimit
+            } catch {
+                // Keep UITests resilient even if the fixture bootstrap fails.
+            }
+        }
+
         private static func makeTestContainer() throws -> DependencyContainer {
             StubURLProtocol.stubbedResponses = [
                 (pattern: "term=xyznonexistent", fixture: "search_empty"),

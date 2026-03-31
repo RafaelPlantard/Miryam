@@ -12,72 +12,104 @@ public struct SongsView: View {
     }
 
     public var body: some View {
-        Group {
-            if viewModel.isLoading {
-                loadingView
-            } else if let error = viewModel.error, viewModel.songs.isEmpty {
-                errorView(error)
-            } else if viewModel.songs.isEmpty, viewModel.searchQuery.isEmpty {
-                emptyStateView
-            } else if viewModel.songs.isEmpty {
-                noResultsView
-            } else {
-                songsList
-            }
+        VStack(spacing: 0) {
+            header
+            content
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier(AccessibilityID.songsView.rawValue)
         .background(Color._miryamBackground)
-        .navigationTitle("Songs")
-        .searchable(text: $viewModel.searchQuery, prompt: "Search")
+        .hideNavigationBarChrome()
         .onChange(of: viewModel.searchQuery) {
             viewModel.search()
-        }
-        .refreshable {
-            await viewModel.refresh()
         }
         .task {
             await viewModel.loadRecentlyPlayed()
         }
     }
 
-    // MARK: - Subviews
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Songs")
+                .font(.miryam.display32)
+                .foregroundStyle(Color._miryamLabel)
+                .padding(.top, Layout.Songs.titleTopPadding)
+                .padding(.horizontal, Layout.Songs.titleHorizontalPadding)
+                .padding(.bottom, Layout.Songs.titleBottomPadding)
+
+            SongsSearchHeader(query: $viewModel.searchQuery)
+                .padding(.horizontal, Layout.Songs.searchHorizontalPadding)
+                .padding(.bottom, Layout.Songs.searchBottomPadding)
+        }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        if viewModel.isLoading {
+            loadingView
+        } else if let error = viewModel.error, viewModel.songs.isEmpty {
+            errorView(error)
+        } else if viewModel.songs.isEmpty, viewModel.searchQuery.isEmpty {
+            emptyStateView
+        } else if viewModel.songs.isEmpty {
+            noResultsView
+        } else {
+            songsList
+        }
+    }
 
     private var songsList: some View {
-        List {
-            if !viewModel.recentlyPlayed.isEmpty, viewModel.searchQuery.isEmpty {
-                recentlyPlayedSection
-            }
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                if !viewModel.recentlyPlayed.isEmpty, viewModel.searchQuery.isEmpty {
+                    recentlyPlayedSection
+                }
 
-            ForEach(viewModel.songs) { song in
-                SongRow(
-                    song: song,
-                    isPlaying: song.id == playerViewModel.currentSong?.id && playerViewModel.isPlaying,
-                    onTapped: { router.navigate(to: .player(song)) },
-                    onMoreTapped: { router.presentSheet(.moreOptions(song)) }
-                )
-                .onAppear {
-                    if song.id == viewModel.songs.last?.id {
-                        viewModel.loadMore()
+                ForEach(viewModel.songs) { song in
+                    SongRow(
+                        song: song,
+                        isPlaying: song.id == playerViewModel.currentSong?.id && playerViewModel.isPlaying,
+                        onTapped: { router.navigate(to: .player(song)) },
+                        onMoreTapped: { router.presentSheet(.moreOptions(song)) }
+                    )
+                    .padding(.horizontal, Layout.SongRow.horizontalPadding)
+                    .onAppear {
+                        if song.id == viewModel.songs.last?.id {
+                            viewModel.loadMore()
+                        }
+                    }
+
+                    if song.id != viewModel.songs.last?.id {
+                        Divider()
+                            .padding(.leading, Layout.SongRow.separatorLeadingInset)
                     }
                 }
-            }
 
-            if viewModel.isLoadingMore {
-                HStack {
-                    Spacer()
-                    ProgressView()
-                        .padding()
-                    Spacer()
+                if viewModel.isLoadingMore {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                            .padding()
+                        Spacer()
+                    }
+                    .padding(.top, 8)
                 }
-                .hideRowSeparator()
             }
         }
-        .listStyle(.plain)
+        .padding(.top, Layout.Songs.sectionTopPadding)
+        .refreshable {
+            await viewModel.refresh()
+        }
     }
 
     private var recentlyPlayedSection: some View {
-        Section {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Recently Played")
+                .font(.miryam.display)
+                .foregroundStyle(Color._miryamLabel)
+                .padding(.horizontal, Layout.Songs.sectionHorizontalPadding)
+
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 12) {
                     ForEach(viewModel.recentlyPlayed) { song in
@@ -90,17 +122,12 @@ public struct SongsView: View {
                         }
                     }
                 }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 16)
+                .padding(.horizontal, Layout.Songs.sectionHorizontalPadding)
             }
-            .listRowInsets(EdgeInsets())
-            .hideRowSeparator()
-        } header: {
-            Text("Recently Played")
-                .font(.miryam.display)
-                .foregroundStyle(Color._miryamLabel)
         }
         .accessibilityIdentifier(AccessibilityID.recentlyPlayedSection.rawValue)
+        .padding(.top, 8)
+        .padding(.bottom, 20)
     }
 
     private var loadingView: some View {
@@ -111,7 +138,7 @@ public struct SongsView: View {
                 .tint(Color._miryamAccent)
             Spacer()
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func errorView(_ error: AppError) -> some View {
@@ -132,12 +159,13 @@ public struct SongsView: View {
             Spacer()
         }
         .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var emptyStateView: some View {
         VStack(spacing: 16) {
             if !viewModel.recentlyPlayed.isEmpty {
-                recentlyPlayedList
+                songsList
             } else {
                 Spacer()
                 Image(symbol: .musicNoteList)
@@ -150,14 +178,7 @@ public struct SongsView: View {
                 Spacer()
             }
         }
-        .frame(maxWidth: .infinity)
-    }
-
-    private var recentlyPlayedList: some View {
-        List {
-            recentlyPlayedSection
-        }
-        .listStyle(.plain)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
     private var noResultsView: some View {
@@ -171,7 +192,7 @@ public struct SongsView: View {
                 .foregroundStyle(Color._miryamLabelSecondary)
             Spacer()
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityIdentifier(AccessibilityID.noResultsView.rawValue)
     }
 }

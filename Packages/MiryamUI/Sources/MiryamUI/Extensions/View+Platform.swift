@@ -29,6 +29,16 @@ public extension View {
         #endif
     }
 
+    /// Hides the navigation bar for root-level custom Figma headers where supported.
+    @ViewBuilder
+    func hideNavigationBarChrome() -> some View {
+        #if !os(tvOS) && !os(watchOS)
+            toolbar(.hidden, for: .navigationBar)
+        #else
+            self
+        #endif
+    }
+
     /// Adds a ••• toolbar button that opens the MoreOptions sheet on supported platforms.
     @ViewBuilder
     func playerToolbar(song: Song?, router: Router) -> some View {

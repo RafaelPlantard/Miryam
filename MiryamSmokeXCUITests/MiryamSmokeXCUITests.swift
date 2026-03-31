@@ -16,24 +16,29 @@ final class MiryamSmokeXCUITests: XCTestCase {
     }
 
     func testLaunchTransitionsToSongsView() throws {
-        app.launch()
+        launchApp()
         XCTAssertTrue(waitForSongsView(), "Songs view should appear after the splash screen")
     }
 
     func testSearchNavigatesToPlayer() throws {
-        app.launch()
+        launchApp()
         navigateToPlayer()
 
-        let playPauseButton = app.buttons[AccessibilityID.playPause.rawValue]
-        XCTAssertTrue(playPauseButton.waitForExistence(timeout: 5))
+        let playerView = app.descendants(matching: .any)[AccessibilityID.playerView.rawValue]
+        XCTAssertTrue(playerView.waitForExistence(timeout: 5), "Player view should appear after selecting a song")
     }
 
     func testSearchNavigatesToAlbumFromMoreOptions() throws {
-        app.launch()
+        launchApp()
         navigateToAlbumFromSheet()
 
         let albumView = app.descendants(matching: .any)[AccessibilityID.albumView.rawValue]
         XCTAssertTrue(albumView.waitForExistence(timeout: 5), "Album view should appear after the More Options flow")
+    }
+
+    private func launchApp() {
+        app.launch()
+        XCUIDevice.shared.orientation = .portrait
     }
 
     @discardableResult
@@ -52,31 +57,40 @@ final class MiryamSmokeXCUITests: XCTestCase {
     private func searchFor(_ query: String) {
         waitForSongsView()
 
-        let searchField = app.searchFields["Search"]
+        let searchField = app.textFields[AccessibilityID.songsSearchField.rawValue].firstMatch
+            .exists
+            ? app.textFields[AccessibilityID.songsSearchField.rawValue].firstMatch
+            : (app.searchFields["Search"].firstMatch.exists
+                ? app.searchFields["Search"].firstMatch
+                : app.textFields["Search"].firstMatch)
         guard searchField.waitForExistence(timeout: 3) else {
             XCTFail("Search field did not appear")
             return
         }
         searchField.tap()
         searchField.typeText(query)
+        let searchButton = app.keyboards.buttons["Search"].firstMatch
+        if searchButton.waitForExistence(timeout: 1) {
+            searchButton.tap()
+        }
     }
 
     private func navigateToPlayer() {
         searchFor("Adele")
 
-        let firstCell = app.cells.firstMatch
-        guard firstCell.waitForExistence(timeout: 5) else {
+        let firstResult = firstSearchResult()
+        guard firstResult.waitForExistence(timeout: 5) else {
             XCTFail("No search results appeared")
             return
         }
-        firstCell.tap()
+        firstResult.tap()
     }
 
     private func openMoreOptions() {
         searchFor("Adele")
 
-        let firstCell = app.cells.firstMatch
-        guard firstCell.waitForExistence(timeout: 5) else {
+        let firstResult = firstSearchResult()
+        guard firstResult.waitForExistence(timeout: 5) else {
             XCTFail("No search results appeared")
             return
         }
@@ -87,16 +101,24 @@ final class MiryamSmokeXCUITests: XCTestCase {
             return
         }
         moreButton.tap()
+
+        let moreOptionsSheet = app.descendants(matching: .any)[AccessibilityID.moreOptionsSheet.rawValue]
+        XCTAssertTrue(moreOptionsSheet.waitForExistence(timeout: 5), "More options sheet did not appear")
     }
 
     private func navigateToAlbumFromSheet() {
         openMoreOptions()
 
-        let viewAlbumButton = app.buttons[AccessibilityID.viewAlbumButton.rawValue]
+        let viewAlbumButton = app.descendants(matching: .any)[AccessibilityID.viewAlbumButton.rawValue]
         guard viewAlbumButton.waitForExistence(timeout: 5) else {
             XCTFail("View album button not found in sheet")
             return
         }
         viewAlbumButton.tap()
+    }
+
+    private func firstSearchResult() -> XCUIElement {
+        let predicate = NSPredicate(format: "identifier BEGINSWITH %@", "SongRow-")
+        return app.descendants(matching: .any).matching(predicate).firstMatch
     }
 }

@@ -70,7 +70,7 @@ public struct AlbumView: View {
     }
 
     private var albumHeader: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: Layout.Album.headerSpacing) {
             AsyncImage(url: viewModel.album.artworkURL(size: 400)) { phase in
                 switch phase {
                 case let .success(image):
@@ -118,7 +118,7 @@ public struct AlbumView: View {
                 .foregroundStyle(Color._miryamLabelTertiary)
             }
         }
-        .padding(.top, 16)
+        .padding(.top, Layout.Album.headerTopPadding)
     }
 
     private var trackList: some View {
@@ -179,7 +179,7 @@ public struct AlbumView: View {
                     .monospacedDigit()
             }
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, Layout.SongRow.horizontalPadding)
         .padding(.vertical, 8)
         .contentShape(Rectangle())
         .onTapGesture {
