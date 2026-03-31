@@ -39,7 +39,7 @@ jobs:
       - name: Record all snapshots
         env:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          SNAPSHOT_RECORD: all
+          TEST_RUNNER_SNAPSHOT_RECORD: all
         run: |
           set -o pipefail
           xcodebuild test \

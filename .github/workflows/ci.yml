@@ -149,7 +149,7 @@ jobs:
       - name: Record snapshot references for this environment
         env:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          SNAPSHOT_RECORD: all
+          TEST_RUNNER_SNAPSHOT_RECORD: all
         run: |
           xcodebuild test \
             -project Miryam.xcodeproj \
