@@ -57,12 +57,7 @@ final class MiryamSmokeXCUITests: XCTestCase {
     private func searchFor(_ query: String) {
         waitForSongsView()
 
-        let searchField = app.textFields[AccessibilityID.songsSearchField.rawValue].firstMatch
-            .exists
-            ? app.textFields[AccessibilityID.songsSearchField.rawValue].firstMatch
-            : (app.searchFields["Search"].firstMatch.exists
-                ? app.searchFields["Search"].firstMatch
-                : app.textFields["Search"].firstMatch)
+        let searchField = preferredSearchField()
         guard searchField.waitForExistence(timeout: 3) else {
             XCTFail("Search field did not appear")
             return
@@ -73,6 +68,20 @@ final class MiryamSmokeXCUITests: XCTestCase {
         if searchButton.waitForExistence(timeout: 1) {
             searchButton.tap()
         }
+    }
+
+    private func preferredSearchField() -> XCUIElement {
+        let identifiedField = app.textFields[AccessibilityID.songsSearchField.rawValue].firstMatch
+        if identifiedField.exists {
+            return identifiedField
+        }
+
+        let searchField = app.searchFields["Search"].firstMatch
+        if searchField.exists {
+            return searchField
+        }
+
+        return app.textFields["Search"].firstMatch
     }
 
     private func navigateToPlayer() {

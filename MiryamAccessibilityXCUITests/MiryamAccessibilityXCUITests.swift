@@ -14,7 +14,7 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
         if let app, app.state != .notRunning {
             app.terminate()
         }
-        self.app = nil
+        app = nil
     }
 
     func testSplashAccessibilityAudit() throws {
@@ -285,11 +285,10 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
         for contract: AccessibilityScreenContract
     ) -> Bool {
         let description = issue.compactDescription
-        let elementRole: AccessibilityElementRole?
-        if let element = issue.element {
-            elementRole = role(for: element.elementType)
+        let elementRole = if let element = issue.element {
+            role(for: element.elementType)
         } else {
-            elementRole = nil
+            nil
         }
 
         return contract.allowedSuppressions.contains { suppression in
@@ -348,7 +347,7 @@ private extension AccessibilityAuditKind {
     }
 }
 
-private extension Array where Element == AccessibilityAuditKind {
+private extension [AccessibilityAuditKind] {
     var xcuiTypes: XCUIAccessibilityAuditType {
         reduce(into: XCUIAccessibilityAuditType()) { partialResult, kind in
             partialResult.formUnion(kind.xcuiType)
