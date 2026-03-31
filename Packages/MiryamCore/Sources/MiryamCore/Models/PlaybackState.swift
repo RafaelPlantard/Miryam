@@ -2,7 +2,7 @@ import Foundation
 
 /// Player state observable by ViewModels.
 public struct PlaybackState: Sendable {
-    public enum Status: Sendable {
+    public enum Status: Sendable, Equatable {
         case idle
         case loading
         case playing

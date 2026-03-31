@@ -42,45 +42,25 @@ test:
 
 # Run app + package unit tests
 test-unit:
-	xcodebuild test \
+	set -o pipefail; xcodebuild test \
 		-project Miryam.xcodeproj \
 		-scheme MiryamAppUnitTests \
 		-destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' \
 		| mint run xcbeautify
-	xcodebuild test \
-		-project Miryam.xcodeproj \
-		-scheme MiryamCore \
-		-destination 'platform=macOS' \
-		| mint run xcbeautify
-	xcodebuild test \
-		-project Miryam.xcodeproj \
-		-scheme MiryamNetworking \
-		-destination 'platform=macOS' \
-		| mint run xcbeautify
-	xcodebuild test \
-		-project Miryam.xcodeproj \
-		-scheme MiryamPersistence \
-		-destination 'platform=macOS' \
-		| mint run xcbeautify
-	xcodebuild test \
-		-project Miryam.xcodeproj \
-		-scheme MiryamPlayer \
-		-destination 'platform=macOS' \
-		| mint run xcbeautify
-	xcodebuild test \
-		-project Miryam.xcodeproj \
-		-scheme MiryamFeatures \
-		-destination 'platform=macOS' \
-		| mint run xcbeautify
+	set -o pipefail; swift test --package-path Packages/MiryamCore | mint run xcbeautify
+	set -o pipefail; swift test --package-path Packages/MiryamNetworking | mint run xcbeautify
+	set -o pipefail; swift test --package-path Packages/MiryamPersistence | mint run xcbeautify
+	set -o pipefail; swift test --package-path Packages/MiryamPlayer | mint run xcbeautify
+	set -o pipefail; swift test --package-path Packages/MiryamFeatures | mint run xcbeautify
 
 # Run iOS + tvOS snapshot suites
 test-snapshots:
-	xcodebuild test \
+	set -o pipefail; xcodebuild test \
 		-project Miryam.xcodeproj \
 		-scheme MiryamSnapshotTests \
 		-destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' \
 		| mint run xcbeautify
-	xcodebuild test \
+	set -o pipefail; xcodebuild test \
 		-project Miryam.xcodeproj \
 		-scheme MiryamTVSnapshotTests \
 		-destination 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)' \
@@ -88,7 +68,7 @@ test-snapshots:
 
 # Run runtime accessibility audits
 test-a11y:
-	xcodebuild test \
+	set -o pipefail; xcodebuild test \
 		-project Miryam.xcodeproj \
 		-scheme MiryamAccessibilityXCUITests \
 		-destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' \
@@ -96,7 +76,7 @@ test-a11y:
 
 # Run minimal end-to-end XCUITest coverage
 test-ui-smoke:
-	xcodebuild test \
+	set -o pipefail; xcodebuild test \
 		-project Miryam.xcodeproj \
 		-scheme MiryamSmokeXCUITests \
 		-destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' \
@@ -114,12 +94,12 @@ format:
 
 # Regenerate snapshot reference images
 snapshot-update:
-	SNAPSHOT_RECORD=all xcodebuild test \
+	set -o pipefail; SNAPSHOT_RECORD=all xcodebuild test \
 		-project Miryam.xcodeproj \
 		-scheme MiryamSnapshotTests \
 		-destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' \
 		| mint run xcbeautify
-	SNAPSHOT_RECORD=all xcodebuild test \
+	set -o pipefail; SNAPSHOT_RECORD=all xcodebuild test \
 		-project Miryam.xcodeproj \
 		-scheme MiryamTVSnapshotTests \
 		-destination 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)' \
