@@ -18,6 +18,8 @@ public actor AudioPlayer: PlayerProtocol {
     private var continuation: AsyncStream<PlaybackState>.Continuation?
     private var endObservation: (any NSObjectProtocol)?
     private var repeatMode: RepeatMode = .off
+    private var onNextTrack: (@Sendable () async -> Void)?
+    private var onPreviousTrack: (@Sendable () async -> Void)?
 
     private let _stateStream: AsyncStream<PlaybackState>
 
@@ -62,6 +64,12 @@ public actor AudioPlayer: PlayerProtocol {
                     },
                     onSkipBackward: { [weak self] in
                         await self?.skipBackward(seconds: Constants.Player.skipInterval)
+                    },
+                    onNextTrack: { [weak self] in
+                        await self?.onNextTrack?()
+                    },
+                    onPreviousTrack: { [weak self] in
+                        await self?.onPreviousTrack?()
                     },
                     onSeek: { [weak self] progress in
                         await self?.seek(to: progress)
@@ -121,6 +129,14 @@ public actor AudioPlayer: PlayerProtocol {
     }
 
     public func resume() async {
+        if let item = player?.currentItem {
+            let currentTime = player?.currentTime().seconds ?? 0
+            let duration = item.duration.seconds
+            if duration.isFinite, duration > 0, currentTime >= duration - 0.1 {
+                await player?.seek(to: .zero)
+            }
+        }
+
         player?.play()
         if let song = currentSong {
             let state = makeCurrentState(status: .playing, song: song)
@@ -183,6 +199,14 @@ public actor AudioPlayer: PlayerProtocol {
 
     public func setRepeatMode(_ mode: RepeatMode) async {
         repeatMode = mode
+    }
+
+    public func setTrackNavigationCallbacks(
+        onNext: @escaping @Sendable () async -> Void,
+        onPrevious: @escaping @Sendable () async -> Void
+    ) async {
+        onNextTrack = onNext
+        onPreviousTrack = onPrevious
     }
 
     // MARK: - Observers

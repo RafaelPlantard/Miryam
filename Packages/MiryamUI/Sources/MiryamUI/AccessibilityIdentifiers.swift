@@ -27,9 +27,11 @@ public enum AccessibilityID: String {
 
     // MARK: - Player Controls
 
+    case previousTrack = "Previous Track"
     case skipBackward = "Skip Backward"
     case playPause = "Play/Pause"
     case skipForward = "Skip Forward"
+    case nextTrack = "Next Track"
     case repeatButton = "RepeatButton"
     case songProgress = "Song progress"
     case loadingSong = "Loading song"

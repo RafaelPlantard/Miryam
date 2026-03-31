@@ -81,10 +81,13 @@ public struct SongsView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 12) {
                     ForEach(viewModel.recentlyPlayed) { song in
-                        RecentlyPlayedCard(song: song)
-                            .onTapGesture {
-                                router.navigate(to: .player(song))
-                            }
+                        RecentlyPlayedCard(
+                            song: song,
+                            isPlaying: song.id == playerViewModel.currentSong?.id && playerViewModel.isPlaying
+                        )
+                        .onTapGesture {
+                            router.navigate(to: .player(song))
+                        }
                     }
                 }
                 .padding(.horizontal, 16)

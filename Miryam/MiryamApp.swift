@@ -58,8 +58,16 @@ struct MiryamApp: App {
                     #endif
                     container = di
                     songsViewModel = di.makeSongsViewModel()
-                    playerViewModel = di.makePlayerViewModel()
-                    let session = PhoneSessionService(player: di.player)
+                    let pvm = di.makePlayerViewModel()
+                    playerViewModel = pvm
+                    let player = di.player
+                    Task {
+                        await player.setTrackNavigationCallbacks(
+                            onNext: { await pvm.skipToNext() },
+                            onPrevious: { await pvm.skipToPrevious() }
+                        )
+                    }
+                    let session = PhoneSessionService(player: player)
                     session.startObserving()
                     phoneSession = session
                 } catch {

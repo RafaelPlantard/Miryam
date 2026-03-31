@@ -9,7 +9,7 @@ public enum Layout: Sendable {
         public static let artworkSizeiPadLandscape: CGFloat = 286
         public static let maxContentWidth: CGFloat = 600
         public static let artworkCornerRadius: CGFloat = 32
-        public static let controlSpacing: CGFloat = 40
+        public static let controlSpacing: CGFloat = 16
         public static let minTapTarget: CGFloat = 44
         public static let playButtonSize: CGFloat = 72
         public static let trackHeight: CGFloat = 8

@@ -15,6 +15,8 @@
         let onTogglePlayPause: @Sendable () async -> Void
         let onSkipForward: @Sendable () async -> Void
         let onSkipBackward: @Sendable () async -> Void
+        let onNextTrack: @Sendable () async -> Void
+        let onPreviousTrack: @Sendable () async -> Void
         let onSeek: @Sendable (Double) async -> Void
     }
 
@@ -39,6 +41,10 @@
             info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime
             info[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? 1.0 : 0.0
 
+            if let cachedArtwork {
+                info[MPMediaItemPropertyArtwork] = cachedArtwork
+            }
+
             MPNowPlayingInfoCenter.default().nowPlayingInfo = info
 
             if !commandsRegistered {
@@ -57,6 +63,8 @@
 
         func clearNowPlaying() {
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+            cachedArtwork = nil
+            lastArtworkSongId = nil
         }
 
         // MARK: - Remote Commands
@@ -101,6 +109,20 @@
                 return .success
             }
 
+            center.nextTrackCommand.isEnabled = true
+            center.nextTrackCommand.addTarget { [weak self] _ in
+                guard let self else { return .commandFailed }
+                Task { await self.callbacks?.onNextTrack() }
+                return .success
+            }
+
+            center.previousTrackCommand.isEnabled = true
+            center.previousTrackCommand.addTarget { [weak self] _ in
+                guard let self else { return .commandFailed }
+                Task { await self.callbacks?.onPreviousTrack() }
+                return .success
+            }
+
             center.changePlaybackPositionCommand.isEnabled = true
             center.changePlaybackPositionCommand.addTarget { [weak self] event in
                 guard let self,
@@ -119,32 +141,37 @@
         // MARK: - Artwork
 
         private var lastArtworkSongId: Int?
+        private var cachedArtwork: MPMediaItemArtwork?
 
         private func loadArtwork(for song: Song) {
             guard song.id != lastArtworkSongId else { return }
             lastArtworkSongId = song.id
+            cachedArtwork = nil
 
             guard let url = song.artworkURL(size: 600) else { return }
+            let songId = song.id
 
             Task.detached { [weak self] in
-                guard let data = try? Data(contentsOf: url),
-                      let image = Self.makeImage(from: data)
-                else { return }
-
-                let artwork = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
-
-                await MainActor.run {
-                    guard var info = MPNowPlayingInfoCenter.default().nowPlayingInfo else { return }
-                    info[MPMediaItemPropertyArtwork] = artwork
-                    MPNowPlayingInfoCenter.default().nowPlayingInfo = info
-                }
-
-                await self?.setLastArtworkSongId(song.id)
+                guard let (data, _) = try? await URLSession.shared.data(from: url) else { return }
+                await self?.applyArtwork(imageData: data, songId: songId)
             }
         }
 
-        private func setLastArtworkSongId(_ id: Int) {
-            lastArtworkSongId = id
+        private func applyArtwork(imageData: Data, songId: Int) {
+            guard songId == lastArtworkSongId,
+                  let image = Self.makeImage(from: imageData)
+            else { return }
+
+            let artwork = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+            cachedArtwork = artwork
+
+            // MPNowPlayingInfoCenter must be accessed on the main thread
+            nonisolated(unsafe) let artworkRef = artwork
+            Task { @MainActor in
+                guard var info = MPNowPlayingInfoCenter.default().nowPlayingInfo else { return }
+                info[MPMediaItemPropertyArtwork] = artworkRef
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+            }
         }
 
         #if os(macOS)
