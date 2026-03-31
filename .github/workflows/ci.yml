@@ -24,8 +24,8 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Install Mint
-        run: which mint || brew install mint
+      - name: Ensure self-hosted runner dependencies
+        run: scripts/ci/ensure-runner-deps.sh mint
 
       - name: Bootstrap Mint tools
         run: mint bootstrap
@@ -44,8 +44,17 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Install Mint
-        run: which mint || brew install mint
+      - name: Ensure self-hosted runner dependencies
+        run: scripts/ci/ensure-runner-deps.sh mint xcresultparser gnupg
+
+      - name: Validate Xcode project secrets
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -z "${APPLE_TEAM_ID:-}" ]; then
+            echo "::error::Missing APPLE_TEAM_ID secret required to generate and test the Xcode project."
+            exit 1
+          fi
 
       - name: Bootstrap Mint tools
         run: mint bootstrap
@@ -151,10 +160,6 @@ jobs:
             echo "No test results found - skipping coverage report"
           fi
 
-      - name: Install xcresultparser
-        if: always()
-        run: which xcresultparser || brew install xcresultparser
-
       - name: Export coverage reports
         if: always()
         run: |
@@ -167,10 +172,6 @@ jobs:
       - name: Normalize unit coverage reports
         if: always()
         run: python3 scripts/normalize_coverage_reports.py --workspace "$GITHUB_WORKSPACE" Coverage/Unit
-
-      - name: Install gpg (needed by Codecov)
-        if: always()
-        run: which gpg || brew install gnupg
 
       - name: Upload coverage to Codecov
         if: always()
@@ -213,8 +214,17 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Install Mint
-        run: which mint || brew install mint
+      - name: Ensure self-hosted runner dependencies
+        run: scripts/ci/ensure-runner-deps.sh mint xcresultparser gnupg
+
+      - name: Validate Xcode project secrets
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -z "${APPLE_TEAM_ID:-}" ]; then
+            echo "::error::Missing APPLE_TEAM_ID secret required to generate and test the Xcode project."
+            exit 1
+          fi
 
       - name: Bootstrap Mint tools
         run: mint bootstrap
@@ -268,10 +278,6 @@ jobs:
               --report-path TestReports/Snapshots \
               --junit-report-filename MiryamTVSnapshotTests.junit.xml
 
-      - name: Install xcresultparser
-        if: always()
-        run: which xcresultparser || brew install xcresultparser
-
       - name: Export coverage reports
         if: always()
         run: |
@@ -284,10 +290,6 @@ jobs:
       - name: Normalize snapshot coverage reports
         if: always()
         run: python3 scripts/normalize_coverage_reports.py --workspace "$GITHUB_WORKSPACE" Coverage/Snapshots
-
-      - name: Install gpg (needed by Codecov)
-        if: always()
-        run: which gpg || brew install gnupg
 
       - name: Upload coverage to Codecov
         if: always()
@@ -338,8 +340,17 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Install Mint
-        run: which mint || brew install mint
+      - name: Ensure self-hosted runner dependencies
+        run: scripts/ci/ensure-runner-deps.sh mint xcresultparser gnupg
+
+      - name: Validate Xcode project secrets
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -z "${APPLE_TEAM_ID:-}" ]; then
+            echo "::error::Missing APPLE_TEAM_ID secret required to generate and test the Xcode project."
+            exit 1
+          fi
 
       - name: Bootstrap Mint tools
         run: mint bootstrap
@@ -368,10 +379,6 @@ jobs:
               --report-path TestReports/Accessibility \
               --junit-report-filename MiryamAccessibilityXCUITests.junit.xml
 
-      - name: Install xcresultparser
-        if: always()
-        run: which xcresultparser || brew install xcresultparser
-
       - name: Export coverage reports
         if: always()
         run: |
@@ -382,10 +389,6 @@ jobs:
       - name: Normalize accessibility coverage reports
         if: always()
         run: python3 scripts/normalize_coverage_reports.py --workspace "$GITHUB_WORKSPACE" Coverage/Accessibility
-
-      - name: Install gpg (needed by Codecov)
-        if: always()
-        run: which gpg || brew install gnupg
 
       - name: Upload coverage to Codecov
         if: always()
@@ -428,8 +431,17 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Install Mint
-        run: which mint || brew install mint
+      - name: Ensure self-hosted runner dependencies
+        run: scripts/ci/ensure-runner-deps.sh mint xcresultparser gnupg
+
+      - name: Validate Xcode project secrets
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -z "${APPLE_TEAM_ID:-}" ]; then
+            echo "::error::Missing APPLE_TEAM_ID secret required to generate and test the Xcode project."
+            exit 1
+          fi
 
       - name: Bootstrap Mint tools
         run: mint bootstrap
@@ -458,10 +470,6 @@ jobs:
               --report-path TestReports/UI \
               --junit-report-filename MiryamSmokeXCUITests.junit.xml
 
-      - name: Install xcresultparser
-        if: always()
-        run: which xcresultparser || brew install xcresultparser
-
       - name: Export coverage reports
         if: always()
         run: |
@@ -472,10 +480,6 @@ jobs:
       - name: Normalize UI smoke coverage reports
         if: always()
         run: python3 scripts/normalize_coverage_reports.py --workspace "$GITHUB_WORKSPACE" Coverage/UI
-
-      - name: Install gpg (needed by Codecov)
-        if: always()
-        run: which gpg || brew install gnupg
 
       - name: Upload coverage to Codecov
         if: always()

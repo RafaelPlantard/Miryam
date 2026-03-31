@@ -43,8 +43,36 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Mint
-        run: which mint || brew install mint
+      - name: Ensure self-hosted runner dependencies
+        run: scripts/ci/ensure-runner-deps.sh mint gh rbenv
+
+      - name: Validate deploy secrets
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          ITC_TEAM_ID: ${{ secrets.ITC_TEAM_ID }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+        run: |
+          required_vars=(
+            APPLE_TEAM_ID
+            APPLE_ID
+            ITC_TEAM_ID
+            MATCH_PASSWORD
+            MATCH_GIT_URL
+            APP_STORE_CONNECT_API_KEY_ID
+            APP_STORE_CONNECT_API_ISSUER_ID
+            APP_STORE_CONNECT_API_KEY
+          )
+          for name in "${required_vars[@]}"; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error::Missing ${name} secret required for deploy."
+              exit 1
+            fi
+          done
 
       - name: Setup Ruby via rbenv
         run: |
@@ -144,9 +172,6 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "prerelease=$PRERELEASE" >> "$GITHUB_OUTPUT"
-
-      - name: Install GitHub CLI
-        run: which gh || brew install gh
 
       - name: Create tag and GitHub Release
         if: github.event_name == 'workflow_dispatch'
