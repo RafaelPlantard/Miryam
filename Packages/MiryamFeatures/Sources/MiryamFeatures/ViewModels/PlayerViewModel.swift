@@ -16,6 +16,7 @@ public final class PlayerViewModel {
     public var isBuffering = false
     public var error: AppError?
     public var repeatMode: RepeatMode = .off
+    public var queue: [Song] = []
 
     // MARK: - Private
 
@@ -95,6 +96,11 @@ public final class PlayerViewModel {
         case .one: repeatMode = .off
         }
         await player.setRepeatMode(repeatMode)
+    }
+
+    /// Set the playback queue.
+    public func setQueue(_ songs: [Song]) {
+        queue = songs
     }
 
     /// Stop playback.

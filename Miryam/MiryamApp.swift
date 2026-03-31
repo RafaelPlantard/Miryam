@@ -80,7 +80,10 @@ struct MiryamApp: App {
                     case let .player(song):
                         PlayerView(viewModel: playerViewModel)
                             .environment(router)
-                            .task { await playerViewModel.play(song) }
+                            .task {
+                                playerViewModel.setQueue(songsViewModel.songs)
+                                await playerViewModel.play(song)
+                            }
                     case let .album(album):
                         AlbumView(
                             viewModel: container.makeAlbumViewModel(album: album),

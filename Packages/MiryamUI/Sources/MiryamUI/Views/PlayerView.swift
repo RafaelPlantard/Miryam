@@ -20,25 +20,12 @@ public struct PlayerView: View {
     }
 
     public var body: some View {
-        ScrollView {
-            VStack(spacing: isCompact ? 24 : 32) {
-                // Artwork
-                artworkView
-
-                // Song info
-                songInfoView
-
-                // Timeline (MANDATORY)
-                timelineView
-
-                // Controls
-                controlsView
+        Group {
+            if isCompact {
+                compactPlayerLayout
+            } else {
+                regularPlayerLayout
             }
-            .padding(.horizontal, isCompact ? 24 : 48)
-            .padding(.top, isCompact ? 32 : 48)
-            .padding(.bottom, 24)
-            .frame(maxWidth: isCompact ? .infinity : Layout.Player.maxContentWidth)
-            .frame(maxWidth: .infinity)
         }
         .overlay {
             if viewModel.isBuffering {
@@ -56,6 +43,55 @@ public struct PlayerView: View {
         .background(Color._miryamBackground)
         .inlineNavigationTitle()
         .playerToolbar(song: viewModel.currentSong, router: router)
+    }
+
+    // MARK: - Compact Layout (iPhone)
+
+    private var compactPlayerLayout: some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                artworkView
+                songInfoView
+                timelineView
+                controlsView
+            }
+            .padding(.horizontal, 24)
+            .padding(.top, 32)
+            .padding(.bottom, 24)
+        }
+    }
+
+    // MARK: - Regular Layout (iPad)
+
+    private var regularPlayerLayout: some View {
+        HStack(spacing: 0) {
+            ScrollView {
+                VStack(spacing: 32) {
+                    artworkView
+                    songInfoView
+                    timelineView
+                    controlsView
+                }
+                .padding(.horizontal, 48)
+                .padding(.top, 48)
+                .padding(.bottom, 24)
+                .frame(maxWidth: Layout.Player.maxContentWidth)
+                .frame(maxWidth: .infinity)
+            }
+
+            if !viewModel.queue.isEmpty {
+                Divider()
+
+                QueuePanel(
+                    songs: viewModel.queue,
+                    currentSong: viewModel.currentSong,
+                    isPlaying: viewModel.isPlaying,
+                    onSelect: { song in
+                        Task { await viewModel.play(song) }
+                    }
+                )
+            }
+        }
     }
 
     // MARK: - Artwork
