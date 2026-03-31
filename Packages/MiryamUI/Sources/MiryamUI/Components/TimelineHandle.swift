@@ -11,20 +11,27 @@ struct TimelineHandle: View {
         @GestureState private var isDragging = false
     #endif
 
+    private var handleSize: CGFloat {
+        Layout.Player.handleSize
+    }
+
     private var offsetX: CGFloat {
-        max(0, trackWidth * progress - 4)
+        max(0, trackWidth * progress - handleSize / 2)
     }
 
     var body: some View {
         #if os(tvOS)
             Circle()
                 .fill(Color._miryamAccent)
-                .frame(width: 8, height: 8)
+                .frame(width: handleSize, height: handleSize)
                 .offset(x: offsetX)
         #else
             Circle()
                 .fill(Color._miryamAccent)
-                .frame(width: isDragging ? 16 : 8, height: isDragging ? 16 : 8)
+                .frame(
+                    width: isDragging ? handleSize + 4 : handleSize,
+                    height: isDragging ? handleSize + 4 : handleSize
+                )
                 .offset(x: offsetX)
                 .gesture(
                     DragGesture(minimumDistance: 0)
