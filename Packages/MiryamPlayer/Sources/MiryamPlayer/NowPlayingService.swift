@@ -9,33 +9,23 @@
         import UIKit
     #endif
 
+    struct RemoteCommandCallbacks: Sendable {
+        let onPlay: @Sendable () async -> Void
+        let onPause: @Sendable () async -> Void
+        let onTogglePlayPause: @Sendable () async -> Void
+        let onSkipForward: @Sendable () async -> Void
+        let onSkipBackward: @Sendable () async -> Void
+        let onSeek: @Sendable (Double) async -> Void
+    }
+
     /// Publishes playback metadata to the system Now Playing info center
     /// and registers remote command handlers (lock screen, Control Center, CarPlay).
     actor NowPlayingService {
         private var commandsRegistered = false
+        private var callbacks: RemoteCommandCallbacks?
 
-        // Callbacks wired by AudioPlayer
-        var onPlay: (@Sendable () async -> Void)?
-        var onPause: (@Sendable () async -> Void)?
-        var onTogglePlayPause: (@Sendable () async -> Void)?
-        var onSkipForward: (@Sendable () async -> Void)?
-        var onSkipBackward: (@Sendable () async -> Void)?
-        var onSeek: (@Sendable (Double) async -> Void)?
-
-        func setCallbacks(
-            onPlay: @escaping @Sendable () async -> Void,
-            onPause: @escaping @Sendable () async -> Void,
-            onTogglePlayPause: @escaping @Sendable () async -> Void,
-            onSkipForward: @escaping @Sendable () async -> Void,
-            onSkipBackward: @escaping @Sendable () async -> Void,
-            onSeek: @escaping @Sendable (Double) async -> Void
-        ) {
-            self.onPlay = onPlay
-            self.onPause = onPause
-            self.onTogglePlayPause = onTogglePlayPause
-            self.onSkipForward = onSkipForward
-            self.onSkipBackward = onSkipBackward
-            self.onSeek = onSeek
+        func setCallbacks(_ callbacks: RemoteCommandCallbacks) {
+            self.callbacks = callbacks
         }
 
         // MARK: - Metadata
@@ -77,21 +67,21 @@
             center.playCommand.isEnabled = true
             center.playCommand.addTarget { [weak self] _ in
                 guard let self else { return .commandFailed }
-                Task { await self.onPlay?() }
+                Task { await self.callbacks?.onPlay() }
                 return .success
             }
 
             center.pauseCommand.isEnabled = true
             center.pauseCommand.addTarget { [weak self] _ in
                 guard let self else { return .commandFailed }
-                Task { await self.onPause?() }
+                Task { await self.callbacks?.onPause() }
                 return .success
             }
 
             center.togglePlayPauseCommand.isEnabled = true
             center.togglePlayPauseCommand.addTarget { [weak self] _ in
                 guard let self else { return .commandFailed }
-                Task { await self.onTogglePlayPause?() }
+                Task { await self.callbacks?.onTogglePlayPause() }
                 return .success
             }
 
@@ -99,7 +89,7 @@
             center.skipForwardCommand.preferredIntervals = [NSNumber(value: Constants.Player.skipInterval)]
             center.skipForwardCommand.addTarget { [weak self] _ in
                 guard let self else { return .commandFailed }
-                Task { await self.onSkipForward?() }
+                Task { await self.callbacks?.onSkipForward() }
                 return .success
             }
 
@@ -107,7 +97,7 @@
             center.skipBackwardCommand.preferredIntervals = [NSNumber(value: Constants.Player.skipInterval)]
             center.skipBackwardCommand.addTarget { [weak self] _ in
                 guard let self else { return .commandFailed }
-                Task { await self.onSkipBackward?() }
+                Task { await self.callbacks?.onSkipBackward() }
                 return .success
             }
 
@@ -119,7 +109,7 @@
                 let info = MPNowPlayingInfoCenter.default().nowPlayingInfo
                 let duration = (info?[MPMediaItemPropertyPlaybackDuration] as? TimeInterval) ?? 1
                 let progress = duration > 0 ? positionEvent.positionTime / duration : 0
-                Task { await self.onSeek?(progress) }
+                Task { await self.callbacks?.onSeek(progress) }
                 return .success
             }
 

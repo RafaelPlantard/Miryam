@@ -46,25 +46,27 @@ public actor AudioPlayer: PlayerProtocol {
     #if canImport(MediaPlayer)
         private func setupRemoteCommands() async {
             await nowPlayingService.setCallbacks(
-                onPlay: { [weak self] in await self?.resume() },
-                onPause: { [weak self] in await self?.pause() },
-                onTogglePlayPause: { [weak self] in
-                    guard let self else { return }
-                    if await self.player?.rate ?? 0 > 0 {
-                        await self.pause()
-                    } else {
-                        await self.resume()
+                RemoteCommandCallbacks(
+                    onPlay: { [weak self] in await self?.resume() },
+                    onPause: { [weak self] in await self?.pause() },
+                    onTogglePlayPause: { [weak self] in
+                        guard let self else { return }
+                        if await self.player?.rate ?? 0 > 0 {
+                            await self.pause()
+                        } else {
+                            await self.resume()
+                        }
+                    },
+                    onSkipForward: { [weak self] in
+                        await self?.skipForward(seconds: Constants.Player.skipInterval)
+                    },
+                    onSkipBackward: { [weak self] in
+                        await self?.skipBackward(seconds: Constants.Player.skipInterval)
+                    },
+                    onSeek: { [weak self] progress in
+                        await self?.seek(to: progress)
                     }
-                },
-                onSkipForward: { [weak self] in
-                    await self?.skipForward(seconds: Constants.Player.skipInterval)
-                },
-                onSkipBackward: { [weak self] in
-                    await self?.skipBackward(seconds: Constants.Player.skipInterval)
-                },
-                onSeek: { [weak self] progress in
-                    await self?.seek(to: progress)
-                }
+                )
             )
         }
     #endif
