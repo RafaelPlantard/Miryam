@@ -5,6 +5,7 @@ import SwiftUI
 public struct SongsView: View {
     @Bindable private var viewModel: SongsViewModel
     @Environment(Router.self) private var router
+    @Environment(PlayerViewModel.self) private var playerViewModel
 
     public init(viewModel: SongsViewModel) {
         self.viewModel = viewModel
@@ -51,6 +52,7 @@ public struct SongsView: View {
             ForEach(viewModel.songs) { song in
                 SongRow(
                     song: song,
+                    isPlaying: song.id == playerViewModel.currentSong?.id && playerViewModel.isPlaying,
                     onTapped: { router.navigate(to: .player(song)) },
                     onMoreTapped: { router.presentSheet(.moreOptions(song)) }
                 )

@@ -5,6 +5,7 @@ import SwiftUI
 public struct AlbumView: View {
     @Bindable private var viewModel: AlbumViewModel
     @Environment(Router.self) private var router
+    @Environment(PlayerViewModel.self) private var playerViewModel
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     private let onPlaySong: @MainActor (Song) -> Void
 
@@ -157,10 +158,14 @@ public struct AlbumView: View {
 
             Spacer()
 
-            Text(song.formattedDuration)
-                .font(.miryam.bodySmall)
-                .foregroundStyle(Color._miryamLabelSecondary)
-                .monospacedDigit()
+            if song.id == playerViewModel.currentSong?.id, playerViewModel.isPlaying {
+                NowPlayingIndicator()
+            } else {
+                Text(song.formattedDuration)
+                    .font(.miryam.bodySmall)
+                    .foregroundStyle(Color._miryamLabelSecondary)
+                    .monospacedDigit()
+            }
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 8)

@@ -19,6 +19,7 @@ public enum AccessibilityID: String {
     // MARK: - Song Row
 
     case moreOptionsButton = "MoreOptionsButton"
+    case nowPlayingIndicator = "NowPlayingIndicator"
 
     // MARK: - More Options Sheet
 

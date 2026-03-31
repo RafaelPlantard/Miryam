@@ -4,15 +4,18 @@ import SwiftUI
 /// Reusable song list row with artwork, title, artist, and more button.
 public struct SongRow: View {
     let song: Song
+    let isPlaying: Bool
     var onTapped: (() -> Void)?
     var onMoreTapped: (() -> Void)?
 
     public init(
         song: Song,
+        isPlaying: Bool = false,
         onTapped: (() -> Void)? = nil,
         onMoreTapped: (() -> Void)? = nil
     ) {
         self.song = song
+        self.isPlaying = isPlaying
         self.onTapped = onTapped
         self.onMoreTapped = onMoreTapped
     }
@@ -58,7 +61,10 @@ public struct SongRow: View {
             .accessibilityLabel("\(song.name) by \(song.artistName)")
             .accessibilityHint("Double tap to play")
 
-            if let onMoreTapped {
+            if isPlaying {
+                NowPlayingIndicator()
+                    .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
+            } else if let onMoreTapped {
                 Button(action: onMoreTapped) {
                     Image(symbol: .ellipsis)
                         .font(.body)
