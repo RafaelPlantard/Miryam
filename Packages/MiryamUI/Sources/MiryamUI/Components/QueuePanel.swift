@@ -12,7 +12,7 @@ struct QueuePanel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Queue")
+            Text(L10n.queue)
                 .font(.miryam.display)
                 .foregroundStyle(Color._miryamLabel)
                 .padding(.horizontal, 16)

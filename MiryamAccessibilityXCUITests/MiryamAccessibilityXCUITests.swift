@@ -219,10 +219,13 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
         in contract: AccessibilityScreenContract
     ) {
         let element = resolveElement(for: expectation)
+        let exists = element.waitForExistence(timeout: 5)
         XCTAssertTrue(
-            element.waitForExistence(timeout: 5),
-            "\(contract.description) should expose \(expectation.locator.description)"
+            exists,
+            "\(contract.description) should expose \(expectation.locator.description)\(diagnosticSummary(for: expectation))"
         )
+
+        guard exists else { return }
 
         if expectation.role != .any {
             XCTAssertTrue(
@@ -252,6 +255,23 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
                 "\(contract.description) expected \(expectation.locator.description) label to be non-empty"
             )
         }
+    }
+
+    private func diagnosticSummary(for expectation: AccessibilityElementExpectation) -> String {
+        let locatorPredicate = predicate(for: expectation.locator)
+        let anyQuery = app.descendants(matching: .any).matching(locatorPredicate)
+        let buttonQuery = app.buttons.matching(locatorPredicate)
+
+        guard anyQuery.count > 0 || buttonQuery.count > 0 else {
+            return " (diagnostics: no matching descendants found)"
+        }
+
+        let samples = (0 ..< min(anyQuery.count, 3)).map { index in
+            let element = anyQuery.element(boundBy: index)
+            return "\(element.elementType)[id='\(element.identifier)', label='\(element.label)']"
+        }
+
+        return " (diagnostics: any=\(anyQuery.count), buttons=\(buttonQuery.count), samples=\(samples.joined(separator: "; ")))"
     }
 
     private func currentRuntimePlatform() -> AccessibilityPlatform {
@@ -285,7 +305,7 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
         for contract: AccessibilityScreenContract
     ) -> Bool {
         let description = issue.compactDescription
-        let elementRole = if let element = issue.element {
+        let elementRole: AccessibilityElementRole? = if let element = issue.element {
             role(for: element.elementType)
         } else {
             nil

@@ -52,6 +52,6 @@ public struct RecentlyPlayedCard: View {
         }
         .frame(width: Layout.RecentlyPlayed.cardSize)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(song.name) by \(song.artistName)")
+        .accessibilityLabel(L10n.songArtistLabel(songName: song.name, artistName: song.artistName))
     }
 }

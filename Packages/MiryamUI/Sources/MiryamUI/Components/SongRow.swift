@@ -42,8 +42,8 @@ public struct SongRow: View {
             }
             .buttonStyle(.plain)
             .accessibilityAddTraits(.isButton)
-            .accessibilityLabel("\(song.name) by \(song.artistName)")
-            .accessibilityHint("Double tap to play")
+            .accessibilityLabel(L10n.songArtistLabel(songName: song.name, artistName: song.artistName))
+            .accessibilityHint(Text(L10n.doubleTapToPlay))
             .accessibilityIdentifier(AccessibilityID.songRow(id: song.id))
         } else {
             rowContent
@@ -62,7 +62,7 @@ public struct SongRow: View {
 
                 Text(song.artistName)
                     .font(.miryam.caption)
-                    .foregroundStyle(Color._miryamSubtitle)
+                    .foregroundStyle(Color._miryamLabelSecondary)
                     .lineLimit(1)
             }
             .accessibilityHidden(true)
@@ -115,8 +115,8 @@ public struct SongRow: View {
             .frame(width: moreButtonHitTarget, height: moreButtonHitTarget)
             .contentShape(Rectangle())
             .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
-            .accessibilityLabel("More options for \(song.name)")
-            .accessibilityHint("Double tap for additional actions")
+            .accessibilityLabel(L10n.moreOptions(for: song.name))
+            .accessibilityHint(Text(L10n.doubleTapForAdditionalActions))
         }
     }
 

@@ -34,13 +34,19 @@ struct MiryamApp: App {
                         playerViewModel: playerViewModel
                     )
                 } else if let containerError {
-                    ContentUnavailableView(
-                        "Unable to Load",
-                        systemImage: "exclamationmark.triangle",
-                        description: Text(containerError.localizedDescription)
-                    )
+                    ContentUnavailableView {
+                        Label {
+                            Text(L10n.unableToLoad)
+                        } icon: {
+                            Image(systemName: "exclamationmark.triangle")
+                        }
+                    } description: {
+                        Text(containerError.localizedDescription)
+                    }
                 } else {
-                    ProgressView("Loading...")
+                    ProgressView {
+                        Text(L10n.loading)
+                    }
                 }
             }
             .task {

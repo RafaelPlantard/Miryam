@@ -57,9 +57,10 @@ public struct PlayerView: View {
                         .tint(Color._miryamAccent)
                 }
                 .ignoresSafeArea()
-                .accessibilityLabel(AccessibilityID.loadingSong.rawValue)
+                .accessibilityLabel(Text(L10n.loadingSong))
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier(AccessibilityID.playerView.rawValue)
         .background(Color._miryamBackground)
         .navigationTitle(isCompact ? "" : (viewModel.currentSong?.albumName ?? ""))
@@ -205,7 +206,7 @@ public struct PlayerView: View {
                     .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Close player")
+            .accessibilityLabel(Text(L10n.closePlayer))
 
             Text(compactHeaderTitle)
                 .font(.miryam.display)
@@ -227,22 +228,22 @@ public struct PlayerView: View {
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
-            .accessibilityLabel("More options")
+            .accessibilityLabel(Text(L10n.moreOptions))
             .opacity(viewModel.currentSong == nil ? 0 : 1)
         }
         .frame(height: Layout.Player.compactHeaderHeight)
     }
 
     private var compactHeaderTitle: String {
-        guard let song = viewModel.currentSong else { return "Not Playing" }
-        return "\(song.name) — \(song.artistName)"
+        guard let song = viewModel.currentSong else { return L10n.string(L10n.notPlaying) }
+        return L10n.compactPlayerTitle(songName: song.name, artistName: song.artistName)
     }
 
     // MARK: - Song Info
 
     private var songInfoView: some View {
         VStack(spacing: 4) {
-            Text(viewModel.currentSong?.name ?? "Not Playing")
+            Text(viewModel.currentSong?.name ?? L10n.string(L10n.notPlaying))
                 .font(.miryam.display32)
                 .foregroundStyle(isCompact ? compactPrimaryControlColor : Color._miryamLabel)
                 .lineLimit(2)
@@ -283,7 +284,7 @@ public struct PlayerView: View {
                         )
                         .contentShape(Rectangle())
                 }
-                .accessibilityLabel("View album \(song.albumName)")
+                .accessibilityLabel(L10n.viewAlbum(for: song.albumName))
             }
         }
         .frame(maxWidth: .infinity)
@@ -304,15 +305,15 @@ public struct PlayerView: View {
                 .contentShape(Rectangle())
         }
         .accessibilityIdentifier(AccessibilityID.repeatButton.rawValue)
-        .accessibilityLabel("Repeat")
+        .accessibilityLabel(Text(L10n.repeatLabel))
         .accessibilityValue(repeatAccessibilityValue)
     }
 
     private var repeatAccessibilityValue: String {
         switch viewModel.repeatMode {
-        case .off: "Off"
-        case .all: "All"
-        case .one: "One"
+        case .off: L10n.string(L10n.off)
+        case .all: L10n.string(L10n.all)
+        case .one: L10n.string(L10n.one)
         }
     }
 
@@ -355,9 +356,9 @@ public struct PlayerView: View {
             .contentShape(Rectangle())
             .accessibilityElement()
             .accessibilityIdentifier(AccessibilityID.songProgress.rawValue)
-            .accessibilityLabel("Playback progress")
-            .accessibilityHint("Drag to seek within the song")
-            .accessibilityValue("\(Int(viewModel.playbackState.progress * 100))%")
+            .accessibilityLabel(Text(L10n.playbackProgress))
+            .accessibilityHint(Text(L10n.dragToSeekWithinTheSong))
+            .accessibilityValue(L10n.percentage(Int(viewModel.playbackState.progress * 100)))
 
             // Time labels
             HStack {
@@ -391,7 +392,7 @@ public struct PlayerView: View {
             }
             .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
             .accessibilityIdentifier(AccessibilityID.previousTrack.rawValue)
-            .accessibilityLabel("Previous track")
+            .accessibilityLabel(Text(L10n.previousTrack))
 
             Button {
                 Task { await viewModel.skipBackward() }
@@ -404,7 +405,7 @@ public struct PlayerView: View {
             }
             .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
             .accessibilityIdentifier(AccessibilityID.skipBackward.rawValue)
-            .accessibilityLabel("Skip backward 15 seconds")
+            .accessibilityLabel(Text(L10n.skipBackward15))
 
             Button {
                 Task { await viewModel.togglePlayPause() }
@@ -418,9 +419,10 @@ public struct PlayerView: View {
                         in: Circle()
                     )
             }
+            .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
             .accessibilityIdentifier(AccessibilityID.playPause.rawValue)
-            .accessibilityLabel(viewModel.isPlaying ? "Pause" : "Play")
-            .accessibilityValue(viewModel.isPlaying ? "Playing" : "Paused")
+            .accessibilityLabel(Text(viewModel.isPlaying ? L10n.pause : L10n.play))
+            .accessibilityValue(viewModel.isPlaying ? L10n.string(L10n.playing) : L10n.string(L10n.paused))
 
             Button {
                 Task { await viewModel.skipForward() }
@@ -433,7 +435,7 @@ public struct PlayerView: View {
             }
             .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
             .accessibilityIdentifier(AccessibilityID.skipForward.rawValue)
-            .accessibilityLabel("Skip forward 15 seconds")
+            .accessibilityLabel(Text(L10n.skipForward15))
 
             Button {
                 Task { await viewModel.skipToNext() }
@@ -446,7 +448,7 @@ public struct PlayerView: View {
             }
             .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
             .accessibilityIdentifier(AccessibilityID.nextTrack.rawValue)
-            .accessibilityLabel("Next track")
+            .accessibilityLabel(Text(L10n.nextTrack))
         }
     }
 }
