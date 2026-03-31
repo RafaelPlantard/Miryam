@@ -76,6 +76,7 @@ targets:
       - package: MiryamNetworking
       - package: MiryamPlayer
       - package: MiryamPersistence
+      - sdk: WatchConnectivity.framework
       - target: MiryamWatch
         embed: true
         codeSign: true
@@ -147,10 +148,10 @@ targets:
         WKCompanionAppBundleIdentifier: io.swift-yah.miryam
     dependencies:
       - package: MiryamCore
-      - package: MiryamPlayer
       - package: MiryamFeatures
       - package: MiryamUI
       - package: MiryamNetworking
+      - sdk: WatchConnectivity.framework
     settings:
       base:
         SWIFT_VERSION: "6.0"

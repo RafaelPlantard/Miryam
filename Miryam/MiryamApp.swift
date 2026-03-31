@@ -15,6 +15,7 @@ struct MiryamApp: App {
     @State private var router = Router()
     @State private var songsViewModel: SongsViewModel?
     @State private var playerViewModel: PlayerViewModel?
+    @State private var phoneSession: PhoneSessionService?
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     var body: some Scene {
@@ -58,6 +59,9 @@ struct MiryamApp: App {
                     container = di
                     songsViewModel = di.makeSongsViewModel()
                     playerViewModel = di.makePlayerViewModel()
+                    let session = PhoneSessionService(player: di.player)
+                    session.startObserving()
+                    phoneSession = session
                 } catch {
                     containerError = error
                 }
