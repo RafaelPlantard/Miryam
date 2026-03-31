@@ -22,11 +22,13 @@ struct SongsViewSnapshotTests {
     @Test("SongsView — Empty State — Light Mode")
     func songsEmptyLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -42,11 +44,13 @@ struct SongsViewSnapshotTests {
     @Test("SongsView — Empty State — Dark Mode")
     func songsEmptyDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -64,12 +68,14 @@ struct SongsViewSnapshotTests {
     @Test("SongsView — Loading State — Light Mode")
     func songsLoadingLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         viewModel.isLoading = true
         let view = NavigationStack {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -85,12 +91,14 @@ struct SongsViewSnapshotTests {
     @Test("SongsView — Loading State — Dark Mode")
     func songsLoadingDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         viewModel.isLoading = true
         let view = NavigationStack {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -108,6 +116,7 @@ struct SongsViewSnapshotTests {
     @Test("SongsView — With Results — Light Mode")
     func songsWithResultsLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         viewModel.songs = TestData.sampleSongs
         viewModel.searchQuery = "Queen"
@@ -115,6 +124,7 @@ struct SongsViewSnapshotTests {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -130,6 +140,7 @@ struct SongsViewSnapshotTests {
     @Test("SongsView — With Results — Dark Mode")
     func songsWithResultsDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         viewModel.songs = TestData.sampleSongs
         viewModel.searchQuery = "Queen"
@@ -137,6 +148,7 @@ struct SongsViewSnapshotTests {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -154,6 +166,7 @@ struct SongsViewSnapshotTests {
     @Test("SongsView — No Results — Light Mode")
     func songsNoResultsLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         viewModel.songs = []
         viewModel.searchQuery = "xyznonexistent"
@@ -161,6 +174,7 @@ struct SongsViewSnapshotTests {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -176,6 +190,7 @@ struct SongsViewSnapshotTests {
     @Test("SongsView — No Results — Dark Mode")
     func songsNoResultsDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         viewModel.songs = []
         viewModel.searchQuery = "xyznonexistent"
@@ -183,6 +198,7 @@ struct SongsViewSnapshotTests {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -200,6 +216,7 @@ struct SongsViewSnapshotTests {
     @Test("SongsView — Error State — Light Mode")
     func songsErrorLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         viewModel.error = .networkError("Connection failed")
         viewModel.songs = []
@@ -207,6 +224,7 @@ struct SongsViewSnapshotTests {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -222,6 +240,7 @@ struct SongsViewSnapshotTests {
     @Test("SongsView — Error State — Dark Mode")
     func songsErrorDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         viewModel.error = .networkError("Connection failed")
         viewModel.songs = []
@@ -229,6 +248,7 @@ struct SongsViewSnapshotTests {
             SongsView(viewModel: viewModel)
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,

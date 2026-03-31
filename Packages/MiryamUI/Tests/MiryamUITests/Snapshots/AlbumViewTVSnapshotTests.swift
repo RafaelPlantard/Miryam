@@ -25,11 +25,13 @@ struct AlbumViewTVSnapshotTests {
     @Test("AlbumView — TV — Loaded — Light Mode")
     func albumLoadedTVLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             AlbumView(viewModel: viewModel, onPlaySong: { _ in })
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -45,11 +47,13 @@ struct AlbumViewTVSnapshotTests {
     @Test("AlbumView — TV — Loaded — Dark Mode")
     func albumLoadedTVDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             AlbumView(viewModel: viewModel, onPlaySong: { _ in })
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,

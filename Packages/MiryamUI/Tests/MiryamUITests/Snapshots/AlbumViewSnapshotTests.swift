@@ -27,11 +27,13 @@ struct AlbumViewSnapshotTests {
     @Test("AlbumView — Loaded — Light Mode")
     func albumLoadedLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             AlbumView(viewModel: viewModel, onPlaySong: { _ in })
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -47,11 +49,13 @@ struct AlbumViewSnapshotTests {
     @Test("AlbumView — Loaded — Dark Mode")
     func albumLoadedDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
             AlbumView(viewModel: viewModel, onPlaySong: { _ in })
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -69,6 +73,7 @@ struct AlbumViewSnapshotTests {
     @Test("AlbumView — Loading — Light Mode")
     func albumLoadingLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let songRepo = MockSongRepository()
         let viewModel = AlbumViewModel(album: TestData.makeAlbum(), songRepository: songRepo)
         viewModel.isLoading = true
@@ -76,6 +81,7 @@ struct AlbumViewSnapshotTests {
             AlbumView(viewModel: viewModel, onPlaySong: { _ in })
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -91,6 +97,7 @@ struct AlbumViewSnapshotTests {
     @Test("AlbumView — Loading — Dark Mode")
     func albumLoadingDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let songRepo = MockSongRepository()
         let viewModel = AlbumViewModel(album: TestData.makeAlbum(), songRepository: songRepo)
         viewModel.isLoading = true
@@ -98,6 +105,7 @@ struct AlbumViewSnapshotTests {
             AlbumView(viewModel: viewModel, onPlaySong: { _ in })
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -115,6 +123,7 @@ struct AlbumViewSnapshotTests {
     @Test("AlbumView — Error — Light Mode")
     func albumErrorLight() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let songRepo = MockSongRepository()
         let viewModel = AlbumViewModel(album: TestData.makeAlbum(), songRepository: songRepo)
         viewModel.error = .networkError("Connection failed")
@@ -123,6 +132,7 @@ struct AlbumViewSnapshotTests {
             AlbumView(viewModel: viewModel, onPlaySong: { _ in })
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
@@ -138,6 +148,7 @@ struct AlbumViewSnapshotTests {
     @Test("AlbumView — Error — Dark Mode")
     func albumErrorDark() {
         let router = Router()
+        let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let songRepo = MockSongRepository()
         let viewModel = AlbumViewModel(album: TestData.makeAlbum(), songRepository: songRepo)
         viewModel.error = .networkError("Connection failed")
@@ -146,6 +157,7 @@ struct AlbumViewSnapshotTests {
             AlbumView(viewModel: viewModel, onPlaySong: { _ in })
         }
         .environment(router)
+        .environment(playerViewModel)
 
         let controller = SnapshotHelper.hostingController(
             for: view,
