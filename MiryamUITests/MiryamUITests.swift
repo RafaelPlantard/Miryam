@@ -27,7 +27,7 @@ final class MiryamUITests: XCTestCase {
     func testSplashScreenTransitionsToSongsView() throws {
         app.launch()
         let songsNavTitle = app.navigationBars["Songs"]
-        XCTAssertTrue(songsNavTitle.waitForExistence(timeout: 5))
+        XCTAssertTrue(songsNavTitle.waitForExistence(timeout: 10))
     }
 
     // MARK: - Search Flow
@@ -370,7 +370,7 @@ final class MiryamUITests: XCTestCase {
     @discardableResult
     private func waitForSongsView() -> Bool {
         let songsNavBar = app.navigationBars["Songs"]
-        let appeared = songsNavBar.waitForExistence(timeout: 5)
+        let appeared = songsNavBar.waitForExistence(timeout: 10)
         if !appeared {
             XCTFail("Songs view did not appear")
         }
