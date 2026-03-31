@@ -110,26 +110,57 @@ public struct PlayerView: View {
                 .lineLimit(1)
 
             if let song = viewModel.currentSong {
-                Button {
-                    let album = Album(
-                        id: song.albumId,
-                        name: song.albumName,
-                        artistName: song.artistName,
-                        artworkURL: song.artworkURL,
-                        trackCount: 0,
-                        releaseDate: nil,
-                        genre: ""
-                    )
-                    router.navigate(to: .album(album))
-                } label: {
-                    Text(song.albumName)
-                        .font(.miryam.bodySmall)
-                        .foregroundStyle(Color._miryamAccent)
-                        .lineLimit(1)
-                        .frame(minWidth: Layout.Player.minTapTarget, minHeight: Layout.Player.minTapTarget)
+                HStack(spacing: 8) {
+                    Button {
+                        let album = Album(
+                            id: song.albumId,
+                            name: song.albumName,
+                            artistName: song.artistName,
+                            artworkURL: song.artworkURL,
+                            trackCount: 0,
+                            releaseDate: nil,
+                            genre: ""
+                        )
+                        router.navigate(to: .album(album))
+                    } label: {
+                        Text(song.albumName)
+                            .font(.miryam.bodySmall)
+                            .foregroundStyle(Color._miryamAccent)
+                            .lineLimit(1)
+                    }
+                    .accessibilityLabel("View album \(song.albumName)")
+
+                    repeatButton
                 }
-                .accessibilityLabel("View album \(song.albumName)")
+                .frame(minHeight: Layout.Player.minTapTarget)
             }
+        }
+    }
+
+    private var repeatButton: some View {
+        Button {
+            Task { await viewModel.toggleRepeat() }
+        } label: {
+            Image(symbol: viewModel.repeatMode == .one ? .repeatOne : .repeatIcon)
+                .font(.miryam.bodySmall)
+                .foregroundStyle(
+                    viewModel.repeatMode == .off
+                        ? Color._miryamLabelTertiary
+                        : Color._miryamAccent
+                )
+                .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
+                .contentShape(Rectangle())
+        }
+        .accessibilityIdentifier(AccessibilityID.repeatButton.rawValue)
+        .accessibilityLabel("Repeat")
+        .accessibilityValue(repeatAccessibilityValue)
+    }
+
+    private var repeatAccessibilityValue: String {
+        switch viewModel.repeatMode {
+        case .off: "Off"
+        case .all: "All"
+        case .one: "One"
         }
     }
 

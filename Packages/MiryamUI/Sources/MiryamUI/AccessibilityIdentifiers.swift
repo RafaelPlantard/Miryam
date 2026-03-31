@@ -30,6 +30,7 @@ public enum AccessibilityID: String {
     case skipBackward = "Skip Backward"
     case playPause = "Play/Pause"
     case skipForward = "Skip Forward"
+    case repeatButton = "RepeatButton"
     case songProgress = "Song progress"
     case loadingSong = "Loading song"
 

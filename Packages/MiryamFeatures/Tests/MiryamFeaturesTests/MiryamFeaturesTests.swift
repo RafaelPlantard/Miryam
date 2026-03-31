@@ -133,6 +133,7 @@ actor MockPlayer: PlayerProtocol {
     func seek(to progress: Double) async { seekProgress = progress }
     func skipForward(seconds: TimeInterval) async { skipForwardSeconds = seconds }
     func skipBackward(seconds: TimeInterval) async { skipBackwardSeconds = seconds }
+    func setRepeatMode(_ mode: RepeatMode) async {}
 }
 
 // MARK: - SongsViewModel Tests
