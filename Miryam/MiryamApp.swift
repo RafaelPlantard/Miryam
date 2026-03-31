@@ -94,26 +94,43 @@ struct MiryamApp: App {
         }
         .environment(router)
         .environment(playerViewModel)
-        .sheet(item: $router.presentedSheet) { sheet in
+        .sheet(item: Binding(
+            get: { horizontalSizeClass == .compact ? router.presentedSheet : nil },
+            set: { router.presentedSheet = $0 }
+        )) { sheet in
             switch sheet {
             case let .moreOptions(song):
-                MoreOptionsView(song: song) {
-                    let album = Album(
-                        id: song.albumId,
-                        name: song.albumName,
-                        artistName: song.artistName,
-                        artworkURL: song.artworkURL,
-                        trackCount: 0,
-                        releaseDate: nil,
-                        genre: ""
-                    )
-                    router.popToRoot()
-                    router.navigate(to: .album(album))
-                }
-                .environment(router)
+                moreOptionsContent(song: song)
+            }
+        }
+        .popover(item: Binding(
+            get: { horizontalSizeClass != .compact ? router.presentedSheet : nil },
+            set: { router.presentedSheet = $0 }
+        )) { sheet in
+            switch sheet {
+            case let .moreOptions(song):
+                moreOptionsContent(song: song)
             }
         }
         .modelContainer(container.modelContainer)
+    }
+
+    @ViewBuilder
+    private func moreOptionsContent(song: Song) -> some View {
+        MoreOptionsView(song: song) {
+            let album = Album(
+                id: song.albumId,
+                name: song.albumName,
+                artistName: song.artistName,
+                artworkURL: song.artworkURL,
+                trackCount: 0,
+                releaseDate: nil,
+                genre: ""
+            )
+            router.popToRoot()
+            router.navigate(to: .album(album))
+        }
+        .environment(router)
     }
 
     // MARK: - UI Test Support
