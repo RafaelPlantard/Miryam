@@ -167,6 +167,7 @@ public struct AlbumView: View {
         .contentShape(Rectangle())
         .onTapGesture {
             onPlaySong(song)
+            router.pop()
             router.navigate(to: .player(song))
         }
     }

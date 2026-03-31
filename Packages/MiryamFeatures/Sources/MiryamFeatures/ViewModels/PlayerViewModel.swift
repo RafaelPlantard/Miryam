@@ -32,8 +32,12 @@ public final class PlayerViewModel {
         startObservingState()
     }
 
-    /// Play a song.
+    /// Play a song. No-op if the same song is already playing.
     public func play(_ song: Song) async {
+        if currentSong?.id == song.id, isPlaying {
+            return
+        }
+
         currentSong = song
         isBuffering = true
         error = nil

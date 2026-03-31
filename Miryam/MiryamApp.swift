@@ -107,6 +107,7 @@ struct MiryamApp: App {
                         releaseDate: nil,
                         genre: ""
                     )
+                    router.popToRoot()
                     router.navigate(to: .album(album))
                 }
                 .environment(router)
