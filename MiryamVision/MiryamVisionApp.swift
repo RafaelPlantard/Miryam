@@ -7,6 +7,7 @@ import SwiftUI
 @main
 struct MiryamVisionApp: App {
     @State private var container: DependencyContainer?
+    @State private var containerError: Error?
     @State private var router = Router()
     @State private var playerViewModel: PlayerViewModel?
 
@@ -35,6 +36,12 @@ struct MiryamVisionApp: App {
                     }
                     .environment(router)
                     .environment(playerViewModel)
+                } else if let containerError {
+                    ContentUnavailableView(
+                        "Unable to Load",
+                        systemImage: "exclamationmark.triangle",
+                        description: Text(containerError.localizedDescription)
+                    )
                 } else {
                     ProgressView("Loading...")
                 }
@@ -46,7 +53,7 @@ struct MiryamVisionApp: App {
                     container = di
                     playerViewModel = di.makePlayerViewModel()
                 } catch {
-                    fatalError("Failed to create DependencyContainer: \(error)")
+                    containerError = error
                 }
             }
         }
