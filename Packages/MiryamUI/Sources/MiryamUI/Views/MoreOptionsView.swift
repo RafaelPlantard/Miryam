@@ -23,9 +23,6 @@ public struct MoreOptionsView: View {
             // Song info header
             songHeader
 
-            Spacer()
-                .frame(height: Layout.MoreOptions.contentTopSpacing)
-
             // Actions
             actionButton(
                 icon: .musicNoteList,
@@ -35,11 +32,15 @@ public struct MoreOptionsView: View {
                 router.dismissSheet()
                 onViewAlbum()
             }
+            .padding(.top, Layout.MoreOptions.contentTopSpacing)
+
+            Spacer(minLength: 0)
         }
+        .padding(.bottom, Layout.MoreOptions.bottomPadding)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier(AccessibilityID.moreOptionsSheet.rawValue)
-        .background(Color._miryamSurface)
-        .presentationBackground(Color._miryamSurface)
+        .background(.ultraThinMaterial)
+        .presentationBackground(.ultraThinMaterial)
         .presentationDetents([.height(Layout.MoreOptions.sheetHeight)])
         .presentationCornerRadius(16)
     }

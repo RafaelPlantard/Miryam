@@ -88,7 +88,8 @@ public enum Layout: Sendable {
         public static let contentTopSpacing: CGFloat = 14
         public static let actionButtonMinHeight: CGFloat = 56
         public static let iconFrameWidth: CGFloat = 24
-        /// Content-fitting sheet height: grabber area + header + action + bottom padding.
-        public static let sheetHeight: CGFloat = 192
+        public static let bottomPadding: CGFloat = 48
+        /// Content-fitting sheet height: grabber(10) + header(67) + spacing(14) + action(56) + bottom(48) ≈ Figma 199.
+        public static let sheetHeight: CGFloat = 200
     }
 }
