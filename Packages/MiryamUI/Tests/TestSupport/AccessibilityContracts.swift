@@ -403,7 +403,13 @@ enum AccessibilityContracts {
             runtimeRequiredElements: runtimeRoute == nil ? [] : requiredElements,
             runtimeRoute: runtimeRoute,
             auditKinds: runtimeRoute == nil ? [] : AccessibilityAuditKind.defaultRuntimeKinds,
-            allowedSuppressions: []
+            allowedSuppressions: runtimeRoute == nil
+                ? []
+                : [
+                    // ultraThinMaterial background (Figma spec) produces dynamic contrast
+                    // that depends on the content behind the sheet.
+                    .init(descriptionContains: "Contrast", role: nil),
+                ]
         )
     }
 
