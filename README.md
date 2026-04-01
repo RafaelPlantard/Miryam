@@ -76,6 +76,15 @@ graph TD
 - **iPad Responsive** — Adaptive artwork sizing and spacing for larger displays
 - **Accessibility** — WCAG AA contrast, VoiceOver labels, 44pt tap targets, Dynamic Type
 
+### Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/songs.png" width="200" alt="Songs screen with search results"/>
+  <img src="docs/screenshots/player.png" width="200" alt="Player screen with playback controls"/>
+  <img src="docs/screenshots/more-options.png" width="200" alt="More options bottom sheet"/>
+  <img src="docs/screenshots/album.png" width="200" alt="Album screen with track listing"/>
+</p>
+
 ### Additive Platforms And Polish
 
 - **Dark & Light Mode** — Semantic color tokens adapt automatically
