@@ -134,6 +134,13 @@ jobs:
           APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
 
+      - name: Restore keychain search list
+        if: always()
+        run: |
+          security delete-keychain ~/Library/Keychains/fastlane_tmp_keychain-db 2>/dev/null || true
+          security list-keychains -s ~/Library/Keychains/login.keychain-db /Library/Keychains/System.keychain
+          security default-keychain -s ~/Library/Keychains/login.keychain-db
+
       - name: Upload build artifacts
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
