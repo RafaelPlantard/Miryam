@@ -4,16 +4,20 @@ struct SongsSearchHeader: View {
     @Binding var query: String
 
     var body: some View {
-        HStack(spacing: Layout.Songs.searchIconSpacing) {
-            Image(symbol: .magnifyingGlass)
-                .font(.miryam.bodyLarge)
-                .foregroundStyle(Color._miryamLabelSecondary)
-
+        #if os(tvOS)
             searchField
-        }
-        .padding(.horizontal, Layout.Songs.searchInnerHorizontalPadding)
-        .frame(height: Layout.Songs.searchHeight)
-        .background(Color._miryamSurfaceSecondary, in: RoundedRectangle(cornerRadius: Layout.Songs.searchCornerRadius))
+        #else
+            HStack(spacing: Layout.Songs.searchIconSpacing) {
+                Image(symbol: .magnifyingGlass)
+                    .font(.miryam.bodyLarge)
+                    .foregroundStyle(Color._miryamLabelSecondary)
+
+                searchField
+            }
+            .padding(.horizontal, Layout.Songs.searchInnerHorizontalPadding)
+            .frame(height: Layout.Songs.searchHeight)
+            .background(Color._miryamSurfaceSecondary, in: RoundedRectangle(cornerRadius: Layout.Songs.searchCornerRadius))
+        #endif
     }
 
     @ViewBuilder

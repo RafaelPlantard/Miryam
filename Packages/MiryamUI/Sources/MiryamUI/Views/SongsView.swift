@@ -61,7 +61,7 @@ public struct SongsView: View {
 
     private var songsList: some View {
         ScrollView {
-            LazyVStack(spacing: 0) {
+            LazyVStack(spacing: Layout.SongRow.verticalPadding) {
                 if !viewModel.recentlyPlayed.isEmpty, viewModel.searchQuery.isEmpty {
                     recentlyPlayedSection
                 }
