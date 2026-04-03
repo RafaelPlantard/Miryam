@@ -9,7 +9,11 @@ public struct SongRow: View {
     var onViewAlbum: (() -> Void)?
 
     private var moreButtonHitTarget: CGFloat {
-        max(Layout.Player.minTapTarget, Layout.Player.secondaryControlSize)
+        #if os(tvOS)
+            Layout.SongRow.moreButtonSize
+        #else
+            max(Layout.Player.minTapTarget, Layout.Player.secondaryControlSize)
+        #endif
     }
 
     public init(

@@ -12,10 +12,17 @@ public enum Layout: Sendable {
         public static let compactHorizontalPadding: CGFloat = 32
         public static let compactTopPadding: CGFloat = 20
         public static let compactBottomPadding: CGFloat = 28
-        public static let controlSpacing: CGFloat = 24
-        public static let minTapTarget: CGFloat = 44
-        public static let playButtonSize: CGFloat = 56
-        public static let secondaryControlSize: CGFloat = 48
+        #if os(tvOS)
+            public static let controlSpacing: CGFloat = 48
+            public static let minTapTarget: CGFloat = 70
+            public static let playButtonSize: CGFloat = 80
+            public static let secondaryControlSize: CGFloat = 70
+        #else
+            public static let controlSpacing: CGFloat = 24
+            public static let minTapTarget: CGFloat = 44
+            public static let playButtonSize: CGFloat = 56
+            public static let secondaryControlSize: CGFloat = 48
+        #endif
         public static let trackHeight: CGFloat = 6
         public static let handleSize: CGFloat = 24
         public static let queuePanelWidth: CGFloat = 320
@@ -27,15 +34,27 @@ public enum Layout: Sendable {
 
     /// Song row / list item dimensions.
     public enum SongRow {
-        public static let rowHeight: CGFloat = 68
-        public static let horizontalPadding: CGFloat = 24
-        public static let verticalPadding: CGFloat = 8
-        public static let thumbnailSize: CGFloat = 52
-        public static let thumbnailCornerRadius: CGFloat = 8
-        public static let textSpacing: CGFloat = 4
-        public static let contentSpacing: CGFloat = 16
-        public static let moreButtonSize: CGFloat = 36
-        public static let separatorLeadingInset: CGFloat = 92
+        #if os(tvOS)
+            public static let rowHeight: CGFloat = 80
+            public static let horizontalPadding: CGFloat = 48
+            public static let verticalPadding: CGFloat = 12
+            public static let thumbnailSize: CGFloat = 60
+            public static let thumbnailCornerRadius: CGFloat = 10
+            public static let textSpacing: CGFloat = 4
+            public static let contentSpacing: CGFloat = 20
+            public static let moreButtonSize: CGFloat = 48
+            public static let separatorLeadingInset: CGFloat = 128
+        #else
+            public static let rowHeight: CGFloat = 68
+            public static let horizontalPadding: CGFloat = 24
+            public static let verticalPadding: CGFloat = 0
+            public static let thumbnailSize: CGFloat = 52
+            public static let thumbnailCornerRadius: CGFloat = 8
+            public static let textSpacing: CGFloat = 4
+            public static let contentSpacing: CGFloat = 16
+            public static let moreButtonSize: CGFloat = 36
+            public static let separatorLeadingInset: CGFloat = 92
+        #endif
     }
 
     /// Recently played card dimensions.
@@ -53,17 +72,31 @@ public enum Layout: Sendable {
 
     /// Songs screen layout metrics.
     public enum Songs {
-        public static let titleTopPadding: CGFloat = 20
-        public static let titleHorizontalPadding: CGFloat = 24
-        public static let titleBottomPadding: CGFloat = 8
-        public static let searchHorizontalPadding: CGFloat = 20
-        public static let searchHeight: CGFloat = 44
-        public static let searchBottomPadding: CGFloat = 8
-        public static let sectionTopPadding: CGFloat = 8
-        public static let sectionHorizontalPadding: CGFloat = 24
-        public static let searchCornerRadius: CGFloat = 12
-        public static let searchIconSpacing: CGFloat = 8
-        public static let searchInnerHorizontalPadding: CGFloat = 16
+        #if os(tvOS)
+            public static let titleTopPadding: CGFloat = 40
+            public static let titleHorizontalPadding: CGFloat = 48
+            public static let titleBottomPadding: CGFloat = 16
+            public static let searchHorizontalPadding: CGFloat = 48
+            public static let searchHeight: CGFloat = 66
+            public static let searchBottomPadding: CGFloat = 16
+            public static let sectionTopPadding: CGFloat = 16
+            public static let sectionHorizontalPadding: CGFloat = 48
+            public static let searchCornerRadius: CGFloat = 16
+            public static let searchIconSpacing: CGFloat = 12
+            public static let searchInnerHorizontalPadding: CGFloat = 24
+        #else
+            public static let titleTopPadding: CGFloat = 20
+            public static let titleHorizontalPadding: CGFloat = 24
+            public static let titleBottomPadding: CGFloat = 8
+            public static let searchHorizontalPadding: CGFloat = 20
+            public static let searchHeight: CGFloat = 44
+            public static let searchBottomPadding: CGFloat = 8
+            public static let sectionTopPadding: CGFloat = 8
+            public static let sectionHorizontalPadding: CGFloat = 24
+            public static let searchCornerRadius: CGFloat = 12
+            public static let searchIconSpacing: CGFloat = 8
+            public static let searchInnerHorizontalPadding: CGFloat = 16
+        #endif
     }
 
     /// Album view dimensions.
