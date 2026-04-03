@@ -18,6 +18,12 @@ public final class PlayerViewModel {
     public var repeatMode: RepeatMode = .off
     public var queue: [Song] = []
 
+    /// Callback invoked on every playback state change. Use to relay state
+    /// to secondary observers (e.g. WatchConnectivity) without competing
+    /// for the unicast ``AsyncStream``.
+    @ObservationIgnored
+    public var onStateChanged: (@MainActor (PlaybackState) -> Void)?
+
     // MARK: - Private
 
     private let player: any PlayerProtocol
@@ -42,6 +48,7 @@ public final class PlayerViewModel {
 
         currentSong = song
         isBuffering = true
+        isPlaying = false
         error = nil
 
         logger.info("Playing: \(song.name) by \(song.artistName)")
@@ -67,8 +74,10 @@ public final class PlayerViewModel {
     /// Toggle play/pause.
     public func togglePlayPause() async {
         if isPlaying {
+            isPlaying = false
             await player.pause()
         } else {
+            isPlaying = true
             await player.resume()
         }
     }
@@ -164,6 +173,7 @@ public final class PlayerViewModel {
                     isPlaying = false
                     isBuffering = false
                 }
+                onStateChanged?(state)
             }
         }
     }
