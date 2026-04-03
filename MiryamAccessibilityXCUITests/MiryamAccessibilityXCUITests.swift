@@ -125,16 +125,18 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
     }
 
     private func openMoreOptions() {
-        XCTAssertTrue(waitForSongsView(), "Songs view should appear before opening more options")
+        // Navigate to the player first — on iPhone the toolbar ellipsis presents the sheet.
+        openFirstSong()
 
-        guard firstSongRow().waitForExistence(timeout: 5) else {
-            XCTFail("No song row appeared")
+        let playerView = app.descendants(matching: .any)[AccessibilityID.playerView.rawValue]
+        guard playerView.waitForExistence(timeout: 5) else {
+            XCTFail("Player view did not appear")
             return
         }
 
         let moreButton = app.buttons[AccessibilityID.moreOptionsButton.rawValue].firstMatch
         guard moreButton.waitForExistence(timeout: 5) else {
-            XCTFail("More options button not found")
+            XCTFail("More options button not found in player toolbar")
             return
         }
 
