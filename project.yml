@@ -394,6 +394,10 @@ schemes:
       config: Debug
       targets:
         - MiryamSnapshotTests
+      environmentVariables:
+        - variable: SNAPSHOT_RECORD
+          value: $(SNAPSHOT_RECORD)
+          isEnabled: true
       coverageTargets:
         - Miryam
 
@@ -464,6 +468,10 @@ schemes:
       config: Debug
       targets:
         - MiryamSnapshotTestsTV
+      environmentVariables:
+        - variable: SNAPSHOT_RECORD
+          value: $(SNAPSHOT_RECORD)
+          isEnabled: true
       coverageTargets:
         - MiryamTV
 

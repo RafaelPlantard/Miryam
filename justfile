@@ -73,7 +73,7 @@ test-snapshots:
 	set -o pipefail; xcodebuild test \
 		-project Miryam.xcodeproj \
 		-scheme MiryamTVSnapshotTests \
-		-destination 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)' \
+		-destination 'platform=tvOS Simulator,name=Apple TV' \
 		| mint run xcbeautify
 
 # Run runtime accessibility audits
@@ -104,15 +104,17 @@ format:
 
 # Regenerate snapshot reference images
 snapshot-update:
-	set -o pipefail; SNAPSHOT_RECORD=all xcodebuild test \
+	set -o pipefail; xcodebuild test \
 		-project Miryam.xcodeproj \
 		-scheme MiryamSnapshotTests \
 		-destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' \
+		SNAPSHOT_RECORD=all \
 		| mint run xcbeautify
-	set -o pipefail; SNAPSHOT_RECORD=all xcodebuild test \
+	set -o pipefail; xcodebuild test \
 		-project Miryam.xcodeproj \
 		-scheme MiryamTVSnapshotTests \
-		-destination 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)' \
+		-destination 'platform=tvOS Simulator,name=Apple TV' \
+		SNAPSHOT_RECORD=all \
 		| mint run xcbeautify
 
 # ── Security ───────────────────────────────────────────────────────────────────
