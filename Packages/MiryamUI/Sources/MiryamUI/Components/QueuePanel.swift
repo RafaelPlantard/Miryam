@@ -76,8 +76,8 @@ struct QueuePanel: View {
 
             Spacer()
 
-            if isCurrent, isPlaying {
-                NowPlayingIndicator()
+            if isCurrent {
+                NowPlayingIndicator(isAnimating: isPlaying)
             }
         }
         .padding(.horizontal, 16)
