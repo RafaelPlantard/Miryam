@@ -80,8 +80,10 @@ struct MiryamApp: App {
                         )
                     }
                     let session = PhoneSessionService(player: player)
-                    session.startObserving()
                     phoneSession = session
+                    pvm.onStateChanged = { state in
+                        PhoneSessionService.sendStateToWatch(state)
+                    }
                 } catch {
                     containerError = error
                 }

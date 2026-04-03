@@ -11,7 +11,6 @@ private let logger = Log.phoneSession
 /// the Watch are forwarded as commands to the player.
 final class PhoneSessionService: NSObject, WCSessionDelegate, @unchecked Sendable {
     private let player: any PlayerProtocol
-    private var observeTask: Task<Void, Never>?
 
     init(player: any PlayerProtocol) {
         self.player = player
@@ -26,20 +25,12 @@ final class PhoneSessionService: NSObject, WCSessionDelegate, @unchecked Sendabl
         logger.info("WCSession activated on iPhone")
     }
 
-    func startObserving() {
-        observeTask?.cancel()
-        let player = player
-        observeTask = Task {
-            for await state in player.stateStream {
-                guard !Task.isCancelled else { break }
-                Self.sendStateToWatch(state)
-            }
-        }
-    }
-
     // MARK: - State Sync (iPhone → Watch)
 
-    private static func sendStateToWatch(_ state: PlaybackState) {
+    /// Sends a playback state update to the paired Apple Watch.
+    /// Called by ``PlayerViewModel.onStateChanged`` to avoid competing
+    /// for the unicast ``AsyncStream`` (which caused missed UI updates).
+    static func sendStateToWatch(_ state: PlaybackState) {
         guard WCSession.default.activationState == .activated,
               WCSession.default.isPaired,
               WCSession.default.isWatchAppInstalled
@@ -165,9 +156,5 @@ final class PhoneSessionService: NSObject, WCSessionDelegate, @unchecked Sendabl
     func sessionDidDeactivate(_ session: WCSession) {
         logger.debug("WCSession deactivated, reactivating")
         session.activate()
-    }
-
-    deinit {
-        observeTask?.cancel()
     }
 }
