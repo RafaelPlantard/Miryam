@@ -5,8 +5,8 @@ import SwiftUI
 public struct PlayerView: View {
     @Bindable private var viewModel: PlayerViewModel
     @Environment(Router.self) private var router
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
 
     public init(viewModel: PlayerViewModel) {
         self.viewModel = viewModel
@@ -16,28 +16,14 @@ public struct PlayerView: View {
         horizontalSizeClass == .compact
     }
 
+    private var isLandscape: Bool {
+        verticalSizeClass == .compact
+    }
+
     private var artworkSize: CGFloat {
-        isCompact ? Layout.Player.artworkSizeCompact : Layout.Player.artworkSizeRegular
-    }
-
-    private var compactTimelineTrackColor: Color {
-        .white.opacity(0.2)
-    }
-
-    private var compactTimelineProgressColor: Color {
-        .white.opacity(0.9)
-    }
-
-    private var compactPrimaryControlColor: Color {
-        .white
-    }
-
-    private var compactSecondaryControlColor: Color {
-        .white.opacity(0.78)
-    }
-
-    private var compactPeripheralControlColor: Color {
-        .white.opacity(0.45)
+        if isCompact { return Layout.Player.artworkSizeCompact }
+        if isLandscape { return Layout.Player.artworkSizeiPadLandscape }
+        return Layout.Player.artworkSizeRegular
     }
 
     public var body: some View {
@@ -51,7 +37,8 @@ public struct PlayerView: View {
         .overlay {
             if viewModel.isBuffering {
                 ZStack {
-                    Color._miryamBackground.opacity(0.6)
+                    Rectangle()
+                        .fill(.ultraThinMaterial)
                     ProgressView()
                         .controlSize(.large)
                         .tint(Color._miryamAccent)
@@ -71,33 +58,28 @@ public struct PlayerView: View {
     // MARK: - Compact Layout (iPhone)
 
     private var compactPlayerLayout: some View {
-        ZStack {
-            compactBackground
+        VStack(spacing: 0) {
+            compactHeader
+                .padding(.horizontal, 8)
 
-            VStack(spacing: 0) {
-                compactHeader
-                    .padding(.horizontal, 8)
-                    .padding(.top, Layout.Player.compactTopPadding)
+            Spacer(minLength: Layout.Player.compactArtworkTopSpacing)
 
-                Spacer(minLength: Layout.Player.compactArtworkTopSpacing)
+            artworkView
 
-                VStack(spacing: 24) {
-                    artworkView
-                    songInfoView
-                }
-                .padding(.horizontal, Layout.Player.compactHorizontalPadding)
+            Spacer(minLength: 32)
 
-                Spacer(minLength: 32)
-
-                VStack(spacing: Layout.Player.compactBottomSectionSpacing) {
-                    timelineView
-                    controlsView
-                }
-                .padding(.horizontal, Layout.Player.compactHorizontalPadding)
-                .padding(.bottom, Layout.Player.compactBottomPadding)
+            VStack(spacing: Layout.Player.compactBottomSectionSpacing) {
+                songInfoView
+                timelineView
+                controlsView
             }
+            .padding(.horizontal, Layout.Player.compactHorizontalPadding)
+            .padding(.bottom, Layout.Player.compactBottomPadding)
         }
-        .ignoresSafeArea()
+        .background {
+            compactBackground
+                .ignoresSafeArea()
+        }
     }
 
     // MARK: - Regular Layout (iPad)
@@ -105,15 +87,15 @@ public struct PlayerView: View {
     private var regularPlayerLayout: some View {
         HStack(spacing: 0) {
             ScrollView {
-                VStack(spacing: 32) {
+                VStack(spacing: isLandscape ? 16 : 32) {
                     artworkView
                     songInfoView
                     timelineView
                     controlsView
                 }
-                .padding(.horizontal, 48)
-                .padding(.top, 48)
-                .padding(.bottom, 24)
+                .padding(.horizontal, isLandscape ? 32 : 48)
+                .padding(.top, isLandscape ? 16 : 48)
+                .padding(.bottom, isLandscape ? 12 : 24)
                 .frame(maxWidth: Layout.Player.maxContentWidth)
                 .frame(maxWidth: .infinity)
             }
@@ -181,7 +163,7 @@ public struct PlayerView: View {
                 LinearGradient.spotlight
             }
 
-            Color.black.opacity(0.72)
+            Color._miryamBackground.opacity(0.72)
         }
     }
 
@@ -198,19 +180,20 @@ public struct PlayerView: View {
     private var compactHeader: some View {
         HStack(spacing: 8) {
             Button {
-                dismiss()
+                router.pop()
             } label: {
-                Image(systemName: "chevron.down")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundStyle(compactPrimaryControlColor)
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(Color._miryamLabel)
                     .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
+                    .background(.ultraThinMaterial, in: Circle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel(Text(L10n.closePlayer))
 
             Text(compactHeaderTitle)
                 .font(.miryam.display)
-                .foregroundStyle(compactPrimaryControlColor)
+                .foregroundStyle(Color._miryamLabel)
                 .lineLimit(1)
                 .frame(maxWidth: .infinity)
 
@@ -220,11 +203,10 @@ public struct PlayerView: View {
                 }
             } label: {
                 Image(symbol: .ellipsis)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(compactPrimaryControlColor)
-                    .frame(width: 28, height: 28)
-                    .background(.white.opacity(0.1), in: Circle())
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(Color._miryamLabel)
                     .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
+                    .background(.ultraThinMaterial, in: Circle())
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
@@ -235,8 +217,7 @@ public struct PlayerView: View {
     }
 
     private var compactHeaderTitle: String {
-        guard let song = viewModel.currentSong else { return L10n.string(L10n.notPlaying) }
-        return L10n.compactPlayerTitle(songName: song.name, artistName: song.artistName)
+        viewModel.currentSong?.albumName ?? L10n.string(L10n.notPlaying)
     }
 
     // MARK: - Song Info
@@ -245,15 +226,19 @@ public struct PlayerView: View {
         VStack(spacing: 4) {
             Text(viewModel.currentSong?.name ?? L10n.string(L10n.notPlaying))
                 .font(.miryam.display32)
-                .foregroundStyle(isCompact ? compactPrimaryControlColor : Color._miryamLabel)
+                .foregroundStyle(Color._miryamLabel)
                 .lineLimit(2)
-                .multilineTextAlignment(.center)
+                .multilineTextAlignment(isCompact ? .leading : .center)
 
             HStack(spacing: 8) {
                 Text(viewModel.currentSong?.artistName ?? "")
                     .font(.miryam.bodyLarge)
-                    .foregroundStyle(isCompact ? compactSecondaryControlColor : Color._miryamLabelSecondary)
+                    .foregroundStyle(Color._miryamLabelSecondary)
                     .lineLimit(1)
+
+                if isCompact {
+                    Spacer(minLength: 0)
+                }
 
                 if viewModel.currentSong != nil {
                     repeatButton
@@ -261,7 +246,7 @@ public struct PlayerView: View {
             }
             .frame(minHeight: Layout.Player.minTapTarget)
 
-            if let song = viewModel.currentSong {
+            if !isCompact, let song = viewModel.currentSong {
                 Button {
                     let album = Album(
                         id: song.albumId,
@@ -276,7 +261,7 @@ public struct PlayerView: View {
                 } label: {
                     Text(song.albumName)
                         .font(.miryam.bodySmall)
-                        .foregroundStyle(isCompact ? compactPrimaryControlColor.opacity(0.82) : Color._miryamAccent)
+                        .foregroundStyle(Color._miryamAccent)
                         .lineLimit(1)
                         .frame(
                             minWidth: Layout.Player.minTapTarget,
@@ -287,7 +272,7 @@ public struct PlayerView: View {
                 .accessibilityLabel(L10n.viewAlbum(for: song.albumName))
             }
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, alignment: isCompact ? .leading : .center)
     }
 
     private var repeatButton: some View {
@@ -295,12 +280,11 @@ public struct PlayerView: View {
             Task { await viewModel.toggleRepeat() }
         } label: {
             Image(symbol: viewModel.repeatMode == .one ? .repeatOne : .repeatIcon)
-                .font(.miryam.bodySmall)
+                .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(
-                    isCompact
-                        ? (viewModel.repeatMode == .off ? compactPeripheralControlColor : compactPrimaryControlColor)
-                        : (viewModel.repeatMode == .off ? Color._miryamLabelTertiary : Color._miryamAccent)
+                    viewModel.repeatMode == .off ? Color._miryamLabelTertiary : Color._miryamAccent
                 )
+                .frame(width: 24, height: 24)
                 .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
                 .contentShape(Rectangle())
         }
@@ -326,12 +310,12 @@ public struct PlayerView: View {
                 ZStack(alignment: .leading) {
                     // Track background
                     Capsule()
-                        .fill(isCompact ? compactTimelineTrackColor : Color._miryamLabelTertiary)
+                        .fill(Color._miryamLabelTertiary)
                         .frame(height: Layout.Player.trackHeight)
 
                     // Progress fill
                     Capsule()
-                        .fill(isCompact ? compactTimelineProgressColor : Color._miryamAccent)
+                        .fill(Color._miryamAccent)
                         .frame(
                             width: max(0, geometry.size.width * viewModel.playbackState.progress),
                             height: Layout.Player.trackHeight
@@ -342,7 +326,7 @@ public struct PlayerView: View {
                     TimelineHandle(
                         progress: viewModel.playbackState.progress,
                         trackWidth: geometry.size.width,
-                        color: isCompact ? compactTimelineProgressColor : Color._miryamAccent,
+                        color: Color._miryamAccent,
                         onSeek: { progress in
                             let viewModel = viewModel
                             Task { @MainActor in
@@ -364,14 +348,14 @@ public struct PlayerView: View {
             HStack {
                 Text(viewModel.playbackState.formattedCurrentTime)
                     .font(.miryam.bodySmall)
-                    .foregroundStyle(isCompact ? compactSecondaryControlColor : Color._miryamLabelSecondary)
+                    .foregroundStyle(Color._miryamLabelSecondary)
                     .monospacedDigit()
 
                 Spacer()
 
                 Text(viewModel.playbackState.formattedRemainingTime)
                     .font(.miryam.bodySmall)
-                    .foregroundStyle(isCompact ? compactSecondaryControlColor : Color._miryamLabelSecondary)
+                    .foregroundStyle(Color._miryamLabelSecondary)
                     .monospacedDigit()
             }
         }
@@ -386,7 +370,7 @@ public struct PlayerView: View {
             } label: {
                 Image(symbol: .backwardEnd)
                     .font(.miryam.controlRegular)
-                    .foregroundStyle(isCompact ? compactPeripheralControlColor : Color._miryamIconPrimary)
+                    .foregroundStyle(Color._miryamIconPrimary)
                     .frame(width: Layout.Player.secondaryControlSize, height: Layout.Player.secondaryControlSize)
                     .contentShape(Rectangle())
             }
@@ -399,7 +383,7 @@ public struct PlayerView: View {
             } label: {
                 Image(symbol: .skipBackward15)
                     .font(.miryam.controlRegular)
-                    .foregroundStyle(isCompact ? compactSecondaryControlColor : Color._miryamIconPrimary)
+                    .foregroundStyle(Color._miryamIconPrimary)
                     .frame(width: Layout.Player.secondaryControlSize, height: Layout.Player.secondaryControlSize)
                     .contentShape(Rectangle())
             }
@@ -412,10 +396,10 @@ public struct PlayerView: View {
             } label: {
                 Image(symbol: viewModel.isPlaying ? .pauseFill : .playFill)
                     .font(.miryam.controlLarge)
-                    .foregroundStyle(isCompact ? compactPrimaryControlColor : Color._miryamIconPrimary)
+                    .foregroundStyle(Color._miryamIconPrimary)
                     .frame(width: Layout.Player.playButtonSize, height: Layout.Player.playButtonSize)
                     .background(
-                        isCompact ? compactPrimaryControlColor.opacity(0.15) : Color._miryamSurfaceSecondary,
+                        Color._miryamSurfaceSecondary,
                         in: Circle()
                     )
             }
@@ -429,7 +413,7 @@ public struct PlayerView: View {
             } label: {
                 Image(symbol: .skipForward15)
                     .font(.miryam.controlRegular)
-                    .foregroundStyle(isCompact ? compactSecondaryControlColor : Color._miryamIconPrimary)
+                    .foregroundStyle(Color._miryamIconPrimary)
                     .frame(width: Layout.Player.secondaryControlSize, height: Layout.Player.secondaryControlSize)
                     .contentShape(Rectangle())
             }
@@ -442,7 +426,7 @@ public struct PlayerView: View {
             } label: {
                 Image(symbol: .forwardEnd)
                     .font(.miryam.controlRegular)
-                    .foregroundStyle(isCompact ? compactPeripheralControlColor : Color._miryamIconPrimary)
+                    .foregroundStyle(Color._miryamIconPrimary)
                     .frame(width: Layout.Player.secondaryControlSize, height: Layout.Player.secondaryControlSize)
                     .contentShape(Rectangle())
             }
@@ -461,9 +445,9 @@ private struct PlayerToolbarModifier: ViewModifier {
     @ViewBuilder
     func body(content: Content) -> some View {
         if isCompact {
-            content
+            content.hideNavigationBarChrome()
         } else {
-            content.playerToolbar(song: song, router: router)
+            content.playerToolbar(song: song, router: router, isCompact: false)
         }
     }
 }

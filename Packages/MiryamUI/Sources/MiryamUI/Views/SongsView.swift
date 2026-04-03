@@ -71,7 +71,18 @@ public struct SongsView: View {
                         song: song,
                         isPlaying: song.id == playerViewModel.currentSong?.id && playerViewModel.isPlaying,
                         onTapped: { router.navigate(to: .player(song)) },
-                        onMoreTapped: { router.presentSheet(.moreOptions(song)) }
+                        onViewAlbum: {
+                            let album = Album(
+                                id: song.albumId,
+                                name: song.albumName,
+                                artistName: song.artistName,
+                                artworkURL: song.artworkURL,
+                                trackCount: 0,
+                                releaseDate: nil,
+                                genre: ""
+                            )
+                            router.navigate(to: .album(album))
+                        }
                     )
                     .padding(.horizontal, Layout.SongRow.horizontalPadding)
                     .onAppear {
