@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Animated equalizer bars indicating the currently playing song.
 public struct NowPlayingIndicator: View {
-    @State private var animating = false
+    let isAnimating: Bool
 
     private let barCount = 5
     private let barWidth: CGFloat = 3
@@ -13,7 +13,9 @@ public struct NowPlayingIndicator: View {
     // Each bar gets a different phase offset for a natural look
     private let phases: [Double] = [0, 0.2, 0.4, 0.15, 0.35]
 
-    public init() {}
+    public init(isAnimating: Bool = true) {
+        self.isAnimating = isAnimating
+    }
 
     public var body: some View {
         HStack(alignment: .bottom, spacing: spacing) {
@@ -22,7 +24,6 @@ public struct NowPlayingIndicator: View {
             }
         }
         .frame(width: CGFloat(barCount) * barWidth + CGFloat(barCount - 1) * spacing, height: maxHeight)
-        .onAppear { animating = true }
         .accessibilityHidden(true)
     }
 
@@ -30,12 +31,14 @@ public struct NowPlayingIndicator: View {
         RoundedRectangle(cornerRadius: barWidth / 2)
             .fill(Color._miryamAccent)
             .frame(width: barWidth)
-            .frame(height: animating ? maxHeight : minHeight)
+            .frame(height: isAnimating ? maxHeight : minHeight)
             .animation(
-                .easeInOut(duration: 0.5)
+                isAnimating
+                    ? .easeInOut(duration: 0.5)
                     .repeatForever(autoreverses: true)
-                    .delay(phase),
-                value: animating
+                    .delay(phase)
+                    : .easeInOut(duration: 0.3),
+                value: isAnimating
             )
     }
 }
