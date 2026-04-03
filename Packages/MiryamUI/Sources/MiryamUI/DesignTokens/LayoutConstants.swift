@@ -5,8 +5,8 @@ public enum Layout: Sendable {
     /// Player view dimensions.
     public enum Player {
         public static let artworkSizeCompact: CGFloat = 302
-        public static let artworkSizeRegular: CGFloat = 334
-        public static let artworkSizeiPadLandscape: CGFloat = 286
+        public static let artworkSizeRegular: CGFloat = 230
+        public static let artworkSizeiPadLandscape: CGFloat = 200
         public static let maxContentWidth: CGFloat = 600
         public static let artworkCornerRadius: CGFloat = 28
         public static let compactHorizontalPadding: CGFloat = 32
@@ -16,7 +16,7 @@ public enum Layout: Sendable {
         public static let minTapTarget: CGFloat = 44
         public static let playButtonSize: CGFloat = 56
         public static let secondaryControlSize: CGFloat = 48
-        public static let trackHeight: CGFloat = 4
+        public static let trackHeight: CGFloat = 6
         public static let handleSize: CGFloat = 24
         public static let queuePanelWidth: CGFloat = 320
         public static let compactHeaderHeight: CGFloat = 48

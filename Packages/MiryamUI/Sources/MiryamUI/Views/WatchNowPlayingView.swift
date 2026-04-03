@@ -29,66 +29,77 @@ public struct WatchNowPlayingView: View {
                         Color._miryamSurfaceSecondary
                     }
                 }
-                .frame(width: 100, height: 100)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .frame(width: 120, height: 120)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
                 .accessibilityHidden(true)
 
                 Text(song.name)
                     .font(.headline)
-                    .lineLimit(2)
+                    .foregroundStyle(Color._miryamLabel)
+                    .lineLimit(1)
                     .multilineTextAlignment(.center)
 
                 Text(song.artistName)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                // Timeline
-                ProgressView(value: viewModel.playbackState.progress)
-                    .tint(.accentColor)
-
-                HStack {
-                    Text(viewModel.playbackState.formattedCurrentTime)
-                    Spacer()
-                    Text(viewModel.playbackState.formattedRemainingTime)
-                }
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-                .monospacedDigit()
+                    .foregroundStyle(Color._miryamLabelSecondary)
+                    .lineLimit(1)
             } else {
                 Image(symbol: .musicNote)
                     .font(.largeTitle)
                     .foregroundStyle(.secondary)
-                Text("Not Playing")
+                Text(L10n.string(L10n.notPlaying))
                     .font(.headline)
             }
 
             // Controls
             HStack(spacing: 20) {
                 Button {
-                    Task { await viewModel.skipBackward() }
+                    Task { await viewModel.skipToPrevious() }
                 } label: {
-                    Image(symbol: .skipBackward15)
+                    Image(symbol: .backwardEnd)
+                        .font(.title3)
+                        .foregroundStyle(Color._miryamIconPrimary)
                 }
-                .accessibilityIdentifier(AccessibilityID.skipBackward.rawValue)
-                .accessibilityLabel("Skip backward 15 seconds")
+                .accessibilityIdentifier(AccessibilityID.previousTrack.rawValue)
+                .accessibilityLabel(Text(L10n.previousTrack))
 
                 Button {
                     Task { await viewModel.togglePlayPause() }
                 } label: {
-                    Image(symbol: viewModel.isPlaying ? .pauseFill : .playFill)
-                        .font(.title2)
+                    ZStack {
+                        // Track background
+                        Circle()
+                            .stroke(Color._miryamLabelTertiary, lineWidth: 3)
+                            .frame(width: 48, height: 48)
+
+                        // Progress ring
+                        Circle()
+                            .trim(from: 0, to: viewModel.playbackState.progress)
+                            .stroke(Color._miryamAccent, style: StrokeStyle(lineWidth: 3, lineCap: .round))
+                            .frame(width: 48, height: 48)
+                            .rotationEffect(.degrees(-90))
+                            .animation(.linear(duration: 0.05), value: viewModel.playbackState.progress)
+
+                        // Play/pause icon
+                        Image(symbol: viewModel.isPlaying ? .pauseFill : .playFill)
+                            .font(.title3)
+                            .foregroundStyle(Color._miryamIconPrimary)
+                    }
                 }
+                .buttonStyle(.plain)
                 .accessibilityIdentifier(AccessibilityID.playPause.rawValue)
-                .accessibilityLabel(viewModel.isPlaying ? "Pause" : "Play")
-                .accessibilityValue(viewModel.isPlaying ? "Playing" : "Paused")
+                .accessibilityLabel(Text(viewModel.isPlaying ? L10n.pause : L10n.play))
+                .accessibilityValue(viewModel.isPlaying ? L10n.string(L10n.playing) : L10n.string(L10n.paused))
 
                 Button {
-                    Task { await viewModel.skipForward() }
+                    Task { await viewModel.skipToNext() }
                 } label: {
-                    Image(symbol: .skipForward15)
+                    Image(symbol: .forwardEnd)
+                        .font(.title3)
+                        .foregroundStyle(Color._miryamIconPrimary)
                 }
-                .accessibilityIdentifier(AccessibilityID.skipForward.rawValue)
-                .accessibilityLabel("Skip forward 15 seconds")
+                .accessibilityIdentifier(AccessibilityID.nextTrack.rawValue)
+                .accessibilityLabel(Text(L10n.nextTrack))
             }
         }
         .padding()

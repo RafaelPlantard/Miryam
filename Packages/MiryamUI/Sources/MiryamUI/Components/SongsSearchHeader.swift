@@ -13,7 +13,7 @@ struct SongsSearchHeader: View {
         }
         .padding(.horizontal, Layout.Songs.searchInnerHorizontalPadding)
         .frame(height: Layout.Songs.searchHeight)
-        .background(Color.white.opacity(0.1), in: RoundedRectangle(cornerRadius: Layout.Songs.searchCornerRadius))
+        .background(Color._miryamSurfaceSecondary, in: RoundedRectangle(cornerRadius: Layout.Songs.searchCornerRadius))
     }
 
     @ViewBuilder
