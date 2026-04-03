@@ -6,7 +6,7 @@ public struct SongRow: View {
     let song: Song
     let isPlaying: Bool
     var onTapped: (() -> Void)?
-    var onMoreTapped: (() -> Void)?
+    var onViewAlbum: (() -> Void)?
 
     private var moreButtonHitTarget: CGFloat {
         max(Layout.Player.minTapTarget, Layout.Player.secondaryControlSize)
@@ -16,12 +16,12 @@ public struct SongRow: View {
         song: Song,
         isPlaying: Bool = false,
         onTapped: (() -> Void)? = nil,
-        onMoreTapped: (() -> Void)? = nil
+        onViewAlbum: (() -> Void)? = nil
     ) {
         self.song = song
         self.isPlaying = isPlaying
         self.onTapped = onTapped
-        self.onMoreTapped = onMoreTapped
+        self.onViewAlbum = onViewAlbum
     }
 
     public var body: some View {
@@ -101,22 +101,39 @@ public struct SongRow: View {
             NowPlayingIndicator()
                 .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
                 .accessibilityHidden(true)
-        } else if let onMoreTapped {
-            Button(action: onMoreTapped) {
-                Image(symbol: .ellipsis)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(Color._miryamIconSecondary)
-                    .frame(width: Layout.SongRow.moreButtonSize, height: Layout.SongRow.moreButtonSize)
-                    .background(Color.black.opacity(0.001), in: Circle())
-                    .frame(width: moreButtonHitTarget, height: moreButtonHitTarget)
-                    .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            .frame(width: moreButtonHitTarget, height: moreButtonHitTarget)
-            .contentShape(Rectangle())
-            .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
-            .accessibilityLabel(L10n.moreOptions(for: song.name))
-            .accessibilityHint(Text(L10n.doubleTapForAdditionalActions))
+        } else if let onViewAlbum {
+            #if os(watchOS)
+                Button(action: onViewAlbum) {
+                    Image(symbol: .ellipsis)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(Color._miryamIconSecondary)
+                        .frame(width: Layout.SongRow.moreButtonSize, height: Layout.SongRow.moreButtonSize)
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
+                .accessibilityLabel(L10n.moreOptions(for: song.name))
+            #else
+                Menu {
+                    Button {
+                        onViewAlbum()
+                    } label: {
+                        Label(L10n.string(L10n.viewAlbum), systemImage: "music.note.list")
+                    }
+                } label: {
+                    Image(symbol: .ellipsis)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(Color._miryamIconSecondary)
+                        .frame(width: Layout.SongRow.moreButtonSize, height: Layout.SongRow.moreButtonSize)
+                        .background(Color.black.opacity(0.001), in: Circle())
+                        .frame(width: moreButtonHitTarget, height: moreButtonHitTarget)
+                        .contentShape(Rectangle())
+                }
+                .frame(width: moreButtonHitTarget, height: moreButtonHitTarget)
+                .contentShape(Rectangle())
+                .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
+                .accessibilityLabel(L10n.moreOptions(for: song.name))
+                .accessibilityHint(Text(L10n.doubleTapForAdditionalActions))
+            #endif
         }
     }
 
