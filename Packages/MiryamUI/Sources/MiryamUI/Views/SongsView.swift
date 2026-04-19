@@ -70,7 +70,10 @@ public struct SongsView: View {
                     SongRow(
                         song: song,
                         isPlaying: song.id == playerViewModel.currentSong?.id && playerViewModel.isPlaying,
-                        onTapped: { router.navigate(to: .player(song)) },
+                        onTapped: {
+                            playerViewModel.setQueue(viewModel.songs)
+                            router.navigate(to: .player(song))
+                        },
                         onViewAlbum: {
                             // iOS/iPadOS: present the MoreOptions sheet so the
                             // user can see song metadata + pick an action. tvOS/
@@ -137,6 +140,7 @@ public struct SongsView: View {
                             isPlaying: song.id == playerViewModel.currentSong?.id && playerViewModel.isPlaying
                         )
                         .onTapGesture {
+                            playerViewModel.setQueue(viewModel.recentlyPlayed)
                             router.navigate(to: .player(song))
                         }
                     }

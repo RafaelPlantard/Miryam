@@ -107,7 +107,10 @@ struct MiryamApp: App {
                         PlayerView(viewModel: playerViewModel)
                             .environment(router)
                             .task {
-                                playerViewModel.setQueue(songsViewModel.songs)
+                                // Queue is set by whichever view triggered the
+                                // navigation (SongsView → search list;
+                                // AlbumView → album tracks), so Next/Previous
+                                // reflects the actual list the user was in.
                                 await playerViewModel.play(song)
                             }
                     case let .album(album):
