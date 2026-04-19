@@ -69,6 +69,20 @@ targets:
           - UIInterfaceOrientationPortraitUpsideDown
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
+        # CarPlay requires a scene manifest that binds the CarPlay scene role
+        # to our CPTemplateApplicationSceneDelegate. Without this, iOS
+        # instantiates the scene but cannot hand off the interface controller
+        # to a delegate — CPTemplateApplicationScene throws
+        # _deliverInterfaceControllerToDelegate and the app crashes.
+        # The main SwiftUI window scene is handled by the App protocol and
+        # does not need a manifest entry.
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+          UISceneConfigurations:
+            CPTemplateApplicationSceneSessionRoleApplication:
+              - UISceneClassName: CPTemplateApplicationScene
+                UISceneConfigurationName: CarPlay
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).CarPlaySceneDelegate
     dependencies:
       - package: MiryamUI
       - package: MiryamFeatures
