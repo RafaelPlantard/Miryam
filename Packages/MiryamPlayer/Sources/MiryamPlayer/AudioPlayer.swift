@@ -86,8 +86,13 @@ public actor AudioPlayer: PlayerProtocol {
             throw AppError.playbackFailed("No preview URL available")
         }
 
-        // Clean up any previous playback
-        await stop()
+        // Clean up any previous playback. Guarded so the first-ever play
+        // doesn't emit a spurious .idle state — which would otherwise chain
+        // .idle -> .loading -> .playing through the AsyncStream, and SwiftUI
+        // coalesces them so the loading indicator is invisible to the user.
+        if player != nil {
+            await stop()
+        }
 
         currentSong = song
         emitState(.init(status: .loading, currentSong: song))
