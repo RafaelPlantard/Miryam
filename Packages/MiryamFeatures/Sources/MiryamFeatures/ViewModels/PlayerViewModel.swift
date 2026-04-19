@@ -40,9 +40,12 @@ public final class PlayerViewModel {
         startObservingState()
     }
 
-    /// Play a song. No-op if the same song is already playing.
+    /// Play a song. No-op if the same song is already playing OR currently
+    /// loading — prevents .task re-fires (on back/forward navigation) and
+    /// any accidental double invocation from racing `AudioPlayer.stop()`
+    /// against a still-warming playback.
     public func play(_ song: Song) async {
-        if currentSong?.id == song.id, isPlaying {
+        if currentSong?.id == song.id, isPlaying || isBuffering {
             return
         }
 

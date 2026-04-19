@@ -183,11 +183,12 @@ public struct AlbumView: View {
         .padding(.vertical, 8)
         .contentShape(Rectangle())
         .onTapGesture {
-            // Push PlayerView on top of the album stack. Playback itself is
-            // started by PlayerView's `.task` to avoid the double-invocation
-            // race: if we also called `playerViewModel.play(song)` here, the
-            // follow-up `.task` invocation would run `AudioPlayer.stop()` mid-
+            // Seed the player queue with the album's tracks so Next/Previous
+            // navigate within this album, then push PlayerView. Playback is
+            // kicked off by PlayerView's `.task` — if we also started play()
+            // here, the second invocation would hit `AudioPlayer.stop()` mid-
             // flight and tear down the just-started playback.
+            playerViewModel.setQueue(viewModel.songs)
             router.navigate(to: .player(song))
         }
     }
