@@ -72,6 +72,13 @@ public struct SongsView: View {
                         isPlaying: song.id == playerViewModel.currentSong?.id && playerViewModel.isPlaying,
                         onTapped: { router.navigate(to: .player(song)) },
                         onViewAlbum: {
+                            // iOS/iPadOS: present the MoreOptions sheet so the
+                            // user can see song metadata + pick an action. tvOS/
+                            // visionOS hosts have no sheet wiring, so we short-
+                            // circuit directly to the album destination there.
+                            #if os(iOS)
+                            router.presentSheet(.moreOptions(song))
+                            #else
                             let album = Album(
                                 id: song.albumId,
                                 name: song.albumName,
@@ -82,6 +89,7 @@ public struct SongsView: View {
                                 genre: ""
                             )
                             router.navigate(to: .album(album))
+                            #endif
                         }
                     )
                     .padding(.horizontal, Layout.SongRow.horizontalPadding)

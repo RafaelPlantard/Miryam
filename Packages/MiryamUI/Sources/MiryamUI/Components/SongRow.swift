@@ -106,37 +106,32 @@ public struct SongRow: View {
                 .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
                 .accessibilityHidden(true)
         } else if let onViewAlbum {
-            #if os(watchOS)
-                Button(action: onViewAlbum) {
-                    Image(symbol: .ellipsis)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(Color._miryamIconSecondary)
-                        .frame(width: Layout.SongRow.moreButtonSize, height: Layout.SongRow.moreButtonSize)
-                }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
-                .accessibilityLabel(L10n.moreOptions(for: song.name))
-            #else
-                Menu {
-                    Button {
-                        onViewAlbum()
-                    } label: {
-                        Label(L10n.string(L10n.viewAlbum), systemImage: "music.note.list")
-                    }
-                } label: {
-                    Image(symbol: .ellipsis)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(Color._miryamIconSecondary)
-                        .frame(width: Layout.SongRow.moreButtonSize, height: Layout.SongRow.moreButtonSize)
-                        .background(Color.black.opacity(0.001), in: Circle())
-                        .frame(width: moreButtonHitTarget, height: moreButtonHitTarget)
-                        .contentShape(Rectangle())
-                }
-                .frame(width: moreButtonHitTarget, height: moreButtonHitTarget)
-                .contentShape(Rectangle())
-                .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
-                .accessibilityLabel(L10n.moreOptions(for: song.name))
-                .accessibilityHint(Text(L10n.doubleTapForAdditionalActions))
+            // Uniform Button across platforms. The parent (e.g. SongsView)
+            // decides what the tap actually does — present the MoreOptions
+            // sheet on iOS/iPadOS, navigate directly on tvOS/visionOS,
+            // or push the watch album route on watchOS. Keeping SongRow free
+            // of Menu lets the same XCUI accessibility identifier flow drive
+            // the MoreOptions sheet test end-to-end.
+            Button(action: onViewAlbum) {
+                Image(symbol: .ellipsis)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(Color._miryamIconSecondary)
+                    .frame(width: Layout.SongRow.moreButtonSize, height: Layout.SongRow.moreButtonSize)
+                    #if !os(watchOS)
+                    .background(Color.black.opacity(0.001), in: Circle())
+                    .frame(width: moreButtonHitTarget, height: moreButtonHitTarget)
+                    .contentShape(Rectangle())
+                    #endif
+            }
+            .buttonStyle(.plain)
+            #if !os(watchOS)
+            .frame(width: moreButtonHitTarget, height: moreButtonHitTarget)
+            .contentShape(Rectangle())
+            #endif
+            .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
+            .accessibilityLabel(L10n.moreOptions(for: song.name))
+            #if !os(watchOS)
+            .accessibilityHint(Text(L10n.doubleTapForAdditionalActions))
             #endif
         }
     }
