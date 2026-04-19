@@ -30,7 +30,7 @@ struct AlbumViewSnapshotTests {
         let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
-            AlbumView(viewModel: viewModel, onPlaySong: { _ in })
+            AlbumView(viewModel: viewModel)
         }
         .environment(router)
         .environment(playerViewModel)
@@ -52,7 +52,7 @@ struct AlbumViewSnapshotTests {
         let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
-            AlbumView(viewModel: viewModel, onPlaySong: { _ in })
+            AlbumView(viewModel: viewModel)
         }
         .environment(router)
         .environment(playerViewModel)
@@ -78,7 +78,7 @@ struct AlbumViewSnapshotTests {
         let viewModel = AlbumViewModel(album: TestData.makeAlbum(), songRepository: songRepo)
         viewModel.isLoading = true
         let view = NavigationStack {
-            AlbumView(viewModel: viewModel, onPlaySong: { _ in })
+            AlbumView(viewModel: viewModel)
         }
         .environment(router)
         .environment(playerViewModel)
@@ -102,7 +102,7 @@ struct AlbumViewSnapshotTests {
         let viewModel = AlbumViewModel(album: TestData.makeAlbum(), songRepository: songRepo)
         viewModel.isLoading = true
         let view = NavigationStack {
-            AlbumView(viewModel: viewModel, onPlaySong: { _ in })
+            AlbumView(viewModel: viewModel)
         }
         .environment(router)
         .environment(playerViewModel)
@@ -129,7 +129,7 @@ struct AlbumViewSnapshotTests {
         viewModel.error = .networkError("Connection failed")
         viewModel.isLoading = false
         let view = NavigationStack {
-            AlbumView(viewModel: viewModel, onPlaySong: { _ in })
+            AlbumView(viewModel: viewModel)
         }
         .environment(router)
         .environment(playerViewModel)
@@ -154,7 +154,7 @@ struct AlbumViewSnapshotTests {
         viewModel.error = .networkError("Connection failed")
         viewModel.isLoading = false
         let view = NavigationStack {
-            AlbumView(viewModel: viewModel, onPlaySong: { _ in })
+            AlbumView(viewModel: viewModel)
         }
         .environment(router)
         .environment(playerViewModel)

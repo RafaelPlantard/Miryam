@@ -112,10 +112,7 @@ struct MiryamApp: App {
                             }
                     case let .album(album):
                         AlbumView(
-                            viewModel: container.makeAlbumViewModel(album: album),
-                            onPlaySong: { song in
-                                Task { await playerViewModel.play(song) }
-                            }
+                            viewModel: container.makeAlbumViewModel(album: album)
                         )
                         .environment(router)
                     }
