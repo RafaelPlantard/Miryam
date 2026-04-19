@@ -35,15 +35,22 @@ public enum Layout: Sendable {
     /// Song row / list item dimensions.
     public enum SongRow {
         #if os(tvOS)
-            public static let rowHeight: CGFloat = 80
+            // tvOS focus engine scales focused content ~1.08x and adds a glow/
+            // shadow halo around it. The previous 80pt row + 12pt vertical gap
+            // left the scaled row (≈86pt) plus its halo overflowing into the
+            // adjacent row. Bump the row to 104pt and the gap to 28pt so the
+            // focus effect fits comfortably without visual collision, and
+            // scale the thumbnail/buttons so the row still looks balanced at
+            // 10-foot viewing distance.
+            public static let rowHeight: CGFloat = 104
             public static let horizontalPadding: CGFloat = 48
-            public static let verticalPadding: CGFloat = 12
-            public static let thumbnailSize: CGFloat = 60
-            public static let thumbnailCornerRadius: CGFloat = 10
+            public static let verticalPadding: CGFloat = 28
+            public static let thumbnailSize: CGFloat = 72
+            public static let thumbnailCornerRadius: CGFloat = 12
             public static let textSpacing: CGFloat = 4
-            public static let contentSpacing: CGFloat = 20
-            public static let moreButtonSize: CGFloat = 48
-            public static let separatorLeadingInset: CGFloat = 128
+            public static let contentSpacing: CGFloat = 24
+            public static let moreButtonSize: CGFloat = 56
+            public static let separatorLeadingInset: CGFloat = 144
         #else
             public static let rowHeight: CGFloat = 68
             public static let horizontalPadding: CGFloat = 24
