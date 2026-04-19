@@ -28,7 +28,7 @@ struct AlbumViewiPadSnapshotTests {
         let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
-            AlbumView(viewModel: viewModel, onPlaySong: { _ in })
+            AlbumView(viewModel: viewModel)
         }
         .environment(router)
         .environment(playerViewModel)
@@ -50,7 +50,7 @@ struct AlbumViewiPadSnapshotTests {
         let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
-            AlbumView(viewModel: viewModel, onPlaySong: { _ in })
+            AlbumView(viewModel: viewModel)
         }
         .environment(router)
         .environment(playerViewModel)
@@ -72,7 +72,7 @@ struct AlbumViewiPadSnapshotTests {
         let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
-            AlbumView(viewModel: viewModel, onPlaySong: { _ in })
+            AlbumView(viewModel: viewModel)
         }
         .environment(router)
         .environment(playerViewModel)
@@ -94,7 +94,7 @@ struct AlbumViewiPadSnapshotTests {
         let playerViewModel = PlayerViewModel(player: MockPlayer(), cacheRepository: MockCacheRepository())
         let viewModel = makeViewModel()
         let view = NavigationStack {
-            AlbumView(viewModel: viewModel, onPlaySong: { _ in })
+            AlbumView(viewModel: viewModel)
         }
         .environment(router)
         .environment(playerViewModel)

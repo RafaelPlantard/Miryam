@@ -7,11 +7,9 @@ public struct AlbumView: View {
     @Environment(Router.self) private var router
     @Environment(PlayerViewModel.self) private var playerViewModel
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    private let onPlaySong: @MainActor (Song) -> Void
 
-    public init(viewModel: AlbumViewModel, onPlaySong: @escaping @MainActor (Song) -> Void) {
+    public init(viewModel: AlbumViewModel) {
         self.viewModel = viewModel
-        self.onPlaySong = onPlaySong
     }
 
     public var body: some View {
@@ -185,8 +183,11 @@ public struct AlbumView: View {
         .padding(.vertical, 8)
         .contentShape(Rectangle())
         .onTapGesture {
-            onPlaySong(song)
-            router.pop()
+            // Push PlayerView on top of the album stack. Playback itself is
+            // started by PlayerView's `.task` to avoid the double-invocation
+            // race: if we also called `playerViewModel.play(song)` here, the
+            // follow-up `.task` invocation would run `AudioPlayer.stop()` mid-
+            // flight and tear down the just-started playback.
             router.navigate(to: .player(song))
         }
     }

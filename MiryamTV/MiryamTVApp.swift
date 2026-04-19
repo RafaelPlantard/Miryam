@@ -25,10 +25,7 @@ struct MiryamTVApp: App {
                                         .task { await playerViewModel.play(song) }
                                 case let .album(album):
                                     AlbumView(
-                                        viewModel: container.makeAlbumViewModel(album: album),
-                                        onPlaySong: { song in
-                                            router.navigate(to: .player(song))
-                                        }
+                                        viewModel: container.makeAlbumViewModel(album: album)
                                     )
                                     .environment(router)
                                 }
