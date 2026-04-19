@@ -71,6 +71,20 @@ platform :ios do
     )
   end
 
+  desc "Force-regenerate dev/adhoc/appstore profiles (use after Portal capability changes)"
+  lane :resync_profiles do
+    api_key = asc_api_key
+    ["development", "adhoc", "appstore"].each do |cert_type|
+      match(
+        type: cert_type,
+        app_identifier: APP_IDENTIFIER,
+        readonly: false,
+        force: true,
+        api_key: api_key
+      )
+    end
+  end
+
   desc "Register Watch App ID and generate App Store profiles"
   lane :setup_watch_signing do
     api_key = asc_api_key
