@@ -90,12 +90,12 @@ public final class PlayerViewModel {
         await player.seek(to: progress)
     }
 
-    /// Skip forward 15 seconds.
+    /// Skip forward by `Constants.Player.skipInterval` seconds.
     public func skipForward() async {
         await player.skipForward(seconds: Constants.Player.skipInterval)
     }
 
-    /// Skip backward 15 seconds.
+    /// Skip backward by `Constants.Player.skipInterval` seconds.
     public func skipBackward() async {
         await player.skipBackward(seconds: Constants.Player.skipInterval)
     }
