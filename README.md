@@ -62,7 +62,23 @@ graph TD
     Player --> Core
 ```
 
-**Dependency rule:** ViewModels depend only on protocols in MiryamCore. Concrete implementations are injected via `DependencyContainer`. No ViewModel imports Networking or Persistence directly.
+**Dependency rule:** ViewModels depend only on protocols in MiryamCore. Concrete implementations are injected via `DependencyContainer`. No ViewModel imports Networking or Persistence directly — the rule is enforced by the SPM package graph, not by convention: `MiryamCore` declares zero external dependencies, so a violating import simply fails to resolve.
+
+### Packages
+
+| Package | Role |
+| --- | --- |
+| `MiryamCore` | Domain models, `Sendable` protocols, `AppError` enum — zero external deps, leaf of the graph |
+| `MiryamNetworking` | `actor HTTPClient` with typed throws, `ITunesEndpoint` enum, DTO-to-domain mapping at the boundary |
+| `MiryamPersistence` | `@ModelActor CacheActor` over SwiftData — offline-first storage |
+| `MiryamPlayer` | `actor AudioPlayer` over AVFoundation, `AsyncStream` publishing playback state |
+| `MiryamFeatures` | `@Observable @MainActor` ViewModels, typed `AppRoute` router, `DependencyContainer` |
+| `MiryamUI` | Design tokens bound to the asset catalog, SwiftUI components — no hardcoded colors or strings |
+
+### Where The Depth Lives
+
+- **Swift 6 concurrency story (`MiryamPlayer`).** `@preconcurrency import AVFoundation` in `AudioPlayer` because AVPlayer's APIs predate `Sendable`; an `AsyncStream` bridges actor-isolated state to a `@MainActor` ViewModel; `PlayerViewModel` holds a deliberate `nonisolated(unsafe) var stateTask` as a defensible tradeoff.
+- **Offline-first policy (`MiryamFeatures`).** Concentrated in `SongsViewModel.search`, which catches `AppError.noInternetConnection` and falls back to `cacheRepository.cachedSongs(for:)`. The same fallback covers refresh and pagination.
 
 ## Features
 
