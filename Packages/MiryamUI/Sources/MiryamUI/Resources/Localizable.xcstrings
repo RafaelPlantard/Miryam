@@ -493,36 +493,36 @@
         }
       }
     },
-    "Skip backward 15 seconds" : {
+    "Skip backward 5 seconds" : {
       "comment" : "Accessibility label for skip backward button",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Skip backward 15 seconds"
+            "value" : "Skip backward 5 seconds"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Retroceder 15 segundos"
+            "value" : "Retroceder 5 segundos"
           }
         }
       }
     },
-    "Skip forward 15 seconds" : {
+    "Skip forward 5 seconds" : {
       "comment" : "Accessibility label for skip forward button",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Skip forward 15 seconds"
+            "value" : "Skip forward 5 seconds"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Avançar 15 segundos"
+            "value" : "Avançar 5 segundos"
           }
         }
       }

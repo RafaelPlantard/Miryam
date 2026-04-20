@@ -4,8 +4,8 @@ import SwiftUI
 public enum SFSymbol: String, Sendable {
     case musicNote = "music.note"
     case musicNoteList = "music.note.list"
-    case skipBackward15 = "gobackward.15"
-    case skipForward15 = "goforward.15"
+    case skipBackward5 = "gobackward.5"
+    case skipForward5 = "goforward.5"
     case pauseFill = "pause.fill"
     case playFill = "play.fill"
     case ellipsis

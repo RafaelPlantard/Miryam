@@ -4,8 +4,10 @@ import Foundation
 public enum Constants: Sendable {
     /// Player-related timing constants.
     public enum Player: Sendable {
-        /// Seconds to skip forward/backward.
-        public static let skipInterval: TimeInterval = 15
+        /// Seconds to skip forward/backward. iTunes previews are 30s, so 5s
+        /// gives ~6 useful steps across the clip — 15s would jump half the
+        /// preview per tap.
+        public static let skipInterval: TimeInterval = 5
         /// Periodic time observer interval in seconds.
         public static let timeObserverInterval: TimeInterval = 0.05
     }

@@ -784,7 +784,7 @@ struct PlayerViewModelTests {
         #expect(progress == 0.75)
     }
 
-    @Test("skipForward calls player with 15 seconds")
+    @Test("skipForward calls player with 5 seconds")
     @MainActor
     func skipForwardCallsPlayer() async {
         let player = MockPlayer()
@@ -794,10 +794,10 @@ struct PlayerViewModelTests {
         await viewModel.skipForward()
 
         let seconds = await player.getSkipForwardSeconds()
-        #expect(seconds == 15)
+        #expect(seconds == Constants.Player.skipInterval)
     }
 
-    @Test("skipBackward calls player with 15 seconds")
+    @Test("skipBackward calls player with 5 seconds")
     @MainActor
     func skipBackwardCallsPlayer() async {
         let player = MockPlayer()
@@ -807,7 +807,7 @@ struct PlayerViewModelTests {
         await viewModel.skipBackward()
 
         let seconds = await player.getSkipBackwardSeconds()
-        #expect(seconds == 15)
+        #expect(seconds == Constants.Player.skipInterval)
     }
 
     @Test("stop calls player and clears currentSong")

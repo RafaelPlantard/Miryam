@@ -342,7 +342,7 @@ enum AccessibilityContracts {
             .init(
                 locator: .id(AccessibilityID.skipBackward.rawValue),
                 role: .button,
-                labelRule: .exact("Skip backward 15 seconds"),
+                labelRule: .exact("Skip backward 5 seconds"),
                 interactive: true
             ),
             .init(
@@ -354,7 +354,7 @@ enum AccessibilityContracts {
             .init(
                 locator: .id(AccessibilityID.skipForward.rawValue),
                 role: .button,
-                labelRule: .exact("Skip forward 15 seconds"),
+                labelRule: .exact("Skip forward 5 seconds"),
                 interactive: true
             ),
             .init(
@@ -442,7 +442,7 @@ enum AccessibilityContracts {
                 .init(
                     locator: .id(AccessibilityID.skipBackward.rawValue),
                     role: .button,
-                    labelRule: .exact("Skip backward 15 seconds"),
+                    labelRule: .exact("Skip backward 5 seconds"),
                     interactive: true
                 ),
                 .init(
@@ -454,7 +454,7 @@ enum AccessibilityContracts {
                 .init(
                     locator: .id(AccessibilityID.skipForward.rawValue),
                     role: .button,
-                    labelRule: .exact("Skip forward 15 seconds"),
+                    labelRule: .exact("Skip forward 5 seconds"),
                     interactive: true
                 ),
             ],

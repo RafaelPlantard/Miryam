@@ -381,7 +381,7 @@ public struct PlayerView: View {
             Button {
                 Task { await viewModel.skipBackward() }
             } label: {
-                Image(symbol: .skipBackward15)
+                Image(symbol: .skipBackward5)
                     .font(.miryam.controlRegular)
                     .foregroundStyle(Color._miryamIconPrimary)
                     .frame(width: Layout.Player.secondaryControlSize, height: Layout.Player.secondaryControlSize)
@@ -389,7 +389,7 @@ public struct PlayerView: View {
             }
             .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
             .accessibilityIdentifier(AccessibilityID.skipBackward.rawValue)
-            .accessibilityLabel(Text(L10n.skipBackward15))
+            .accessibilityLabel(Text(L10n.skipBackward5))
 
             Button {
                 Task { await viewModel.togglePlayPause() }
@@ -411,7 +411,7 @@ public struct PlayerView: View {
             Button {
                 Task { await viewModel.skipForward() }
             } label: {
-                Image(symbol: .skipForward15)
+                Image(symbol: .skipForward5)
                     .font(.miryam.controlRegular)
                     .foregroundStyle(Color._miryamIconPrimary)
                     .frame(width: Layout.Player.secondaryControlSize, height: Layout.Player.secondaryControlSize)
@@ -419,7 +419,7 @@ public struct PlayerView: View {
             }
             .frame(width: Layout.Player.minTapTarget, height: Layout.Player.minTapTarget)
             .accessibilityIdentifier(AccessibilityID.skipForward.rawValue)
-            .accessibilityLabel(Text(L10n.skipForward15))
+            .accessibilityLabel(Text(L10n.skipForward5))
 
             Button {
                 Task { await viewModel.skipToNext() }
