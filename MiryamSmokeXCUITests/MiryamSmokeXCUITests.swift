@@ -9,6 +9,7 @@ final class MiryamSmokeXCUITests: XCTestCase {
         continueAfterFailure = false
         app = XCUIApplication()
         app.launchArguments = ["-UITestMode"]
+        app.launchEnvironment = UITestFixtureLoader.launchEnvironment()
     }
 
     override func tearDown() async throws {

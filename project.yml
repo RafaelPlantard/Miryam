@@ -36,8 +36,6 @@ targets:
           - "**/*.md"
     resources:
       - Miryam/Assets.xcassets
-      - path: Miryam/TestFixtures
-        buildPhase: resources
     entitlements:
       path: Miryam/Miryam.entitlements
       properties:
@@ -166,6 +164,9 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - MiryamSmokeXCUITests
+      - UITestSupport
+      - path: UITestFixtures
+        buildPhase: resources
     dependencies:
       - target: Miryam
       - package: MiryamUI
@@ -182,6 +183,9 @@ targets:
     sources:
       - MiryamAccessibilityXCUITests
       - path: Packages/MiryamUI/Tests/TestSupport
+      - UITestSupport
+      - path: UITestFixtures
+        buildPhase: resources
     dependencies:
       - target: Miryam
       - package: MiryamUI
