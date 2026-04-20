@@ -262,14 +262,22 @@ public actor AudioPlayer: PlayerProtocol {
     // MARK: - State Helpers
 
     private func handleTimeUpdate(_ time: CMTime) {
-        guard let song = currentSong, let item = player?.currentItem else { return }
+        guard let song = currentSong, let player, let item = player.currentItem else { return }
         let currentTime = time.seconds
         let duration = item.duration.seconds
 
         guard duration.isFinite, duration > 0 else { return }
 
+        // Derive the status from the live rate instead of hardcoding .playing.
+        // AVPlayer's periodic observer also fires on "playback starts/stops"
+        // and on time jumps — emitting .playing after pause() runs would race
+        // with the .paused emission and leave the UI stuck showing the pause
+        // icon while the audio is actually paused.
+        let isActivelyPlaying = player.rate > 0
+        let status: PlaybackState.Status = isActivelyPlaying ? .playing : .paused
+
         emitState(PlaybackState(
-            status: .playing,
+            status: status,
             currentSong: song,
             currentTime: currentTime,
             duration: duration,
@@ -282,7 +290,7 @@ public actor AudioPlayer: PlayerProtocol {
                     song: song,
                     currentTime: currentTime,
                     duration: duration,
-                    isPlaying: true
+                    isPlaying: isActivelyPlaying
                 )
             }
         #endif
