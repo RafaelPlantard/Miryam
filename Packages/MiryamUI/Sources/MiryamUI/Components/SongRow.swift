@@ -117,21 +117,21 @@ public struct SongRow: View {
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(Color._miryamIconSecondary)
                     .frame(width: Layout.SongRow.moreButtonSize, height: Layout.SongRow.moreButtonSize)
-                    #if !os(watchOS)
+                #if !os(watchOS)
                     .background(Color.black.opacity(0.001), in: Circle())
                     .frame(width: moreButtonHitTarget, height: moreButtonHitTarget)
                     .contentShape(Rectangle())
-                    #endif
+                #endif
             }
             .buttonStyle(.plain)
             #if !os(watchOS)
-            .frame(width: moreButtonHitTarget, height: moreButtonHitTarget)
-            .contentShape(Rectangle())
+                .frame(width: moreButtonHitTarget, height: moreButtonHitTarget)
+                .contentShape(Rectangle())
             #endif
-            .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
-            .accessibilityLabel(L10n.moreOptions(for: song.name))
+                .accessibilityIdentifier(AccessibilityID.moreOptionsButton.rawValue)
+                .accessibilityLabel(L10n.moreOptions(for: song.name))
             #if !os(watchOS)
-            .accessibilityHint(Text(L10n.doubleTapForAdditionalActions))
+                .accessibilityHint(Text(L10n.doubleTapForAdditionalActions))
             #endif
         }
     }

@@ -80,18 +80,18 @@ public struct SongsView: View {
                             // visionOS hosts have no sheet wiring, so we short-
                             // circuit directly to the album destination there.
                             #if os(iOS)
-                            router.presentSheet(.moreOptions(song))
+                                router.presentSheet(.moreOptions(song))
                             #else
-                            let album = Album(
-                                id: song.albumId,
-                                name: song.albumName,
-                                artistName: song.artistName,
-                                artworkURL: song.artworkURL,
-                                trackCount: 0,
-                                releaseDate: nil,
-                                genre: ""
-                            )
-                            router.navigate(to: .album(album))
+                                let album = Album(
+                                    id: song.albumId,
+                                    name: song.albumName,
+                                    artistName: song.artistName,
+                                    artworkURL: song.artworkURL,
+                                    trackCount: 0,
+                                    releaseDate: nil,
+                                    genre: ""
+                                )
+                                router.navigate(to: .album(album))
                             #endif
                         }
                     )
