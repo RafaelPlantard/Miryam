@@ -87,12 +87,12 @@ public final class SongsViewModel {
                 }
             } catch let appError as AppError {
                 guard !Task.isCancelled else { return }
-                if case .noInternetConnection = appError {
+                if Self.shouldFallBackToCache(appError) {
                     let cached = try? await cacheRepository.cachedSongs(for: query)
                     if let cached, !cached.isEmpty {
                         songs = cached
-                        error = .noInternetConnection
-                        logger.info("Serving \(cached.count) cached results for '\(query)'")
+                        error = appError
+                        logger.info("Serving \(cached.count) cached results for '\(query)' after \(appError)")
                         isLoading = false
                         return
                     }
@@ -106,6 +106,25 @@ public final class SongsViewModel {
             }
 
             isLoading = false
+        }
+    }
+
+    /// Whether a given failure should fall back to cached results if any exist.
+    /// Beyond plain offline, we also trust cached data when the server is
+    /// transiently struggling (5xx / 429), the network is slow/lossy enough
+    /// that URLSession threw a generic networkError (timeouts, connection
+    /// lost, host unreachable), or the response was malformed (decodingError).
+    /// Hard-wall errors like 404, cache failures, and playback errors are NOT
+    /// surfaced through the cache path — they need the user to know something
+    /// is wrong.
+    static func shouldFallBackToCache(_ error: AppError) -> Bool {
+        switch error {
+        case .noInternetConnection, .networkError, .decodingError:
+            return true
+        case let .serverError(statusCode) where statusCode >= 500 || statusCode == 429:
+            return true
+        case .serverError, .notFound, .cacheError, .playbackFailed, .unknown:
+            return false
         }
     }
 
@@ -177,12 +196,12 @@ public final class SongsViewModel {
                 logger.warning("Cache write failed during refresh: \(error)")
             }
         } catch let appError as AppError {
-            if case .noInternetConnection = appError {
+            if Self.shouldFallBackToCache(appError) {
                 let cached = try? await cacheRepository.cachedSongs(for: query)
                 if let cached, !cached.isEmpty {
                     songs = cached
-                    error = .noInternetConnection
-                    logger.info("Serving \(cached.count) cached refresh results for '\(query)'")
+                    error = appError
+                    logger.info("Serving \(cached.count) cached refresh results for '\(query)' after \(appError)")
                     return
                 }
             }
