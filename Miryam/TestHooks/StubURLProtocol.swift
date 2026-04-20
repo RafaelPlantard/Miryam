@@ -1,12 +1,17 @@
 #if DEBUG
     import Foundation
 
-    /// Intercepts all URL requests and returns matching JSON fixture files.
+    /// Intercepts all URL requests and returns matching JSON fixture bodies.
     /// Used exclusively during UI tests to avoid hitting the live iTunes API.
+    ///
+    /// Fixture content is passed from the XCUITest bundle via `launchEnvironment`
+    /// under `MIRYAM_FIXTURE_<name>` keys — so fixtures never ship in Release.
     final class StubURLProtocol: URLProtocol, @unchecked Sendable {
         /// Ordered list of (pattern, fixtureName) pairs.
         /// Patterns are matched against the full URL string in order — first match wins.
         nonisolated(unsafe) static var stubbedResponses: [(pattern: String, fixture: String)] = []
+
+        private static let envPrefix = "MIRYAM_FIXTURE_"
 
         override static func canInit(with request: URLRequest) -> Bool {
             true
@@ -19,8 +24,8 @@
         override func startLoading() {
             guard let url = request.url,
                   let fixtureName = Self.matchFixture(for: url),
-                  let fixtureURL = Bundle.main.url(forResource: fixtureName, withExtension: "json"),
-                  let data = try? Data(contentsOf: fixtureURL)
+                  let json = ProcessInfo.processInfo.environment["\(Self.envPrefix)\(fixtureName)"],
+                  let data = json.data(using: .utf8)
             else {
                 client?.urlProtocol(self, didFailWithError: URLError(.fileDoesNotExist))
                 client?.urlProtocolDidFinishLoading(self)

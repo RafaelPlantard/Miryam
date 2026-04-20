@@ -74,6 +74,7 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
         }
 
         app.launchArguments = arguments
+        app.launchEnvironment = UITestFixtureLoader.launchEnvironment()
         app.launch()
         XCUIDevice.shared.orientation = .portrait
     }
