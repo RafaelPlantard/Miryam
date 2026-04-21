@@ -48,23 +48,6 @@
         }
       }
     },
-    "%lld%%" : {
-      "comment" : "Accessibility value for playback progress percentage",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld%%"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld%%"
-          }
-        }
-      }
-    },
     "Close player" : {
       "comment" : "Accessibility label for dismissing the compact player",
       "localizations" : {
