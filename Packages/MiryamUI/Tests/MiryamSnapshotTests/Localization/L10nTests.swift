@@ -16,6 +16,6 @@ struct L10nTests {
         #expect(L10n.moreOptions(for: "Bohemian Rhapsody") == "More options for Bohemian Rhapsody")
         #expect(L10n.viewAlbum(for: "A Night at the Opera") == "View album A Night at the Opera")
         #expect(L10n.trackCount(12) == "12 tracks")
-        #expect(L10n.percentage(42) == "42%")
+        #expect(L10n.percentage(0.42) == "42%")
     }
 }

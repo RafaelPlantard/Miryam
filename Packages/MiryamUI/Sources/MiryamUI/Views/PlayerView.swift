@@ -342,7 +342,7 @@ public struct PlayerView: View {
             .accessibilityIdentifier(AccessibilityID.songProgress.rawValue)
             .accessibilityLabel(Text(L10n.playbackProgress))
             .accessibilityHint(Text(L10n.dragToSeekWithinTheSong))
-            .accessibilityValue(L10n.percentage(Int(viewModel.playbackState.progress * 100)))
+            .accessibilityValue(L10n.percentage(viewModel.playbackState.progress))
 
             // Time labels
             HStack {

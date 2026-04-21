@@ -43,8 +43,8 @@ public enum L10n {
         String(localized: "More options for \(songName)")
     }
 
-    public static func percentage(_ value: Int) -> String {
-        String(localized: "\(value)%")
+    public static func percentage(_ fraction: Double) -> String {
+        fraction.formatted(.percent.precision(.fractionLength(0)))
     }
 
     public static func songArtistLabel(songName: String, artistName: String) -> String {
