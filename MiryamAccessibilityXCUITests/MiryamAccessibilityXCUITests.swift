@@ -3,6 +3,17 @@ import XCTest
 
 @MainActor
 final class MiryamAccessibilityXCUITests: XCTestCase {
+    /// Wait budget for any single UI element existence check.
+    ///
+    /// Sized for a cold simulator: on CI the sim is warm across jobs (unit →
+    /// snapshot → accessibility all share the same iPhone 17 Pro Max), so the
+    /// first test's app launch and first NavigationStack push are instant.
+    /// Locally the first test (`testAlbumAccessibilityAudit`, alphabetically)
+    /// lands on a cold dyld / SwiftUI JIT / AVAudioSession path and the 5s
+    /// budget used previously was not enough. Raising to 10s costs nothing
+    /// on the happy path (this returns the moment the element appears).
+    private static let elementWaitTimeout: TimeInterval = 10
+
     private var app: XCUIApplication!
 
     override func setUp() async throws {
@@ -48,7 +59,7 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
 
         let root = app.descendants(matching: .any)[contract.rootIdentifier]
         XCTAssertTrue(
-            root.waitForExistence(timeout: 5),
+            root.waitForExistence(timeout: Self.elementWaitTimeout),
             "\(contract.description) should expose root identifier \(contract.rootIdentifier)"
         )
 
@@ -86,7 +97,7 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
         case .songs:
             XCTAssertTrue(waitForSongsView(), "Songs view should appear before running the accessibility audit")
             XCTAssertTrue(
-                firstSongRow().waitForExistence(timeout: 5),
+                firstSongRow().waitForExistence(timeout: Self.elementWaitTimeout),
                 "At least one song row should be available for the Songs accessibility audit"
             )
         case .player:
@@ -103,10 +114,10 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
     @discardableResult
     private func waitForSongsView() -> Bool {
         let songsNavBar = app.navigationBars["Songs"]
-        if songsNavBar.waitForExistence(timeout: 5) { return true }
+        if songsNavBar.waitForExistence(timeout: Self.elementWaitTimeout) { return true }
 
         let songsView = app.descendants(matching: .any)[AccessibilityID.songsView.rawValue]
-        let appeared = songsView.waitForExistence(timeout: 5)
+        let appeared = songsView.waitForExistence(timeout: Self.elementWaitTimeout)
         if !appeared {
             XCTFail("Songs view did not appear")
         }
@@ -117,7 +128,7 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
         XCTAssertTrue(waitForSongsView(), "Songs view should appear before navigating to the player")
 
         let row = firstSongRow()
-        guard row.waitForExistence(timeout: 5) else {
+        guard row.waitForExistence(timeout: Self.elementWaitTimeout) else {
             XCTFail("No song row appeared")
             return
         }
@@ -130,13 +141,13 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
         openFirstSong()
 
         let playerView = app.descendants(matching: .any)[AccessibilityID.playerView.rawValue]
-        guard playerView.waitForExistence(timeout: 5) else {
+        guard playerView.waitForExistence(timeout: Self.elementWaitTimeout) else {
             XCTFail("Player view did not appear")
             return
         }
 
         let moreButton = app.buttons[AccessibilityID.moreOptionsButton.rawValue].firstMatch
-        guard moreButton.waitForExistence(timeout: 5) else {
+        guard moreButton.waitForExistence(timeout: Self.elementWaitTimeout) else {
             XCTFail("More options button not found in player toolbar")
             return
         }
@@ -144,14 +155,14 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
         moreButton.tap()
 
         let moreOptionsSheet = app.descendants(matching: .any)[AccessibilityID.moreOptionsSheet.rawValue]
-        XCTAssertTrue(moreOptionsSheet.waitForExistence(timeout: 5), "More options sheet did not appear")
+        XCTAssertTrue(moreOptionsSheet.waitForExistence(timeout: Self.elementWaitTimeout), "More options sheet did not appear")
     }
 
     private func navigateToAlbumFromSheet() {
         openMoreOptions()
 
         let viewAlbumButton = app.buttons[AccessibilityID.viewAlbumButton.rawValue].firstMatch
-        guard viewAlbumButton.waitForExistence(timeout: 5) else {
+        guard viewAlbumButton.waitForExistence(timeout: Self.elementWaitTimeout) else {
             XCTFail("View album button not found in sheet")
             return
         }
@@ -159,7 +170,7 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
         viewAlbumButton.tap()
 
         let albumView = app.descendants(matching: .any)[AccessibilityID.albumView.rawValue]
-        XCTAssertTrue(albumView.waitForExistence(timeout: 5), "Album view did not appear")
+        XCTAssertTrue(albumView.waitForExistence(timeout: Self.elementWaitTimeout), "Album view did not appear")
     }
 
     private func firstSongRow() -> XCUIElement {
@@ -222,7 +233,7 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
         in contract: AccessibilityScreenContract
     ) {
         let element = resolveElement(for: expectation)
-        let exists = element.waitForExistence(timeout: 5)
+        let exists = element.waitForExistence(timeout: Self.elementWaitTimeout)
         XCTAssertTrue(
             exists,
             "\(contract.description) should expose \(expectation.locator.description)\(diagnosticSummary(for: expectation))"
@@ -279,7 +290,7 @@ final class MiryamAccessibilityXCUITests: XCTestCase {
 
     private func currentRuntimePlatform() -> AccessibilityPlatform {
         let window = app.windows.firstMatch
-        guard window.waitForExistence(timeout: 5) else { return .iphone }
+        guard window.waitForExistence(timeout: Self.elementWaitTimeout) else { return .iphone }
         return window.frame.width >= 700 ? .ipad : .iphone
     }
 
