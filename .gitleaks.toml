@@ -6,10 +6,9 @@ title = "Miryam gitleaks config"
 [extend]
 useDefault = true
 
-[[allowlist.paths]]
-description = "Ignore .env.example (contains placeholders, not real secrets)"
-regex = '''\.env\.example$'''
-
-[[allowlist.paths]]
-description = "Ignore snapshot test reference images"
-regex = '''__Snapshots__/'''
+[allowlist]
+description = "Global allowlist"
+paths = [
+  '''\.env\.example$''',    # placeholders, not real secrets
+  '''__Snapshots__/''',     # snapshot test reference images
+]
