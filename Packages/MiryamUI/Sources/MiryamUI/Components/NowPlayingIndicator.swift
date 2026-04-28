@@ -4,6 +4,8 @@ import SwiftUI
 public struct NowPlayingIndicator: View {
     let isAnimating: Bool
 
+    @State private var isActive = false
+
     private let barCount = 5
     private let barWidth: CGFloat = 3
     private let spacing: CGFloat = 2
@@ -24,6 +26,8 @@ public struct NowPlayingIndicator: View {
             }
         }
         .frame(width: CGFloat(barCount) * barWidth + CGFloat(barCount - 1) * spacing, height: maxHeight)
+        .onAppear { isActive = isAnimating }
+        .onChange(of: isAnimating) { _, newValue in isActive = newValue }
         .accessibilityHidden(true)
     }
 
@@ -31,14 +35,14 @@ public struct NowPlayingIndicator: View {
         RoundedRectangle(cornerRadius: barWidth / 2)
             .fill(Color._miryamAccent)
             .frame(width: barWidth)
-            .frame(height: isAnimating ? maxHeight : minHeight)
+            .frame(height: isActive ? maxHeight : minHeight)
             .animation(
                 isAnimating
                     ? .easeInOut(duration: 0.5)
                     .repeatForever(autoreverses: true)
                     .delay(phase)
                     : .easeInOut(duration: 0.3),
-                value: isAnimating
+                value: isActive
             )
     }
 }
