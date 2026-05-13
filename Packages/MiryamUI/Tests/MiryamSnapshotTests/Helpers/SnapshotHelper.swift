@@ -6,14 +6,17 @@ import UIKit
 
 @MainActor
 enum SnapshotHelper {
+// App Store screenshot sizes (logical points; pixel output = points × displayScale).
+// iPhone Xr preset renders @3x → 1242×2688 px (matches the App Store 6.5" iPhone slot).
+// iPad Pro 13" M4 logical (1032×1376) renders @2x → 2064×2752 px.
 #if os(iOS)
     static let phoneConfig = ViewImageConfig.iPhoneXr(.portrait)
-    static let padPortraitConfig = ViewImageConfig.iPadPro11(.portrait)
-    static let padLandscapeConfig = ViewImageConfig.iPadPro11(.landscape)
+    static let padPortraitConfig = ViewImageConfig(size: CGSize(width: 1_032, height: 1_376))
+    static let padLandscapeConfig = ViewImageConfig(size: CGSize(width: 1_376, height: 1_032))
 #else
     static let phoneConfig = ViewImageConfig(size: CGSize(width: 414, height: 896))
-    static let padPortraitConfig = ViewImageConfig(size: CGSize(width: 834, height: 1_194))
-    static let padLandscapeConfig = ViewImageConfig(size: CGSize(width: 1_194, height: 834))
+    static let padPortraitConfig = ViewImageConfig(size: CGSize(width: 1_032, height: 1_376))
+    static let padLandscapeConfig = ViewImageConfig(size: CGSize(width: 1_376, height: 1_032))
 #endif
 #if os(tvOS)
     static let tvConfig = ViewImageConfig.tv
