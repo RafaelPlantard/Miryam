@@ -269,14 +269,10 @@ platform :ios do
       api_key: api_key
     )
 
-    # visionOS — fetch visionOS-specific profiles (same bundle ID, xrOS platform)
-    match(
-      type: "appstore",
-      app_identifier: [APP_IDENTIFIER],
-      platform: "xros",
-      readonly: false,
-      api_key: api_key
-    )
+    # visionOS — reuses the iOS App Store profile fetched above. Apple's App
+    # Store Connect API has no VISIONOS_APP_STORE profile type; multi-platform
+    # visionOS apps sign with IOS_APP_STORE when shipping under the same bundle
+    # ID. Spaceship coerces :xros/:visionos → Platform::IOS for the same reason.
     build_app(
       project: PROJECT,
       scheme: VISION_SCHEME,

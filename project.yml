@@ -110,11 +110,15 @@ targets:
           CODE_SIGN_STYLE: Manual
           CODE_SIGN_IDENTITY: "Apple Development"
           PROVISIONING_PROFILE_SPECIFIER: "match Development io.swift-yah.miryam"
+          # Mac Catalyst builds use a separate provisioning profile because
+          # match manages catalyst as its own platform (Mac Distribution cert).
+          PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]: "match Development io.swift-yah.miryam catalyst"
           DEBUG_INFORMATION_FORMAT: dwarf
         Release:
           CODE_SIGN_STYLE: Manual
           CODE_SIGN_IDENTITY: "Apple Distribution"
           PROVISIONING_PROFILE_SPECIFIER: "match AppStore io.swift-yah.miryam"
+          PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]: "match AppStore io.swift-yah.miryam catalyst"
           DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
 
   MiryamTests:
@@ -260,18 +264,18 @@ targets:
       base:
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
-        PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam.vision
+        PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam
         DEVELOPMENT_TEAM: ${APPLE_TEAM_ID}
         GENERATE_INFOPLIST_FILE: YES
       configs:
         Debug:
           CODE_SIGN_STYLE: Manual
           CODE_SIGN_IDENTITY: "Apple Development"
-          PROVISIONING_PROFILE_SPECIFIER: "match Development io.swift-yah.miryam.vision"
+          PROVISIONING_PROFILE_SPECIFIER: "match Development io.swift-yah.miryam"
         Release:
           CODE_SIGN_STYLE: Manual
           CODE_SIGN_IDENTITY: "Apple Distribution"
-          PROVISIONING_PROFILE_SPECIFIER: "match AppStore io.swift-yah.miryam.vision"
+          PROVISIONING_PROFILE_SPECIFIER: "match AppStore io.swift-yah.miryam"
 
   MiryamTV:
     type: application
