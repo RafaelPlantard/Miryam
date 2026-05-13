@@ -30,6 +30,7 @@ targets:
     type: application
     platform: iOS
     deploymentTarget: "17.0"
+    supportedDestinations: [iPhone, iPad, macCatalyst]
     sources:
       - path: Miryam
         excludes:
@@ -101,6 +102,9 @@ targets:
         CURRENT_PROJECT_VERSION: "1"
         PRODUCT_BUNDLE_IDENTIFIER: io.swift-yah.miryam
         DEVELOPMENT_TEAM: ${APPLE_TEAM_ID}
+        SUPPORTS_MACCATALYST: YES
+        DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER: NO
+        MACOSX_DEPLOYMENT_TARGET_FOR_MACCATALYST: "14.0"
       configs:
         Debug:
           CODE_SIGN_STYLE: Manual

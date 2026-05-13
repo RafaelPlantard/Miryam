@@ -8,6 +8,7 @@ ALL_IDENTIFIERS = [APP_IDENTIFIER, WATCH_IDENTIFIER]
 PROJECT = "Miryam.xcodeproj"
 SCHEME = "Miryam"
 TV_SCHEME = "MiryamTV"
+VISION_SCHEME = "MiryamVision"
 
 platform :ios do
 
@@ -259,6 +260,54 @@ platform :ios do
       export_method: "app-store",
       output_directory: "fastlane/builds",
       output_name: "MiryamTV.ipa",
+      export_options: {
+        iCloudContainerEnvironment: "Production"
+      }
+    )
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      api_key: api_key
+    )
+
+    # visionOS — fetch visionOS-specific profiles (same bundle ID, xrOS platform)
+    match(
+      type: "appstore",
+      app_identifier: [APP_IDENTIFIER],
+      platform: "xros",
+      readonly: false,
+      api_key: api_key
+    )
+    build_app(
+      project: PROJECT,
+      scheme: VISION_SCHEME,
+      destination: "generic/platform=visionOS",
+      export_method: "app-store",
+      output_directory: "fastlane/builds",
+      output_name: "MiryamVision.ipa",
+      export_options: {
+        iCloudContainerEnvironment: "Production"
+      }
+    )
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      api_key: api_key
+    )
+
+    # Mac Catalyst — same bundle ID, macOS Catalyst destination (iPad design on Mac)
+    match(
+      type: "appstore",
+      app_identifier: [APP_IDENTIFIER],
+      platform: "catalyst",
+      readonly: false,
+      api_key: api_key
+    )
+    build_app(
+      project: PROJECT,
+      scheme: SCHEME,
+      destination: "generic/platform=macOS,variant=Mac Catalyst",
+      export_method: "app-store",
+      output_directory: "fastlane/builds",
+      output_name: "MiryamMacCatalyst.pkg",
       export_options: {
         iCloudContainerEnvironment: "Production"
       }
