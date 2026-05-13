@@ -442,7 +442,6 @@ private struct PlayerToolbarModifier: ViewModifier {
     let song: Song?
     let router: Router
 
-    @ViewBuilder
     func body(content: Content) -> some View {
         if isCompact {
             content.hideNavigationBarChrome()

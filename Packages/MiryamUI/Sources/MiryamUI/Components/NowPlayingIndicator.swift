@@ -12,7 +12,7 @@ public struct NowPlayingIndicator: View {
     private let maxHeight: CGFloat = 16
     private let minHeight: CGFloat = 3
 
-    // Each bar gets a different phase offset for a natural look
+    /// Each bar gets a different phase offset for a natural look
     private let phases: [Double] = [0, 0.2, 0.4, 0.15, 0.35]
 
     public init(isAnimating: Bool = true) {

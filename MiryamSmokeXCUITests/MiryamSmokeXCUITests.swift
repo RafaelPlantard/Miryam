@@ -16,12 +16,12 @@ final class MiryamSmokeXCUITests: XCTestCase {
         app = nil
     }
 
-    func testLaunchTransitionsToSongsView() throws {
+    func testLaunchTransitionsToSongsView() {
         launchApp()
         XCTAssertTrue(waitForSongsView(), "Songs view should appear after the splash screen")
     }
 
-    func testSearchNavigatesToPlayer() throws {
+    func testSearchNavigatesToPlayer() {
         launchApp()
         navigateToPlayer()
 
@@ -29,7 +29,7 @@ final class MiryamSmokeXCUITests: XCTestCase {
         XCTAssertTrue(playerView.waitForExistence(timeout: 5), "Player view should appear after selecting a song")
     }
 
-    func testSearchNavigatesToAlbumFromMoreOptions() throws {
+    func testSearchNavigatesToAlbumFromMoreOptions() {
         launchApp()
         navigateToAlbumFromSheet()
 

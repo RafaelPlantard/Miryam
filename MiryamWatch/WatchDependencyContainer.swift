@@ -30,8 +30,19 @@ actor WatchCacheRepository: CacheRepositoryProtocol {
     private var played: [Song] = []
 
     func cacheSongs(_ songs: [Song], for query: String) async throws {}
-    func cachedSongs(for query: String) async throws -> [Song] { [] }
-    func markAsRecentlyPlayed(_ song: Song) async throws { played.append(song) }
-    func recentlyPlayedSongs(limit: Int) async throws -> [Song] { Array(played.suffix(limit)) }
-    func clearCache() async throws { played = [] }
+    func cachedSongs(for query: String) async throws -> [Song] {
+        []
+    }
+
+    func markAsRecentlyPlayed(_ song: Song) async throws {
+        played.append(song)
+    }
+
+    func recentlyPlayedSongs(limit: Int) async throws -> [Song] {
+        Array(played.suffix(limit))
+    }
+
+    func clearCache() async throws {
+        played = []
+    }
 }

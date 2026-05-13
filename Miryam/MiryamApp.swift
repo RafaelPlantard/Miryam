@@ -144,7 +144,6 @@ struct MiryamApp: App {
         .modelContainer(container.modelContainer)
     }
 
-    @ViewBuilder
     private func moreOptionsContent(song: Song) -> some View {
         MoreOptionsView(song: song) {
             let album = Album(

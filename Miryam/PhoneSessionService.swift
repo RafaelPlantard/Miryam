@@ -78,7 +78,7 @@ final class PhoneSessionService: NSObject, WCSessionDelegate, @unchecked Sendabl
 
     // MARK: - Command Parsing
 
-    private enum PlayerCommand: Sendable {
+    private enum PlayerCommand {
         case play(Song)
         case pause
         case resume

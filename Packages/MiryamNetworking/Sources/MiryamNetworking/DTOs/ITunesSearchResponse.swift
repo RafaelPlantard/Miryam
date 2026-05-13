@@ -1,13 +1,13 @@
 import Foundation
 
 /// Raw response from the iTunes Search API.
-struct ITunesSearchResponse: Decodable, Sendable {
+struct ITunesSearchResponse: Decodable {
     let resultCount: Int
     let results: [ITunesTrack]
 }
 
 /// Raw track from iTunes API — maps to domain Song.
-struct ITunesTrack: Decodable, Sendable {
+struct ITunesTrack: Decodable {
     let trackId: Int?
     let trackName: String?
     let artistName: String?

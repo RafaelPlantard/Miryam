@@ -9,7 +9,7 @@
         import UIKit
     #endif
 
-    struct RemoteCommandCallbacks: Sendable {
+    struct RemoteCommandCallbacks {
         let onPlay: @Sendable () async -> Void
         let onPause: @Sendable () async -> Void
         let onTogglePlayPause: @Sendable () async -> Void
