@@ -1,10 +1,15 @@
-# Miryam
+<h1 align="center">
+  <img src="docs/screenshots/app-icon.png" width="96" alt="Miryam app icon" /><br/>
+  Miryam
+</h1>
 
-[![CI](https://github.com/RafaelPlantard/Miryam/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/RafaelPlantard/Miryam/actions/workflows/ci.yml)
-[![codecov](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/RafaelPlantard/1b309b73189be09d6e6a1a163c7693e6/raw/miryam-coverage.json)](https://app.codecov.io/github/RafaelPlantard/Miryam)
-[![Version](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/RafaelPlantard/1b309b73189be09d6e6a1a163c7693e6/raw/miryam-version.json)](https://github.com/RafaelPlantard/Miryam/tags)
+<p align="center">
+  <a href="https://github.com/RafaelPlantard/Miryam/actions/workflows/ci.yml"><img src="https://github.com/RafaelPlantard/Miryam/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"/></a>
+  <a href="https://app.codecov.io/github/RafaelPlantard/Miryam"><img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/RafaelPlantard/1b309b73189be09d6e6a1a163c7693e6/raw/miryam-coverage.json" alt="codecov"/></a>
+  <a href="https://github.com/RafaelPlantard/Miryam/tags"><img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/RafaelPlantard/1b309b73189be09d6e6a1a163c7693e6/raw/miryam-version.json" alt="Version"/></a>
+</p>
 
-> Named after Miriam (Miryam) — Moses' sister, prophet, and musician who played the timbrel and led song after the crossing of the Red Sea (Exodus 15:20-21).
+> Named after Miriam (Miryam) — Moses' sister, prophet, and musician who played the timbrel and led song after the crossing of the Red Sea (Exodus 15:20-21). The design system even names its accent color **Acqua** — a quiet callback to that crossing.
 
 Miryam is a SwiftUI music search app spanning six Apple platforms — iPhone, iPad, Apple Watch, Apple TV, CarPlay, and visionOS — from a single modular architecture. Built on Swift 6 with complete strict concurrency, SwiftData for offline-first caching, and MVVM split across six local SPM packages. The iTunes Search API powers song search, preview playback, album browsing, and a recently-played history that survives offline.
 
@@ -101,10 +106,13 @@ graph TD
 ### Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/songs.png" width="200" alt="Songs screen with search results"/>
-  <img src="docs/screenshots/player.png" width="200" alt="Player screen with playback controls"/>
-  <img src="docs/screenshots/more-options.png" width="200" alt="More options bottom sheet"/>
-  <img src="docs/screenshots/album.png" width="200" alt="Album screen with track listing"/>
+  <img src="docs/screenshots/splash.png" width="180" alt="Splash screen with the Miryam mark"/>
+  <img src="docs/screenshots/songs.png" width="180" alt="Songs screen with search results and recently played"/>
+  <img src="docs/screenshots/player.png" width="180" alt="Player screen with playback controls and timeline"/>
+  <img src="docs/screenshots/album.png" width="180" alt="Album screen with track listing"/>
+</p>
+<p align="center">
+  <img src="docs/screenshots/more-options.png" width="370" alt="More options bottom sheet"/>
 </p>
 
 ### Additive Platforms And Polish

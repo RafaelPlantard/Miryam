@@ -7,7 +7,9 @@ Miryam is a multi-platform Apple music search app. Named after Miriam (Miryam) �
 **Stack:** Swift 6 · SwiftUI · SwiftData · MVVM · 6 local SPM packages · XcodeGen · Fastlane · GitHub Actions
 **Bundle ID:** io.swift-yah.miryam
 **Design spec:** `docs/superpowers/plans/` — read the current wave plan before starting any implementation.
-**Figma file key:** `L8KZBiSulfv2IEzPUQyeuq` — use Figma MCP tools for every screen implementation.
+**Figma file key:** `L8KZBiSulfv2IEzPUQyeuq` — use Figma MCP tools for every screen implementation. File is private; pages are `🍎 Miryam Designs iOS` (id `10985:4971`), `🤖 Miryam Designs Android` (id `11005:2007`), `Cover` (id `0:3`).
+**Design tokens (Figma → SwiftUI):** mirror the Figma variable namespaces — `Base/Primary/Black`, `Base/Primary/White`, `Base/Acqua/acqua 500` (accent). New SwiftUI colors should land in `MiryamUI`'s asset catalog under matching token names so SwiftUI views never reference raw hex.
+**Design font:** Articulat CF (via Typographer subscription). Available in Figma's UI but NOT in the Plugin API sandbox — `use_figma` text edits on Articulat-bound layers will fail font loading. For text edits, ask the user to do them manually in Figma, or fall back to a system-available font.
 
 ## Workflow Orchestration
 
