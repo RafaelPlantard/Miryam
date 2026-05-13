@@ -302,7 +302,7 @@ platform :ios do
       app_name: "Miryam",
       language: "English",
       app_version: "1.0",
-      sku: "miryam-moises-challenge",
+      sku: "miryam",
       team_id: ENV["APPLE_TEAM_ID"],
       username: ENV["FASTLANE_USER"]
     )

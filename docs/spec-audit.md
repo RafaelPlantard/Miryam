@@ -1,8 +1,8 @@
-# Moises Challenge Audit
+# Spec Audit
 
-This document is the shortest review path for the original Moises challenge in [CHALLENGE.md](../CHALLENGE.md).
+A requirement-to-code map for the v1 spec captured in [SPEC.md](../SPEC.md).
 
-The implementation intentionally goes beyond the minimum scope in a few places, but the primary review surface remains the required iPhone/iPad flow:
+The implementation intentionally goes beyond the minimum spec in a few places, but the core surface remains the iPhone/iPad flow:
 
 1. Splash
 2. Songs/Home
@@ -10,7 +10,7 @@ The implementation intentionally goes beyond the minimum scope in a few places, 
 4. More Options sheet
 5. Album
 
-Bonus platform work on watchOS, tvOS, visionOS, and CarPlay is additive and should not be required to validate the challenge requirements.
+Bonus platform work on watchOS, tvOS, visionOS, and CarPlay is additive — it demonstrates architectural reach without redefining the v1 scope.
 
 ## Requirement Matrix
 
@@ -26,11 +26,11 @@ Bonus platform work on watchOS, tvOS, visionOS, and CarPlay is additive and shou
 | Recently played on home | Met | `PlayerViewModel.play(_:)` marks songs as recently played; `SongsViewModel.loadRecentlyPlayed()` hydrates the home surface. |
 | Replaceable network layer | Met | `SongRepositoryProtocol` lives in `MiryamCore`; `SongRepository` is one implementation behind the DI boundary in `DependencyContainer`. |
 
-## Review Path
+## Tour
 
 - Start in [README.md](../README.md) for setup and architecture.
-- Use [CHALLENGE.md](../CHALLENGE.md) for the original prompt.
-- Review the challenge-critical code in:
+- Use [SPEC.md](../SPEC.md) for the original v1 requirements.
+- Core-flow code lives in:
   - `Miryam/MiryamApp.swift`
   - `Packages/MiryamFeatures/Sources/MiryamFeatures/ViewModels/`
   - `Packages/MiryamNetworking/Sources/MiryamNetworking/SongRepository.swift`
@@ -46,10 +46,10 @@ swift test --package-path Packages/MiryamPersistence
 xcodebuild test -project Miryam.xcodeproj -scheme MiryamSmokeXCUITests -destination 'platform=iOS Simulator,name=iPhone 17 Pro Max'
 ```
 
-These commands validate the most important challenge-facing guarantees: clean formatting/lint, search/offline-first behavior, persistence behavior, and end-to-end iOS navigation through the required flow.
+These commands validate the core guarantees: clean formatting/lint, search/offline-first behavior, persistence behavior, and end-to-end iOS navigation through the required flow.
 
 ## Deliberate Tradeoffs
 
-- The repository contains extra platform surfaces and richer testing than the prompt requires. They are meant to show engineering discipline, not to redefine the scope of the submission.
+- The repository contains extra platform surfaces and richer testing than the v1 spec requires. They are meant to show engineering discipline across the Apple platform family, not to redefine the v1 scope.
 - The app favors protocol boundaries and package separation so the network and persistence layers can evolve independently without touching the views.
 - Some platform-specific UI chrome remains system-owned rather than being forced to mimic static mocks where Apple frameworks are intentionally constrained.

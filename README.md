@@ -5,9 +5,10 @@
 [![Version](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/RafaelPlantard/1b309b73189be09d6e6a1a163c7693e6/raw/miryam-version.json)](https://github.com/RafaelPlantard/Miryam/tags)
 
 > Named after Miriam (Miryam) — Moses' sister, prophet, and musician who played the timbrel and led song after the crossing of the Red Sea (Exodus 15:20-21).
-> The challenge is for [Moises.ai](https://moises.ai); Miryam is who stands next to Moses and makes music.
 
-A SwiftUI music search app built as a code challenge for Moises.ai, centered on the required iPhone/iPad flow: search the iTunes catalog, play song previews, browse albums, and keep track of recently played songs with offline-first caching. watchOS, tvOS, CarPlay, and visionOS are additive extensions of the same package architecture, not the primary review target.
+Miryam is a SwiftUI music search app spanning six Apple platforms — iPhone, iPad, Apple Watch, Apple TV, CarPlay, and visionOS — from a single modular architecture. Built on Swift 6 with complete strict concurrency, SwiftData for offline-first caching, and MVVM split across six local SPM packages. The iTunes Search API powers song search, preview playback, album browsing, and a recently-played history that survives offline.
+
+> A portfolio piece demonstrating end-to-end Apple platform engineering: concurrency correctness, package-graph-enforced layering, and consistent design tokens across every Apple surface.
 
 ## Getting Started
 
@@ -22,12 +23,17 @@ just bootstrap          # installs everything else, generates project, opens Xco
 
 Validated on Xcode 26.4, using the simulator set bundled with that toolchain for local checks and CI.
 
-## Reviewer Fast Path
+## Tour
 
-- Review the required 5-surface iPhone/iPad challenge flow from [CHALLENGE.md](CHALLENGE.md) first.
-- Use [docs/challenge-audit.md](docs/challenge-audit.md) for a requirement-to-code map of every must-have.
-- Treat watchOS, tvOS, CarPlay, and visionOS as additive architecture proofs rather than the main evaluation surface.
-- CI intentionally uses self-hosted macOS runners for the full Apple simulator matrix and auto-installs any missing host tools needed by the workflows.
+What this project demonstrates, beyond shipping a working music app:
+
+- **Swift 6 concurrency story** in `MiryamPlayer` — `AsyncStream` bridges `actor`-isolated AVFoundation state into a `@MainActor` ViewModel, with `@preconcurrency import` and a defensible `nonisolated(unsafe)` boundary documented in code.
+- **Protocol-gated package graph** — `MiryamCore` declares zero external dependencies, so MVVM layering is enforced by SPM resolution itself: a ViewModel importing `MiryamNetworking` simply fails to compile.
+- **Design-token pipeline** — colors, fonts, and strings live in the asset catalog and `.xcstrings`; views never hardcode literals.
+- **Snapshot + accessibility test stack** — Point-Free's snapshot testing, runtime accessibility audits, and a small XCUITest smoke surface, all gated by `just` and CI lanes.
+- **CI on self-hosted macOS runners** — the full Apple simulator matrix runs in CI with tools auto-installed on demand.
+
+Original v1 scope and per-requirement code map live in [SPEC.md](SPEC.md) and [docs/spec-audit.md](docs/spec-audit.md).
 
 ## Platforms
 
@@ -82,7 +88,7 @@ graph TD
 
 ## Features
 
-### Challenge Scope
+### Core Flow
 
 - **Song Search** — Real-time search with 300ms debounce, pagination, pull-to-refresh
 - **Audio Playback** — 30-second iTunes previews with play/pause, skip forward/backward, drag-to-seek timeline
@@ -184,9 +190,8 @@ Miryam/
   .github/workflows/         # CI/CD pipelines
 ```
 
-## Challenge Spec
+## Original Spec
 
-See [CHALLENGE.md](CHALLENGE.md) for the original code challenge specification.
+See [SPEC.md](SPEC.md) for the v1 requirements this implementation was built against.
 
-For the fastest reviewer path through the required scope, see [docs/challenge-audit.md](docs/challenge-audit.md).
-That audit maps each must-have requirement to its implementation and highlights which extra platform surfaces are additive rather than challenge-critical.
+[docs/spec-audit.md](docs/spec-audit.md) maps each requirement to its implementation and highlights which extra platform surfaces are additive rather than core-flow.

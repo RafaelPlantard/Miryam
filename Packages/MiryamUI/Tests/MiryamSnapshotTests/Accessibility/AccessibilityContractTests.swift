@@ -29,9 +29,9 @@ struct AccessibilityContractTests {
         #expect(expectation.hasHumanReadableLabelRule)
     }
 
-    @Test("Challenge-critical elements are represented", arguments: AccessibilityContracts.all)
-    func challengeCriticalElementsAreRepresented(contract: AccessibilityScreenContract) {
-        let expected = AccessibilityContracts.challengeCriticalLocators[contract.coverageKey] ?? []
+    @Test("Core-flow elements are represented", arguments: AccessibilityContracts.all)
+    func coreFlowElementsAreRepresented(contract: AccessibilityScreenContract) {
+        let expected = AccessibilityContracts.coreFlowLocators[contract.coverageKey] ?? []
         let actual = Set(contract.allLocatorKeys)
         #expect(expected.isSubset(of: actual))
     }

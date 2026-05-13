@@ -196,7 +196,7 @@ enum AccessibilityContracts {
         .init(platform: .watch, screen: .watchAlbum),
     ]
 
-    static let challengeCriticalLocators: [AccessibilityCoverageKey: Set<String>] = [
+    static let coreFlowLocators: [AccessibilityCoverageKey: Set<String>] = [
         .init(platform: .iphone, screen: .splash): [],
         .init(platform: .ipad, screen: .splash): [],
         .init(platform: .tvos, screen: .splash): [],

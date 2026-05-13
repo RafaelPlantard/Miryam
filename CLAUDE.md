@@ -2,8 +2,7 @@
 
 ## Project Context
 
-Miryam is a multi-platform Apple music search app built as a code challenge for [Moises.ai](https://moises.ai).
-Named after Miriam (Miryam) — Moses' sister, prophet and musician who played the timbrel and led song after the crossing of the Red Sea (Exodus 15:20–21). The challenge is for Moises.ai; Miryam is who stands next to Moses and makes music.
+Miryam is a multi-platform Apple music search app. Named after Miriam (Miryam) — Moses' sister, prophet and musician who played the timbrel and led song after the crossing of the Red Sea (Exodus 15:20–21).
 
 **Stack:** Swift 6 · SwiftUI · SwiftData · MVVM · 6 local SPM packages · XcodeGen · Fastlane · GitHub Actions
 **Bundle ID:** io.swift-yah.miryam
