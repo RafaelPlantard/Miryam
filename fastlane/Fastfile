@@ -295,7 +295,20 @@ platform :ios do
       api_key: api_key
     )
 
-    # Mac Catalyst — same bundle ID, macOS Catalyst destination (iPad design on Mac)
+    # Mac Catalyst — same bundle ID, macOS Catalyst destination (iPad design on Mac).
+    # Mac App Store .pkg export needs BOTH the Apple Distribution cert (signs the
+    # .app inside) AND the Mac Installer Distribution cert (signs the .pkg
+    # installer). match's `platform: "catalyst"` only provisions the former, so
+    # we additionally run `platform: "macos"` to install the installer cert
+    # into the keychain. We don't use the resulting macOS profile — the catalyst
+    # profile signs the .app.
+    match(
+      type: "appstore",
+      app_identifier: [APP_IDENTIFIER],
+      platform: "macos",
+      readonly: false,
+      api_key: api_key
+    )
     match(
       type: "appstore",
       app_identifier: [APP_IDENTIFIER],
