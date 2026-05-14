@@ -93,6 +93,12 @@ targets:
       - target: MiryamWatch
         embed: true
         codeSign: true
+        # Mac Catalyst can't embed a watchOS app — xcodebuild errors with
+        # "This target is built for macOS but contains embedded content
+        # (MiryamWatch.app) built for watchOS, which is not allowed".
+        # platformFilter excludes the Embed Watch Content phase from the
+        # macCatalyst variant while keeping it on iPhone/iPad.
+        platformFilter: iOS
     settings:
       base:
         SWIFT_VERSION: "6.0"
