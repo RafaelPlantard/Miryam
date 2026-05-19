@@ -197,7 +197,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: always()
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
           files: Coverage/Unit/*.xml,Coverage/Unit/*.lcov
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -208,7 +208,7 @@ jobs:
 
       - name: Upload test results to Codecov
         if: always()
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
           files: TestReports/Unit/*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -315,7 +315,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: always()
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
           files: Coverage/Snapshots/*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -326,7 +326,7 @@ jobs:
 
       - name: Upload test results to Codecov
         if: always()
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
           files: TestReports/Snapshots/*.xml
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -414,7 +414,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: always()
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
           files: Coverage/Accessibility/MiryamAccessibilityXCUITests.xml
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -425,7 +425,7 @@ jobs:
 
       - name: Upload test results to Codecov
         if: always()
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
           files: TestReports/Accessibility/MiryamAccessibilityXCUITests.junit.xml
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -505,7 +505,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: always()
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
           files: Coverage/UI/MiryamSmokeXCUITests.xml
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -516,7 +516,7 @@ jobs:
 
       - name: Upload test results to Codecov
         if: always()
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
           files: TestReports/UI/MiryamSmokeXCUITests.junit.xml
           token: ${{ secrets.CODECOV_TOKEN }}
